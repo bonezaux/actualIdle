@@ -192,6 +192,7 @@ class ForestObject(object):
             self.addedFormulas = [addedFormulas]
         self.forest = forest
         self.price = price
+        #Whether this ForestObject is unlocked. This should be updated in loop if it isn't just a flip thing.
         self.unlocked = False
         
         for stat in statList:
@@ -236,10 +237,6 @@ class ForestObject(object):
         for stat in statList:
             stats[stat] = self.forest.getValue(self.name + stat);
         return stats;
-
-    #Returns whether this ForestObject is unlocked. By default, this is a variable thing, but inherited objects can change that.
-    def unlocked(self):
-        return self.unlocked
 
 class DruidObject(ForestObject):
     def __init__(self, forest, addedThings, addedFormulas, name, price, xp):
@@ -310,7 +307,8 @@ class Doable(object):
                 self.resourceChange.apply(self.forest, 1)
             print(self.text)
             self.unlocked=self.remainUnlocked;
-            self.forest.unlockedThings += self.unlockedThings
+            for unlockedThing in self.unlockedThings:
+                self.forest.objects[unlockedThing].unlocked = True
             for doable in self.addedDoables:
                 self.forest.unlockDoable(doable);
             for unlock in self.addedUnlocks:
@@ -367,7 +365,8 @@ class Unlockable():
             for unlock in self.addedUnlocks:
                 self.forest.unlockUnlockable(unlock);
             self.unlocked = False;
-            self.forest.unlockedThings += self.unlockedThings
+            for unlockedThing in self.unlockedThings:
+                self.forest.objects[unlockedThing].unlocked = True
             print(self.text);
 
 class Fighter(object):
@@ -395,10 +394,6 @@ class Fighter(object):
             self.hp = self.maxhp
         return True
 
-class FighterDruid(Fighter):
-    def __init__(self, maxhp, attack, defense, forest):
-        super(FighterDruid, self).__init__(maxhp, attack, defense, "Druid", Resources([]), [])
-        self.forest = forest
 
 
 class Fight(object):
@@ -418,7 +413,7 @@ class Fight(object):
                 
 
 class FighterTemplate(object):
-    def __init__(self, name, minLevel, maxLevel, minHp, maxHp, minAttack, maxAttack, minDefense, maxDefense, rewardScale, xpScale, moves):
+    def __init__(self, name, minLevel, maxLevel, minHp, maxHp, minAttack, maxAttack, minDefense, maxDefense, rewardScale, xpScale):
         self.name = name
         self.minLevel = minLevel
         self.levelDiff = float(maxLevel-minLevel)
@@ -476,18 +471,18 @@ class Forest(Fighter):
         self.doables = {}
         self.unlocks = {}
         self.values = {}
-        self.unlockedThings = []
         self.groups = {}
         self.xp = {}
         for skill in Forest.skills:
             self.xp[skill] = 1
         self.items = []
-        self.druid = FighterDruid(10, 2, 0, self)
         self.x = 984.0;
         self.y = 873.0;
         self.boss = Location.wolf1.create(1, self);
         self.fighting = False
         self.modifiers = []
+        self.hp = 0.0
+        self.maxhp = 0.0
 
     # Returns the stats of the Druid of this Forest
     def getStats(self):
@@ -527,9 +522,11 @@ class Forest(Fighter):
             obj.loop();
         for item in self.items:
             item.loop(self)
-        self.hp += self.getStats["HealthRegen"]
-        if(self.fighting):
-            
+        self.maxhp = self.getStats()["Health"]
+        self.hp += self.getStats()["HealthRegen"]/20
+        if(self.hp > self.maxhp):
+            self.hp = self.maxhp
+        
 
     def addItem(self, item):
         self.items += [item]
@@ -565,7 +562,7 @@ class Forest(Fighter):
         i = 0
         print("")
         for name,amount in self.things.items():
-            if name in self.unlockedThings:
+            if self.objects[name].unlocked:
                 self.objects[name].echo()
                 i += 1
                 if(i == 4):
@@ -574,7 +571,7 @@ class Forest(Fighter):
 
     def listPrices(self):
         for name,amount in self.things.items():
-            if(self.objects[name].unlocked()):
+            if(self.objects[name].unlocked):
                 self.objects[name].echoPrice()
 
     def listItems(self):
@@ -670,7 +667,7 @@ forest = Forest()
 
 
 
-
+forest.modifiers += [Modifier("Debug", {"BushesGain":10000, "OaksGain":10000, "BirchesGain":10000})]
 ## FOREST THINGS
 forest.addThing(ForestObject(forest, None, Formula(), "Organic Material", None))
 forest.values["boughtThings"] = 2
@@ -721,8 +718,6 @@ forest.addThing(DruidObject(forest, "Organic Material", FormulaLinear("!I0", "Sp
 forest.addDoable(DoableFlowerHeal("Flower Heal", Resources({}), [], forest, "", "", [], True, 0.01))
 forest.objects["Bushes"].unlocked = True;
 forest.objects["Organic Material"].unlocked = True
-forest.unlockedThings += ["Bushes", "Organic Material"]
-
 forest.things["Bushes"] = 2
 
 forest.addGroup("forest")
@@ -779,7 +774,7 @@ while True:
     elif l.startswith("skills"):
         forest.listSkills()
     elif l.startswith("hp"):
-        print(str(forest.druid.hp) + " / " + str(forest.druid.maxhp))
+        print(str(forest.hp) + " / " + str(forest.maxhp))
     elif l.startswith("fight"):
         forest.echoBoss() 
     elif l.startswith("boss"):
