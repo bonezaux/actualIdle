@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace ActualIdle {
 
-    public class Fighter {
-        public double Hp { get; protected set; }
-        public double MaxHp { get; protected set; }
-        public double Attack { get; protected set; }
-        public double Defense { get; protected set; }
-        public string Name { get; protected set; }
-        public Resources Reward { get; protected set; }
-        public Dictionary<string, int> Xp { get; protected set; }
+    public class Fighter : IEntity {
+        public double Hp { get; set; }
+        public double MaxHp { get; set; }
+        public double Attack { get; set; }
+        public double Defense { get; set; }
+        public string Name { get; set; }
+        public Resources Reward { get; set; }
+        public Dictionary<string, int> Xp { get; set; }
         public string Requirements { get; set; }
+        public bool Unlocked { get; set; }
 
         public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements) {
             MaxHp = maxHp;
@@ -25,6 +26,17 @@ namespace ActualIdle {
             Reward = reward;
             Xp = xp;
             Requirements = requirements;
+        }
+
+        public void FightLoop(Fighter fighter) {
+            fighter.Hp -= (this.Attack - fighter.Defense);
+            Console.WriteLine(Name + " dealt " + fighter.Name + " " + (Attack - fighter.Defense) + " damage!");
+            if (fighter.Hp <= 0)
+                fighter.Lose();
+        }
+
+        public virtual void Lose() {
+            Console.WriteLine("You defeated " + Name + "!");
         }
     }
 }

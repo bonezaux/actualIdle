@@ -8,7 +8,7 @@ namespace ActualIdle {
     /// <summary>
     /// An inventory Item. You can have as many as you want.
     /// </summary>
-    public class Item {
+    public class Item : IEntity{
         public static List<Item> itemList = new List<Item>();
 
         /// <summary>
@@ -18,6 +18,7 @@ namespace ActualIdle {
         public Modifier Modifier;
         public string Name { get; private set; }
         public string Text { get; private set; }
+        public bool Unlocked { get; set; }
 
         public Item(string name, Modifier modifier, string text) {
             Name = name;

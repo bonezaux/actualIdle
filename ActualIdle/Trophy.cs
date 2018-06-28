@@ -9,7 +9,7 @@ namespace ActualIdle {
     /// <summary>
     /// Will become a trophy somehow
     /// </summary>
-    public class Trophy {
+    public class Trophy : IEntity {
         public string Name { get; private set; }
         public string[] Requirements { get; set; }
         public string Text { get; set; }

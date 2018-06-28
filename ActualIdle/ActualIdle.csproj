@@ -51,6 +51,7 @@
     <Compile Include="Formula.cs" />
     <Compile Include="FormulaLimitedExp.cs" />
     <Compile Include="FormulaLogistic.cs" />
+    <Compile Include="IEntity.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Program.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="ResourcesFactoryScale.cs" />
     <Compile Include="ResourcesIncrement.cs" />
     <Compile Include="Runtime.cs" />
-    <Compile Include="Unlockable.cs" />
+    <Compile Include="Trophy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

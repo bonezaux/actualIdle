@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ActualIdle {
-    public delegate RuntimeValue growthCodeInject(Forest f, Growth g, RuntimeValue[] arguments); 
+    public delegate RuntimeValue codeInject(Forest f, IEntity e, RuntimeValue[] arguments); 
 
     /// <summary>
     /// Contains static values.
@@ -21,7 +21,8 @@ namespace ActualIdle {
             Forest forest = new Forest();
 
             forest.AddObject(new Growth(forest, "Organic Material", new string[] { null }, new Formula[] { new Formula() }, null));
-            forest.Values["boughtThings"] = 2;
+            forest.Growths["Organic Material"].Unlocked = true;
+
             forest.Values["wandlevel"] = 0;
 
             // BUSHES
@@ -32,7 +33,8 @@ namespace ActualIdle {
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 10 } }, "BushesInc", "boughtThings"), 1));
             forest.Growths["Bushes"].Amount = 2;
-            forest.Growths["Bushes"].injects["create"].Add((f, g, arguments) => { Console.WriteLine("Bob"); return null; });
+            forest.Values["boughtThings"] = 2;
+            forest.Growths["Bushes"].Unlocked = true;
 
             // OAKS
             forest.Values["OaksGain"] = 2;
@@ -40,6 +42,7 @@ namespace ActualIdle {
             forest.Values["OaksInc"] = 1.1;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "OaksGain") }, "Oaks",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 50 } }, "OaksInc", "boughtThings"), 3));
+            forest.Growths["Oaks"].Unlocked = true;
 
             // BIRCHES
             forest.Values["BirchesGain"] = 7;
@@ -47,6 +50,13 @@ namespace ActualIdle {
             forest.Values["BirchesInc"] = 1.1;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BirchesGain") }, "Birches",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 220 } }, "BirchesInc", "boughtThings"), 27));
+            forest.Growths["Birches"].injects["loop"].Add((f, g, arguments) => {
+                if (f.GetValue("DefeatedBosses") >= 1) {
+                    g.Unlocked = true;
+                }
+                return null;
+            });
+
 
             // YEWS
             forest.Values["YewsGain"] = 23;
@@ -71,10 +81,8 @@ namespace ActualIdle {
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4100 } }, "SpidersInc", "boughtThings"), 150));
 
-            forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 } }));
+            forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 }, { "HealthRegen", 10000 } }));
 
-            forest.Growths["Bushes"].Unlocked = true;
-            forest.Growths["Organic Material"].Unlocked = true;
 
             Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "wandlevel", 1 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);
@@ -128,7 +136,7 @@ namespace ActualIdle {
                 } else if (l.StartsWith("hp")) {
                     Console.WriteLine(Math.Round(forest.Hp, 2) + " / " + Math.Round(forest.MaxHp, 2));
                 } else if (l.StartsWith("fight")) {
-                    forest.EchoBoss();
+                    forest.Fighting = true;
                 } else if (l.StartsWith("boss")) {
                     forest.EchoBoss();
                 } else if (l.StartsWith("stats")) {

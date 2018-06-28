@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ActualIdle {
+namespace ActualIdle  {
     /// <summary>
     /// An object in the forest, like oaks or bushes. Produce other things by a formula based on how many of them there are, and give stats.
     /// </summary>
@@ -14,7 +14,7 @@ namespace ActualIdle {
     /// <summary>
     /// An object in the forest, like oaks or bushes. Produce other things by a formula based on how many of them there are, and give stats.
     /// </summary>
-    public class Growth {
+    public class Growth : IEntity {
         public string Name { get; set; }
         public Forest forest { get; set; }
         public string[] AddedGrowths { get; set; }
@@ -28,7 +28,7 @@ namespace ActualIdle {
         ///  loop
         ///  create (called when the Growth is created, args[0] = amount)
         /// </summary>
-        public Dictionary<string, List<growthCodeInject>> injects { get; private set; }
+        public Dictionary<string, List<codeInject>> injects { get; private set; }
 
         public Growth(Forest forest, string name, string[] addedThings, Formula[] addedFormulas, Resources price) {
             Name = name;
@@ -37,9 +37,9 @@ namespace ActualIdle {
             AddedFormulas = addedFormulas;
             Price = price;
             Unlocked = false;
-            injects = new Dictionary<string, List<growthCodeInject>>();
-            injects["loop"] = new List<growthCodeInject>();
-            injects["create"] = new List<growthCodeInject>();
+            injects = new Dictionary<string, List<codeInject>>();
+            injects["loop"] = new List<codeInject>();
+            injects["create"] = new List<codeInject>();
             foreach (string stat in Statics.statList) {
                 if (!forest.Values.ContainsKey(name + stat)) {
                     forest.Values[name + stat] = 0;
@@ -49,7 +49,7 @@ namespace ActualIdle {
         }
 
         public virtual void Loop() {
-            foreach (growthCodeInject gci in injects["loop"])
+            foreach (codeInject gci in injects["loop"])
                 gci(forest, this, null);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
                 if (AddedGrowths[loop] != null) {
@@ -60,7 +60,7 @@ namespace ActualIdle {
 
         public virtual bool Create(int amount) {
             if (Price.CanAfford(forest, amount)) {
-                foreach (growthCodeInject gci in injects["create"])
+                foreach (codeInject gci in injects["create"])
                     gci(forest, this, new RuntimeValue[] { new RuntimeValue(2, amount) });
                 Console.WriteLine("You bought " + amount + " " + Name + " for ");
                 Price.Print(forest, amount);

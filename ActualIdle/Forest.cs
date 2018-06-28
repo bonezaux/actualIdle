@@ -23,7 +23,15 @@ namespace ActualIdle {
         public List<Item> Items { get; private set; }
         public List<Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
-        public bool running { get; private set; }
+        public bool Running { get; private set; }
+        /// <summary>
+        /// Controls whether the Druid is currently fighting a boss.
+        /// </summary>
+        public bool Fighting { get; set; }
+        /// <summary>
+        /// What calculation step we're currently at. Every 5th is a second
+        /// </summary>
+        public int Count { get; private set; }
 
         public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Growths = new Dictionary<string, Growth>();
@@ -33,11 +41,17 @@ namespace ActualIdle {
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
             Modifiers = new List<Modifier>();
+            Modifiers.Add(new Modifier("BaseStats", new Dictionary<string, double>(), new Dictionary<string, double>() {
+                { "HealthRegen", 0.2 }
+                }));
             foreach (string skill in Statics.skills) {
-                Xp[skill] = 1;
+                Xp[skill] = 100;
             }
 
-            running = true;
+            Running = true;
+            Fighting = false;
+            Values["DefeatedBosses"] = 0;
+            Boss = new Fighter(20, 5, 0, "Ferret", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), "");
         }
 
         /// <summary>
@@ -60,6 +74,14 @@ namespace ActualIdle {
                       select new { Name = e.Key, Count = Modifier.Modify(Modifiers, e.Key, e.Value) }).ToDictionary(item => item.Name, item => item.Count);
             return result;
         }
+
+        public override void Lose() {
+            Console.WriteLine("You were defeated!");
+            Boss.Hp = Boss.MaxHp;
+            Fighting = false;
+            Hp = 0;
+        }
+
         public void loop() {
 
             foreach (KeyValuePair<string, Growth> entry in Growths) {
@@ -74,6 +96,22 @@ namespace ActualIdle {
             foreach (KeyValuePair<string, Doable> entry in Doables) {
                 entry.Value.Loop();
             }
+            
+            if(Fighting && Count % 5 == 0) {
+                Boss.FightLoop(this);
+                Console.WriteLine("You dealt " + Boss.Name + " " + (Attack - Boss.Defense) + " damage!");
+                Boss.Hp -= (Attack-Boss.Defense);
+                if(Boss.Hp <= 0) {
+                    Boss.Lose();
+                    Values["Defeated" + Boss.Name] = 1;
+                    Values["DefeatedBosses"] += 1;
+                    Boss = null;
+                    Fighting = false;
+
+                }
+            }
+
+            Attack = GetStats()["Attack"];
             MaxHp = GetStats()["Health"];
             Hp += GetStats()["HealthRegen"] / 5.0;
             if (Hp > MaxHp) {
@@ -94,8 +132,8 @@ namespace ActualIdle {
             Doables.Add(doable.Name, doable);
         }
 
-        public void addUnlockable(Trophy unlockable) {
-            Trophies.Add(unlockable.Name, unlockable);
+        public void AddTrophy(Trophy trophy) {
+            Trophies.Add(trophy.Name, trophy);
         }
 
         public void AddXp(string skillName, double xp) {
@@ -165,7 +203,9 @@ namespace ActualIdle {
 
         public void ListSkills() {
             foreach (string skill in Statics.skills) {
-                Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "xp");
+                int lvl = (int)GetValue("lvl" + skill);
+                double nextXp = Math.Pow(1.1, lvl + 1) * 100;
+                Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp");
             }
         }
 
@@ -198,7 +238,7 @@ namespace ActualIdle {
         public double GetValue(string value) {
             if (value.StartsWith("lvl")) {
                 if (Statics.skills.Contains(value.Substring(3)))
-                    return (int)Math.Log10(Xp[value.Substring(3)]);
+                    return (int)Math.Log(Xp[value.Substring(3)]/100, 1.1);
             } else if (value.StartsWith("count")) {
                 if (Growths.ContainsKey(value.Substring(5)))
                     return Growths[value.Substring(5)].Amount;
@@ -211,8 +251,12 @@ namespace ActualIdle {
                 return float.Parse(value.Substring(2));
             } else if (value.StartsWith("!B")) {
                 return bool.Parse(value.Substring(2)) ? 1 : 0;
+            } else if (Values.ContainsKey(value)) {
+                return Modifier.Modify(Modifiers, value, Values[value]);
             }
-            return Modifier.Modify(Modifiers, value, Values[value]);
+
+            return 0;
+
         }
 
         public void ChangeValue(string value, double change) {
@@ -250,10 +294,10 @@ namespace ActualIdle {
         }
 
         public void Calculation() {
-            int counter = 0;
-            while (running) {
+            Count = 0;
+            while (Running) {
                 Thread.Sleep(200);
-                counter++;
+                Count++;
                 loop();
             }
             Console.WriteLine("Terminating");
