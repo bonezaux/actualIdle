@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ActualIdle {
+    public delegate RuntimeValue growthCodeInject(Forest f, Growth g, RuntimeValue[] arguments); 
 
     /// <summary>
     /// Contains static values.
@@ -31,6 +32,7 @@ namespace ActualIdle {
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 10 } }, "BushesInc", "boughtThings"), 1));
             forest.Growths["Bushes"].Amount = 2;
+            forest.Growths["Bushes"].injects["create"].Add((f, g, arguments) => { Console.WriteLine("Bob"); return null; });
 
             // OAKS
             forest.Values["OaksGain"] = 2;

@@ -14,8 +14,9 @@ namespace ActualIdle {
         public string Name { get; protected set; }
         public Resources Reward { get; protected set; }
         public Dictionary<string, int> Xp { get; protected set; }
+        public string Requirements { get; set; }
 
-        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp) {
+        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements) {
             MaxHp = maxHp;
             Hp = MaxHp;
             Attack = attack;
@@ -23,6 +24,7 @@ namespace ActualIdle {
             Name = name;
             Reward = reward;
             Xp = xp;
+            Requirements = requirements;
         }
     }
 }

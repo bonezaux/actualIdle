@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,13 @@ namespace ActualIdle {
         public bool Unlocked { get; set; }
         public double Amount { get; set; }
 
+        /// <summary>
+        /// Code injects:
+        ///  loop
+        ///  create (called when the Growth is created, args[0] = amount)
+        /// </summary>
+        public Dictionary<string, List<growthCodeInject>> injects { get; private set; }
+
         public Growth(Forest forest, string name, string[] addedThings, Formula[] addedFormulas, Resources price) {
             Name = name;
             this.forest = forest;
@@ -29,7 +37,9 @@ namespace ActualIdle {
             AddedFormulas = addedFormulas;
             Price = price;
             Unlocked = false;
-
+            injects = new Dictionary<string, List<growthCodeInject>>();
+            injects["loop"] = new List<growthCodeInject>();
+            injects["create"] = new List<growthCodeInject>();
             foreach (string stat in Statics.statList) {
                 if (!forest.Values.ContainsKey(name + stat)) {
                     forest.Values[name + stat] = 0;
@@ -39,6 +49,8 @@ namespace ActualIdle {
         }
 
         public virtual void Loop() {
+            foreach (growthCodeInject gci in injects["loop"])
+                gci(forest, this, null);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
                 if (AddedGrowths[loop] != null) {
                     forest.Growths[AddedGrowths[loop]].Amount += AddedFormulas[loop].Calculate(Amount, forest);
@@ -46,8 +58,10 @@ namespace ActualIdle {
             }
         }
 
-        public virtual bool Buy(int amount) {
+        public virtual bool Create(int amount) {
             if (Price.CanAfford(forest, amount)) {
+                foreach (growthCodeInject gci in injects["create"])
+                    gci(forest, this, new RuntimeValue[] { new RuntimeValue(2, amount) });
                 Console.WriteLine("You bought " + amount + " " + Name + " for ");
                 Price.Print(forest, amount);
                 Price.Apply(forest, amount);

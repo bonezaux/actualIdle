@@ -16,8 +16,8 @@ namespace ActualIdle {
             Xp = xp;
         }
 
-        public override bool Buy(int amount) {
-            if (base.Buy(amount)) {
+        public override bool Create(int amount) {
+            if (base.Create(amount)) {
                 forest.AddXp("Druidcraft", amount * Xp * (1 + forest.GetValue("wandlevel") * 0.01));
                 return true;
             } else

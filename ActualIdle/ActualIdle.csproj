@@ -58,6 +58,7 @@
     <Compile Include="Resources.cs" />
     <Compile Include="ResourcesFactoryScale.cs" />
     <Compile Include="ResourcesIncrement.cs" />
+    <Compile Include="Runtime.cs" />
     <Compile Include="Unlockable.cs" />
   </ItemGroup>
   <ItemGroup>

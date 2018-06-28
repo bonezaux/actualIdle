@@ -14,7 +14,7 @@ namespace ActualIdle {
         /// </summary>
         public Dictionary<string, Growth> Growths { get; private set; }
         public Dictionary<string, Doable> Doables { get; private set; }
-        public Dictionary<string, Unlockable> Unlocks { get; private set; }
+        public Dictionary<string, Trophy> Trophies { get; private set; }
         public Dictionary<string, double> Values { get; private set; }
         /// <summary>
         /// The Druids xp in all skills specified in the Statics statlist. Levels are at specific intervals, which will probably be changed at some point.
@@ -25,10 +25,10 @@ namespace ActualIdle {
         public Fighter Boss { get; private set; }
         public bool running { get; private set; }
 
-        public Forest() : base(0, 0, 0, "Druid", null, null) {
+        public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Growths = new Dictionary<string, Growth>();
             Doables = new Dictionary<string, Doable>();
-            Unlocks = new Dictionary<string, Unlockable>();
+            Trophies = new Dictionary<string, Trophy>();
             Values = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
@@ -65,7 +65,7 @@ namespace ActualIdle {
             foreach (KeyValuePair<string, Growth> entry in Growths) {
                 entry.Value.Loop();
             }
-            foreach (KeyValuePair<string, Unlockable> entry in Unlocks) {
+            foreach (KeyValuePair<string, Trophy> entry in Trophies) {
                 entry.Value.Loop();
             }
             foreach (Item item in Items) {
@@ -94,8 +94,8 @@ namespace ActualIdle {
             Doables.Add(doable.Name, doable);
         }
 
-        public void addUnlockable(Unlockable unlockable) {
-            Unlocks.Add(unlockable.Name, unlockable);
+        public void addUnlockable(Trophy unlockable) {
+            Trophies.Add(unlockable.Name, unlockable);
         }
 
         public void AddXp(string skillName, double xp) {
@@ -110,7 +110,7 @@ namespace ActualIdle {
         /// <param name="obj"></param>
         /// <param name="amount"></param>
         public void BuyObject(string obj, int amount) {
-            Growths[obj].Buy(amount);
+            Growths[obj].Create(amount);
         }
 
         /// <summary>
