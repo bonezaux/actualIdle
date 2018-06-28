@@ -1,0 +1,6 @@
+c:\users\carl\documents\visual studio 2015\Projects\ActualIdle\ActualIdle\bin\Debug\ActualIdle.exe.config
+C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\obj\Debug\ActualIdle.csprojResolveAssemblyReference.cache
+C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\bin\Debug\ActualIdle.exe
+C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
+C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\obj\Debug\ActualIdle.exe
+C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
