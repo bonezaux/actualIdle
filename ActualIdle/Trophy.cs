@@ -11,12 +11,12 @@ namespace ActualIdle {
     /// </summary>
     public class Trophy : IEntity {
         public string Name { get; private set; }
-        public string[] Requirements { get; set; }
+        public codeInject[] Requirements { get; set; }
         public string Text { get; set; }
         public bool Unlocked { get; set; }
         public Forest forest { get; private set; }
 
-        public Trophy(Forest forest, string name, string[] requirements, string text) {
+        public Trophy(Forest forest, string name, codeInject[] requirements, string text) {
             Name = name;
             Requirements = requirements;
             Text = text;
@@ -27,12 +27,13 @@ namespace ActualIdle {
         public void Loop() {
             if (!Unlocked) {
                 bool result = true;
-                foreach (string requirement in Requirements)
-                    if (!forest.TestRequirement(requirement))
+                foreach (codeInject requirement in Requirements)
+                    if (!requirement(forest, this, null).GetBool())
                         result = false;
                 if (result) {
                     Console.WriteLine(Text);
                     Unlocked = true;
+                    forest.Values["Trophy" + Name] = 1;
                     ///TODO: add trohphy code.
                 }
             }

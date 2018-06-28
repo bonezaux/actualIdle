@@ -12,7 +12,7 @@ namespace ActualIdle {
     /// Contains static values.
     /// </summary>
     class Statics {
-        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen" };
+        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense" };
         public static string[] skills = new string[] { "Druidcraft" };
     }
 
@@ -82,7 +82,14 @@ namespace ActualIdle {
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4100 } }, "SpidersInc", "boughtThings"), 150));
 
             forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 }, { "HealthRegen", 10000 } }));
-
+            
+            forest.AddTrophy(new Trophy(forest, "Defeated Ferret",
+                new codeInject[] { (f, g, arguments) => {
+                    if(f.GetValue("DefeatedFerret") == 1)
+                        return new RuntimeValue(3, true);
+                    else
+                        return new RuntimeValue(3, false);
+                } }, "You defeated the Ferret! Good job!"));
 
             Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "wandlevel", 1 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);

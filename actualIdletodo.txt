@@ -10,8 +10,6 @@ Forskellige ting giver mere/mindre bonus til det
 Måske skal alle træerne osv. alle sammen scale på den samme build cost modifier? Så man skal rive noget op for at bygge noget andet. Det kunne være sejt.
 Træer skal unlockes af bosser.
 Items skal give modifiers i stedet for at have en mærkelig, kompliceret changedValues tech.
-Unlocks skal ændres til trophies, der giver adgang til ting. Det er meget mærkeligt det der add doable og add unlock noget.
-Objects skal skifte navn til Organisms eller Growths eller sådan noget
 Bossfights
  Evil bosses
  Good bosses

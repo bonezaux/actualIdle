@@ -111,12 +111,24 @@ namespace ActualIdle {
                 }
             }
 
-            Attack = GetStats()["Attack"];
-            MaxHp = GetStats()["Health"];
-            Hp += GetStats()["HealthRegen"] / 5.0;
+            Dictionary<string, double> stats = GetStats();
+            Defense = stats["Defense"];
+            Attack = stats["Attack"];
+            MaxHp = stats["Health"];
+            Hp += stats["HealthRegen"] / 5.0;
             if (Hp > MaxHp) {
                 Hp = MaxHp;
             }
+        }
+
+        public void StartFighting() {
+            if(Boss == null) {
+                Console.WriteLine("You don't have a next boss to fight right now.");
+                return;
+            }
+            Console.WriteLine();
+            Console.WriteLine("You are now fighting " + Boss.Name + "!");
+            Fighting = true;
         }
 
         public void AddItem(Item item) {
