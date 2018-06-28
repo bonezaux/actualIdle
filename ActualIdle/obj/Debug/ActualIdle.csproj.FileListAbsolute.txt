@@ -4,3 +4,9 @@ C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\bin\De
 C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
 C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\obj\Debug\ActualIdle.exe
 C:\Users\Carl\Documents\Visual Studio 2015\Projects\ActualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe.config
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.exe
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.csprojResolveAssemblyReference.cache
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
