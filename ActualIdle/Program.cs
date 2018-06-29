@@ -91,7 +91,7 @@ namespace ActualIdle {
                         return new RuntimeValue(3, false);
                 } }, "You defeated the Ferret! Good job!"));
 
-            Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "XpModDruidcraft", 0.01 } }), "Wand\t+1 wand level"));
+            Item.itemList.Add(new Item("wand", new Modifier("wand", null, new Dictionary<string, double>() { { "XpModDruidcraft", 0.01 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);
 
             forest.AddUpgrade(new Upgrade(forest, "Better Oaks", "This upgrade improves oak gain by 200%. Mutually exclusive with Better Bushes.", "This upgrade improves oak gain by 200%.",
@@ -181,6 +181,8 @@ namespace ActualIdle {
                             }
                         }
                     }
+                } else if(l.StartsWith("modifiers")) {
+                    forest.ListModifiers();
                 } else {
                     printHelp();
                 }
@@ -198,9 +200,10 @@ namespace ActualIdle {
             Console.WriteLine(" - hp: Get your current hp.");
             Console.WriteLine(" - fight: Fight the currently chosen boss.");
             Console.WriteLine(" - boss: See the stats of the currrently chosen boss.");
-            Console.WriteLine(" - stats: See your own stats");
-            Console.WriteLine(" - upgrades: List upgrades");
-            Console.WriteLine(" - upgrade <upgrade>: See the description of a single upgrade and maybe buy it, or list upgrades");
+            Console.WriteLine(" - stats: See your own stats.");
+            Console.WriteLine(" - upgrades: List upgrades.");
+            Console.WriteLine(" - upgrade <upgrade>: See the description of a single upgrade and maybe buy it, or list upgrades.");
+            Console.WriteLine(" - modifiers : List modifiers.");
         }
         
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,21 @@ namespace ActualIdle {
         /// </summary>
         public Dictionary<string, double> ModifiersAAfter { get; private set; }
 
-        public Modifier(string name, Dictionary<string, double> modifiersF, Dictionary<string, double> modifiersA = null, Dictionary<string, double> modifiersAAfter = null) {
+        /// <summary>
+        /// If any of the modifier lists are to be empty, they should be null, not an empty dictionary!
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="modifiersF"></param>
+        /// <param name="modifiersA"></param>
+        /// <param name="modifiersAAfter"></param>
+        public Modifier(string name, Dictionary<string, double> modifiersF = null, Dictionary<string, double> modifiersA = null, Dictionary<string, double> modifiersAAfter = null) {
             this.Name = name;
             this.ModifiersF = modifiersF;
+            Debug.Assert(!(modifiersF != null && modifiersF.Count == 0)); //Can't be an empty dictionary.
             this.ModifiersA = modifiersA;
+            Debug.Assert(!(modifiersA != null && modifiersA.Count == 0)); //Can't be an empty dictionary.
             this.ModifiersAAfter = modifiersAAfter;
+            Debug.Assert(!(modifiersAAfter != null && modifiersAAfter.Count == 0)); //Can't be an empty dictionary.
         }
 
         public double GetModF(string modName) {
@@ -106,6 +117,36 @@ namespace ActualIdle {
             }
 
             return new double[] { sums, product, sums2 };
+        }
+
+        public void Echo() {
+            string res = "";
+            res += Name + ": \n";
+            if(ModifiersA != null) {
+                res += "Base additions: ";
+                foreach(KeyValuePair<string, double> modifiedValue in ModifiersA) {
+                    res += modifiedValue.Key + " " + (modifiedValue.Value > 0 ? "+": "") + modifiedValue.Value + ", ";
+                }
+                res = res.Substring(0, res.Length - 2);
+                res += "\n";
+            }
+            if (ModifiersF!= null) {
+                res += "Relative modifiers: ";
+                foreach (KeyValuePair<string, double> modifiedValue in ModifiersF) {
+                    res += modifiedValue.Key + " " + (modifiedValue.Value > 0 ? "+" : "") + (modifiedValue.Value*100) + "%, ";
+                }
+                res = res.Substring(0, res.Length - 2);
+                res += "\n";
+            }
+            if (ModifiersAAfter != null) {
+                res += "After-everything additions: ";
+                foreach (KeyValuePair<string, double> modifiedValue in ModifiersAAfter) {
+                    res += modifiedValue.Key + " " + (modifiedValue.Value > 0 ? "+" : "") + (modifiedValue.Value) + ", ";
+                }
+                res = res.Substring(0, res.Length - 2);
+                res += "\n";
+            }
+            Console.WriteLine(res);
         }
     }
 }

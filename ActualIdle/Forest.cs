@@ -44,7 +44,7 @@ namespace ActualIdle {
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
             Modifiers = new List<Modifier>();
-            Modifiers.Add(new Modifier("BaseStats", new Dictionary<string, double>(), new Dictionary<string, double>() {
+            Modifiers.Add(new Modifier("BaseStats", modifiersA: new Dictionary<string, double>() {
                 { "HealthRegen", 0.2 }
                 }));
             foreach (string skill in Statics.skills) {
@@ -274,6 +274,13 @@ namespace ActualIdle {
                 Doables[doable].Perform();
             else
                 Console.WriteLine("No doable with the name " + doable + " is unlocked");
+        }
+
+        public void ListModifiers() {
+            Console.WriteLine(" --- Modifiers ---");
+            foreach(Modifier modifier in Modifiers) {
+                modifier.Echo();
+            }
         }
 
         /// <summary>
