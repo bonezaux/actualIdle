@@ -114,7 +114,6 @@ namespace ActualIdle {
             if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
                 if(Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
-                    Console.WriteLine("You dealt " + Boss.Name + " " + (Attack - Boss.Defense) + " damage!");
                     Boss.Hp -= (Attack - Boss.Defense);
                     if (Boss.Hp <= 0) {
                         WinBattle();

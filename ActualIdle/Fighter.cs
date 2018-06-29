@@ -31,7 +31,6 @@ namespace ActualIdle {
 
         public void FightLoop(Fighter fighter) {
             fighter.Hp -= (this.Attack - fighter.Defense);
-            Console.WriteLine(Name + " dealt " + fighter.Name + " " + (Attack - fighter.Defense) + " damage!");
             if (fighter.Hp <= 0)
                 fighter.Lose();
         }

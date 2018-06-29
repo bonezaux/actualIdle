@@ -57,6 +57,16 @@ namespace ActualIdle {
                 return null;
             });
 
+            forest.Values["DruidHeal"] = 5;
+            forest.AddDoable(new Doable(forest, "Rejuvenate", null, "", "Rejuvenate!", "Rejuvenate is on cooldown.", true));
+            forest.Doables["Rejuvenate"].Injects["perform"].Add((f, g, arguments) => {
+                double hpIncrease = forest.GetValue("DruidHeal") * (1 + forest.GetValue("lvlDruidcraft") * 0.1);
+                forest.Hp += hpIncrease;
+                Console.WriteLine("Gained " + Math.Round(hpIncrease, 2));
+                return null;
+            });
+            forest.Doables["Rejuvenate"].Unlocked = true;
+
 
             // YEWS
             forest.Values["YewsGain"] = 23;
