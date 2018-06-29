@@ -15,6 +15,7 @@ namespace ActualIdle {
         public Dictionary<string, Growth> Growths { get; private set; }
         public Dictionary<string, Doable> Doables { get; private set; }
         public Dictionary<string, Trophy> Trophies { get; private set; }
+        public Dictionary<string, Upgrade> Upgrades { get; private set; }
         public Dictionary<string, double> Values { get; private set; }
         /// <summary>
         /// The Druids xp in all skills specified in the Statics statlist. Levels are at specific intervals, which will probably be changed at some point.
@@ -24,6 +25,7 @@ namespace ActualIdle {
         public List<Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
         public bool Running { get; private set; }
+
         /// <summary>
         /// Controls whether the Druid is currently fighting a boss.
         /// </summary>
@@ -37,6 +39,7 @@ namespace ActualIdle {
             Growths = new Dictionary<string, Growth>();
             Doables = new Dictionary<string, Doable>();
             Trophies = new Dictionary<string, Trophy>();
+            Upgrades = new Dictionary<string, Upgrade>();
             Values = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
@@ -90,14 +93,17 @@ namespace ActualIdle {
             foreach (KeyValuePair<string, Trophy> entry in Trophies) {
                 entry.Value.Loop();
             }
+            foreach (KeyValuePair<string, Upgrade> entry in Upgrades) {
+                entry.Value.Loop();
+            }
             foreach (Item item in Items) {
                 item.Loop(this);
             }
             foreach (KeyValuePair<string, Doable> entry in Doables) {
                 entry.Value.Loop();
             }
-            
-            if(Fighting && Count % 5 == 0) {
+
+            if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
                 Console.WriteLine("You dealt " + Boss.Name + " " + (Attack - Boss.Defense) + " damage!");
                 Boss.Hp -= (Attack-Boss.Defense);
@@ -148,10 +154,22 @@ namespace ActualIdle {
             Trophies.Add(trophy.Name, trophy);
         }
 
+        public void AddUpgrade(Upgrade upgrade) {
+            Upgrades.Add(upgrade.Name, upgrade);
+        }
+
         public void AddXp(string skillName, double xp) {
             if (Statics.skills.Contains(skillName)) {
-                Xp[skillName] += xp;
+                Xp[skillName] += xp*GetValue("XpMod"+ skillName);
             }
+        }
+
+        public void AddModifier(Modifier modifier) {
+            Modifiers.Add(modifier);
+        }
+
+        public void RemoveModifier(Modifier modifier) {
+            Modifiers.Remove(modifier);
         }
 
         /// <summary>
@@ -219,6 +237,24 @@ namespace ActualIdle {
                 double nextXp = Math.Pow(1.1, lvl + 1) * 100;
                 Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp");
             }
+        }
+
+        public void ListAvailableUpgrades() {
+            string owned = "";
+            string unowned = "";
+            foreach (KeyValuePair<string, Upgrade> entry in Upgrades) {
+                Console.WriteLine("Hullo" + entry.Value.Unlocked);
+                if(entry.Value.Unlocked) {
+                    if (entry.Value.Owned)
+                        owned += entry.Key;
+                    else
+                        unowned += entry.Key;
+                }
+            }
+            Console.WriteLine(" --- Available Upgrades --- ");
+            Console.WriteLine(unowned);
+            Console.WriteLine(" ----- Owned Upgrades ----- ");
+            Console.WriteLine(owned);
         }
 
         /// <summary>

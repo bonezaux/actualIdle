@@ -15,7 +15,7 @@ namespace ActualIdle {
         /// The way values are changed when this is equipped. Will probably be changed into modifiers or something.
         /// Keys: 
         /// </summary>
-        public Modifier Modifier;
+        public Modifier Modifier { get; private set; }
         public string Name { get; private set; }
         public string Text { get; private set; }
         public bool Unlocked { get; set; }
@@ -35,7 +35,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="forest"></param>
         public virtual void Get(Forest forest) {
-            //TODO: Figure out modifiers
+            forest.AddModifier(Modifier);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="forest"></param>
         public virtual void Lose(Forest forest) {
-            //TODO: Figure out modifiers
+            forest.RemoveModifier(Modifier);
         }
 
         public void Echo(Forest forest) {

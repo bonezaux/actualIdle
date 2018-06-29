@@ -91,8 +91,10 @@ namespace ActualIdle {
                         return new RuntimeValue(3, false);
                 } }, "You defeated the Ferret! Good job!"));
 
-            Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "wandlevel", 1 } }), "Wand\t+1 wand level"));
+            Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "XpModDruidcraft", 0.01 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);
+
+            forest.AddUpgrade(new Upgrade(forest, "bob", "This is a dummy upgrade", "It's still a dummy upgrade", new Resources(new Dictionary<string, double>() { { "Organic Material", 1 } })));
 
             ThreadStart calculation = new ThreadStart(forest.Calculation);
             Console.WriteLine("Calculation is starting nao.");
@@ -114,7 +116,7 @@ namespace ActualIdle {
                 } else if (l.StartsWith("count")) {
                     forest.ListGrowths();
                 } else if (l.ToLower().StartsWith("growth")) {
-                    if(l.Split(' ').Length ==  1)
+                    if (l.Split(' ').Length == 1)
                         forest.ListGrowths();
                     else {
                         string growth = l.Split(' ')[1];
@@ -148,9 +150,32 @@ namespace ActualIdle {
                     forest.EchoBoss();
                 } else if (l.StartsWith("stats")) {
                     foreach (KeyValuePair<string, double> entry in forest.GetStats()) {
-                        if(entry.Value != 0)
+                        if (entry.Value != 0)
                             Console.WriteLine(entry.Key + ": " + entry.Value);
                     }
+                } else if (l.StartsWith("upgrades")) {
+                    forest.ListAvailableUpgrades();
+                } else if (l.StartsWith("upgrade")) { // Get data on a specific Upgrade and maybe buy it
+                    if (l.Split(' ').Length == 1)
+                        forest.ListAvailableUpgrades();
+                    else {
+                        string upgrade = l.Split(' ')[1];
+                        if (!forest.Upgrades.ContainsKey(upgrade) || !forest.Upgrades[upgrade].Unlocked)
+                            Console.WriteLine("No upgrade by name " + upgrade);
+                        else {
+                            forest.Upgrades[upgrade].Echo();
+                            if (!forest.Upgrades[upgrade].Owned) { //Let you buy the upgrade
+                                Console.WriteLine("Do you want to buy it? [Y/N]");
+                                string answer = Console.ReadLine();
+                                if (answer.Trim().ToLower().Equals("y")) {
+                                    forest.Upgrades[upgrade].Buy();
+                                } else {
+                                    Console.WriteLine("Okay :)");
+                                }
+                            }
+                        }
+                    }
+                } else {
                 }
             }
         }

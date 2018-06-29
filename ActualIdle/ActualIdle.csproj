@@ -61,6 +61,7 @@
     <Compile Include="ResourcesIncrement.cs" />
     <Compile Include="Runtime.cs" />
     <Compile Include="Trophy.cs" />
+    <Compile Include="Upgrade.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

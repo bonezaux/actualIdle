@@ -1,5 +1,3 @@
-Conditions
-Måske noget simpelt bytecode?
 
 Specielle formål med de forskellige bosser
  - incapacitate
@@ -7,9 +5,6 @@ Specielle formål med de forskellige bosser
  - convince
 sådan noget
 Forskellige ting giver mere/mindre bonus til det
-Måske skal alle træerne osv. alle sammen scale på den samme build cost modifier? Så man skal rive noget op for at bygge noget andet. Det kunne være sejt.
-Træer skal unlockes af bosser.
-Items skal give modifiers i stedet for at have en mærkelig, kompliceret changedValues tech.
 Bossfights
  Evil bosses
  Good bosses
@@ -17,3 +12,4 @@ Bossfights
  Adskillige approaches
   -Nak
   -Bring på din side
+Upgrades der er mutually exclusive ligesom talent trees eller sådan noget.
