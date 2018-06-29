@@ -176,8 +176,25 @@ namespace ActualIdle {
                         }
                     }
                 } else {
+                    printHelp();
                 }
             }
+        }
+
+        public static void printHelp() {
+            Console.WriteLine("This is the help screen.");
+            Console.WriteLine(" --- Commands ---");
+            Console.WriteLine(" - do <doable>: Perform a doable or get the list of doables.");
+            Console.WriteLine(" - count: Get a count of owned Growths.");
+            Console.WriteLine(" - create <Growth>: Create a Growth or get a list of Growth prices.");
+            Console.WriteLine(" - items: Get a list of your items.");
+            Console.WriteLine(" - skills: Get a list of your skill levels and xp.");
+            Console.WriteLine(" - hp: Get your current hp.");
+            Console.WriteLine(" - fight: Fight the currently chosen boss.");
+            Console.WriteLine(" - boss: See the stats of the currrently chosen boss.");
+            Console.WriteLine(" - stats: See your own stats");
+            Console.WriteLine(" - upgrades: List upgrades");
+            Console.WriteLine(" - upgrade <upgrade>: See the description of a single upgrade and maybe buy it, or list upgrades");
         }
     }
 }
