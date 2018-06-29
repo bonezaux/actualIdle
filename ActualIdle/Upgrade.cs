@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ActualIdle {
     /// <summary>
     /// An upgrade.
-    /// When it is bought, the value Upgrade[Name]Bought
+    /// When it is bought, the value Upgrade[Name]Bought is set to 1
     /// Has three injects, unlocked, bought and ownedLoop.
     ///  - unlocked returns a bool and all must be true for it to be unlocked.
     ///  - bought is run when the Upgrade is bought.
@@ -16,7 +16,7 @@ namespace ActualIdle {
     public class Upgrade : IEntity {
 
         /// <summary>
-        /// Text shown before you buy an upgrade.
+        /// Text shown before you buy the upgrade.
         /// </summary>
         public string PreDescriptionText { get; private set; }
         /// <summary>
@@ -40,6 +40,10 @@ namespace ActualIdle {
         ///  - ownedLoop is run every loop when the Upgrade is owned.
         /// </summary>
         public Dictionary<string, List<codeInject>> Injects { get; private set; }
+        /// <summary>
+        /// Modifiers added when the upgrade is bought.
+        /// </summary>
+        public Modifier Modifier { get; private set; }
 
         /// <summary>
         /// Returns whether or not the Upgrade is Unlocked. Cannot be set.
@@ -59,17 +63,32 @@ namespace ActualIdle {
             }
         }
         public bool Owned { get; private set; }
+        public string Requirements { get; private set; }
 
-        public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price) {
+        /// <summary>
+        /// CodeInjects can be added afterwards.
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name">Name of upgrade</param>
+        /// <param name="preDescriptionText">Text shown before you buy the upgrade.</param>
+        /// <param name="postDescriptionText">Text shown after you buy the upgrade. If set to null, will be equal to preDescriptionText.</param>
+        /// <param name="price">Price of the upgrade</param>
+        /// <param name="modifiers">Modifiers added when the upgrade is bought.</param>
+        /// <param name="requirements">Requirements for having the Upgrade unlocked. For when Lambda is overdoing it..</param>
+        public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier = null, string requirements = null) {
             this.forest = forest;
             Name = name;
             PreDescriptionText = preDescriptionText;
             PostDescriptionText = postDescriptionText;
+            if (postDescriptionText == null)
+                PostDescriptionText = preDescriptionText;
             Price = price;
             Injects = new Dictionary<string, List<codeInject>>();
             Injects["unlocked"] = new List<codeInject>();
             Injects["bought"] = new List<codeInject>();
             Injects["ownedLoop"] = new List<codeInject>();
+            Modifier = modifier;
+            Requirements = requirements;
         }
  
 
@@ -90,6 +109,10 @@ namespace ActualIdle {
                     c(forest, this, null);
                 }
                 Owned = true;
+                if(Modifier != null) {
+                    forest.AddModifier(Modifier);
+                }
+                forest.Values["Upgrade" + Name + "Bought"] = 1;
             }
         }
 

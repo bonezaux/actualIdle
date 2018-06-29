@@ -94,7 +94,13 @@ namespace ActualIdle {
             Item.itemList.Add(new Item("wand", new Modifier("wand", new Dictionary<string, double>(), new Dictionary<string, double>() { { "XpModDruidcraft", 0.01 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);
 
-            forest.AddUpgrade(new Upgrade(forest, "bob", "This is a dummy upgrade", "It's still a dummy upgrade", new Resources(new Dictionary<string, double>() { { "Organic Material", 1 } })));
+            forest.AddUpgrade(new Upgrade(forest, "Better Oaks", "This upgrade improves oak gain by 200%. Mutually exclusive with Better Bushes.", "This upgrade improves oak gain by 200%.",
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2000 } }), new Modifier("Better Oaks", new Dictionary<string, double>() { { "OaksGain", 3 } }),
+                "UpgradeBetter BushesBought_==_0"));
+
+            forest.AddUpgrade(new Upgrade(forest, "Better Bushes", "this upgrade improves bushes base attack by 0.3. Mutually exclusive with Better Oaks.", "This upgrade improves oak gain by 200%.",
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 500 } }), new Modifier("Better Bushes", null, new Dictionary<string, double>() { { "BushesAttack", 0.3 } }),
+                "UpgradeBetter OaksBought_==_0"));
 
             ThreadStart calculation = new ThreadStart(forest.Calculation);
             Console.WriteLine("Calculation is starting nao.");
@@ -159,7 +165,7 @@ namespace ActualIdle {
                     if (l.Split(' ').Length == 1)
                         forest.ListAvailableUpgrades();
                     else {
-                        string upgrade = l.Split(' ')[1];
+                        string upgrade = l.Substring(8);
                         if (!forest.Upgrades.ContainsKey(upgrade) || !forest.Upgrades[upgrade].Unlocked)
                             Console.WriteLine("No upgrade by name " + upgrade);
                         else {
@@ -196,5 +202,6 @@ namespace ActualIdle {
             Console.WriteLine(" - upgrades: List upgrades");
             Console.WriteLine(" - upgrade <upgrade>: See the description of a single upgrade and maybe buy it, or list upgrades");
         }
+        
     }
 }

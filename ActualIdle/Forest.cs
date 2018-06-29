@@ -243,18 +243,26 @@ namespace ActualIdle {
             string owned = "";
             string unowned = "";
             foreach (KeyValuePair<string, Upgrade> entry in Upgrades) {
-                Console.WriteLine("Hullo" + entry.Value.Unlocked);
                 if(entry.Value.Unlocked) {
                     if (entry.Value.Owned)
-                        owned += entry.Key;
+                        owned += ", " + entry.Key;
                     else
-                        unowned += entry.Key;
+                        unowned += ", " + entry.Key;
                 }
             }
+            
             Console.WriteLine(" --- Available Upgrades --- ");
-            Console.WriteLine(unowned);
-            Console.WriteLine(" ----- Owned Upgrades ----- ");
-            Console.WriteLine(owned);
+            if(unowned.Length > 0) {
+                Console.WriteLine(unowned.Substring(2));
+            } else {
+                Console.WriteLine("N/A");
+            }
+                Console.WriteLine(" ----- Owned Upgrades ----- ");
+            if (owned.Length > 0) {
+                Console.WriteLine(owned.Substring(2));
+            } else {
+                Console.WriteLine("N/A");
+            }
         }
 
         /// <summary>
@@ -315,8 +323,7 @@ namespace ActualIdle {
         }
 
         /// <summary>
-        /// Tests whether a giiven string requirement holds true. Another part that could be a part of a more generalized bytecode-like system, if it ends up making sense.
-        /// Maybe lambda expressions or something like that will actually end up making more sense.
+        /// Tests whether a giiven string requirement holds true. Used when Lambda expressions are overkill.
         /// Returns the answer.
         /// </summary>
         /// <param name="requirement"></param>
@@ -335,10 +342,25 @@ namespace ActualIdle {
                 return value1 < value2;
             else if (compare == "==")
                 return value1 == value2;
+            else if (compare == "!=")
+                return value1 != value2;
             else {
                 Console.WriteLine("Illegal comparator " + compare);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Runs TestRequirement for every line in the string. Returns true if they're all true, otherwise false.
+        /// </summary>
+        /// <param name="requirements"></param>
+        /// <returns></returns>
+        public bool TextRequirements(string requirements) {
+            string[] requirementList = requirements.Split('\n');
+            foreach(string requirement in requirementList) {
+                if (!TestRequirement(requirement)) return false;
+            }
+            return true;
         }
 
         public void Calculation() {
