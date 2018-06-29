@@ -21,8 +21,10 @@ namespace ActualIdle {
         /// Description of the branch.
         /// </summary>
         public string DescText { get; private set; }
+        public Forest forest { get; private set; }
 
-        public Branch(string name, string descText) {
+        public Branch(Forest forest, string name, string descText) {
+            this.forest = forest;
             Paths = new List<Path>();
             Name = name;
             DescText = descText;
@@ -34,7 +36,7 @@ namespace ActualIdle {
         public void Echo() {
             Console.WriteLine(DescText);
             foreach(Path path in Paths) {
-                if(path.Unlocked) {
+                if(path.Show) {
                     path.Echo();
                 }
             }
@@ -48,9 +50,18 @@ namespace ActualIdle {
             bool picked = false;
             while(!picked) {
                 Echo();
+                bool allLocked = true;
+                foreach(Path path in Paths) {
+                    if (path.Unlocked)
+                        allLocked = false;
+                }
+                if(allLocked) {
+                    Console.WriteLine("You can't go anywhere from here.");
+                    return null;
+                }
                 string l = Console.ReadLine();
                 foreach(Path path in Paths) {
-                    if(l.Trim().Equals(path.Name)) {
+                    if(l.Trim().Equals(path.Name) && path.Unlocked) {
                         return path;
                     }
                 }

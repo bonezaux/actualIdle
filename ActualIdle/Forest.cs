@@ -161,6 +161,8 @@ namespace ActualIdle {
         }
 
         public void StartFighting() {
+            if (Fighting)
+                return;
             if(Boss == null) {
                 Console.WriteLine("You don't have a next boss to fight right now.");
                 return;
@@ -315,6 +317,7 @@ namespace ActualIdle {
                 return;
             } else if(CurPath.EndBranch == null) {
                 Console.WriteLine("There's no branch from here..");
+                return;
             }
             Path nextPath = CurPath.EndBranch.PickPath();
             if (nextPath != null) {
@@ -416,12 +419,14 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="requirements"></param>
         /// <returns></returns>
-        public bool TextRequirements(string requirements) {
+        public bool TestRequirements(string requirements) {
             if (requirements == "")
                 return true;
             string[] requirementList = requirements.Split('\n');
             foreach(string requirement in requirementList) {
-                if (!TestRequirement(requirement)) return false;
+                if (!TestRequirement(requirement)) {
+                    return false;
+                }
             }
             return true;
         }

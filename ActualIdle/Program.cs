@@ -81,7 +81,9 @@ namespace ActualIdle {
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4100 } }, "SpidersInc", "boughtThings"), 150));
 
-            forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 }, { "HealthRegen", 10000 } }));
+            // A modifier for debugging
+            //forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 },
+            //    { "HealthRegen", 10000 }, { "Attack", 10000 }, { "Health", 10000 } }));
             
             forest.AddTrophy(new Trophy(forest, "Defeated Ferret",
                 new codeInject[] { (f, g, arguments) => {
@@ -115,12 +117,15 @@ namespace ActualIdle {
             startPath.AddBoss(new Fighter(10, 2, 0, "Bird", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
             startPath.AddBoss(new Fighter(20, 5, 0, "Ferret", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
             startPath.AddBoss(new Fighter(30, 6, 1, "Fox", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
-            Branch crossBranch = new Branch("The Forest Cross", "You're at the forest cross. You have a few ways to go now.");
+            Branch crossBranch = new Branch(forest, "The Forest Cross", "You're at the forest cross. You have a few ways to go now.");
             startPath.EndBranch = crossBranch;
             Path testPath = new Path(forest, "Here you go", "Yes wewy gut", "");
             testPath.AddBoss(new Fighter(1000, 2, 0, "Megacool", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
-
+            Path testPath2 = new Path(forest, "Nonono", "Not gut", "DefeatedBosses_>=_!I5");
+            Path testPath3 = new Path(forest, "Not even shown", "Not gut", "", "DefeatedBosses_>=_!I6");
             crossBranch.Paths.Add(testPath);
+            crossBranch.Paths.Add(testPath2);
+            crossBranch.Paths.Add(testPath3);
 
 
             forest.SetPath(startPath);

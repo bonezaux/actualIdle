@@ -1,15 +1,21 @@
 
-Specielle formål med de forskellige bosser
- - incapacitate
- - set at ease
- - convince
 sådan noget
 Forskellige ting giver mere/mindre bonus til det
-Bossfights
+Bossfights x
  Evil bosses
  Good bosses
  Bonuses to each
  Adskillige approaches
   -Nak
   -Bring på din side
+Specielle formål med de forskellige bosser
+ - incapacitate
+ - set at ease
+ - convince
+ 
+Et lille starter path med nogle starter bosser.
+ - En optional boss man nok ikke kan klare i starten.
+En ascension mechanic
+Flere skills, skills der gør noget
+ 
 Upgrades der er mutually exclusive ligesom talent trees eller sådan noget.

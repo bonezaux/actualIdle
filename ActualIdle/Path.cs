@@ -25,7 +25,9 @@ namespace ActualIdle {
         public bool Unlocked {
             get {
                 bool result = true;
-                result = forest.TextRequirements(Requirements);
+                if (!Show)
+                    return false;
+                result = forest.TestRequirements(Requirements);
                 foreach (codeInject c in Injects["unlocked"]) {
                     if (!c(forest, this, null).GetBool())
                         result = false;
@@ -37,9 +39,38 @@ namespace ActualIdle {
                 throw new NotImplementedException();
             }
         }
-        
 
-        public Path(Forest forest, string name, string descText, string requirements) {
+        
+        public string ShowRequirements { get; set; }
+        /// <summary>
+        /// Whether the Path is even shown. If it isn't shown, it also counts as not unlocked. You don't have to double things.
+        /// </summary>
+        public bool Show {
+            get {
+                if (!forest.TestRequirements(ShowRequirements))
+                    return false;
+                bool result = true;
+                foreach (codeInject c in Injects["shown"]) {
+                    if (!c(forest, this, null).GetBool())
+                        result = false;
+                }
+                return result;
+            }
+
+            set {
+                throw new NotImplementedException();
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="descText">Description given of the Path when chosen. Should contain any requirements that are not necessary for it even being shown</param>
+        /// <param name="requirements">Requirements for picking the Path. the "unlocked" injects do the same.</param>
+        /// <param name="showRequirements">Requirements for having the Path even shown in picking. The "shown" injects do the same.</param>
+        public Path(Forest forest, string name, string descText, string requirements = "", string showRequirements = "") {
             this.forest = forest;
             Bosses = new List<Fighter>();
             Name = name;
@@ -47,7 +78,9 @@ namespace ActualIdle {
             EndBranch = null;
             Injects = new Dictionary<string, List<codeInject>>();
             Requirements = requirements;
+            ShowRequirements = showRequirements;
             Injects["unlocked"] = new List<codeInject>();
+            Injects["shown"] = new List<codeInject>();
         }
 
         public void AddBoss(Fighter boss) {
@@ -55,7 +88,7 @@ namespace ActualIdle {
         }
 
         public void Echo() {
-            Console.WriteLine(Name + ": " + DescText);
+            Console.WriteLine(Name + ": " + DescText + (Unlocked ? "" : " [Locked]"));
         }
 
         public int Length() {
