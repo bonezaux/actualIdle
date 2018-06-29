@@ -61,6 +61,8 @@ namespace ActualIdle {
                 }
                 string l = Console.ReadLine();
                 foreach(Path path in Paths) {
+                    if (l.Trim().ToLower().Equals("exit"))
+                        return null;
                     if(l.Trim().Equals(path.Name) && path.Unlocked) {
                         return path;
                     }

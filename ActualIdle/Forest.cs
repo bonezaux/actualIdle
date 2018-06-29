@@ -57,6 +57,7 @@ namespace ActualIdle {
                 }));
             foreach (string skill in Statics.skills) {
                 Xp[skill] = 100;
+                Values["XpMod" + skill] = 1;
             }
 
             Running = true;
@@ -195,7 +196,12 @@ namespace ActualIdle {
 
         public void AddXp(string skillName, double xp) {
             if (Statics.skills.Contains(skillName)) {
+                int preLevel = (int)GetValue("lvl" + skillName);
                 Xp[skillName] += xp*GetValue("XpMod"+ skillName);
+                int postLevel = (int)GetValue("lvl" + skillName);
+                if(postLevel > preLevel) {
+                    Console.WriteLine("Level up! " + skillName + " " + preLevel + "->" + postLevel);
+                }
             }
         }
 
@@ -226,7 +232,10 @@ namespace ActualIdle {
                 return;
             }
             Console.WriteLine(Boss.Name);
-            Console.WriteLine(Boss.Hp);
+            Console.WriteLine("Hp: " + Boss.Hp + ", defense: " + Boss.Defense);
+            Console.WriteLine("Attack: " + Boss.Attack);
+            if(Boss.Description != null)
+                Console.WriteLine(Boss.Description);
         }
 
         public void ListGrowths() {

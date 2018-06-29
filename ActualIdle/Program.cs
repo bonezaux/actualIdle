@@ -29,27 +29,27 @@ namespace ActualIdle {
             forest.Values["BushesGain"] = 0.6;
             forest.Values["BushesAttack"] = 0.2;
             forest.Values["BushesHealth"] = 0.2;
-            forest.Values["BushesInc"] = 1.1;
+            forest.Values["BushesInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 10 } }, "BushesInc", "boughtThings"), 1));
-            forest.Growths["Bushes"].Amount = 2;
-            forest.Values["boughtThings"] = 2;
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 20 } }, "BushesInc", "boughtThings"), 1));
+            forest.Growths["Bushes"].Amount = 1;
+            forest.Values["boughtThings"] = 1;
             forest.Growths["Bushes"].Unlocked = true;
 
             // OAKS
             forest.Values["OaksGain"] = 2;
             forest.Values["OaksHealth"] = 1;
-            forest.Values["OaksInc"] = 1.1;
+            forest.Values["OaksInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "OaksGain") }, "Oaks",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 50 } }, "OaksInc", "boughtThings"), 3));
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 100 } }, "OaksInc", "boughtThings"), 3));
             forest.Growths["Oaks"].Unlocked = true;
 
             // BIRCHES
             forest.Values["BirchesGain"] = 7;
             forest.Values["BirchesAttack"] = 2;
-            forest.Values["BirchesInc"] = 1.1;
+            forest.Values["BirchesInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BirchesGain") }, "Birches",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 220 } }, "BirchesInc", "boughtThings"), 27));
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 440 } }, "BirchesInc", "boughtThings"), 27));
             forest.Growths["Birches"].injects["loop"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 1) {
                     g.Unlocked = true;
@@ -62,24 +62,24 @@ namespace ActualIdle {
             forest.Values["YewsGain"] = 23;
             forest.Values["YewsHealth"] = 4;
             forest.Values["YewsAttack"] = 2;
-            forest.Values["YewsInc"] = 1.1;
+            forest.Values["YewsInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "YewsGain") }, "Yews",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 950 } }, "YewsInc", "boughtThings"), 100));
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4000 } }, "YewsInc", "boughtThings"), 100));
 
             // FLOWERS
             forest.Values["FlowersGain"] = 0;
             forest.Values["FlowersHealth"] = 1;
             forest.Values["FlowersHealthRegen"] = 0.2;
-            forest.Values["FlowersInc"] = 1.1;
+            forest.Values["FlowersInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "FlowersGain") }, "Flowers",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 2000 } }, "FlowersInc", "boughtThings"), 100));
 
             // SPIDERS
             forest.Values["SpidersGain"] = 85;
             forest.Values["SpidersAttack"] = 9;
-            forest.Values["SpidersInc"] = 1.1;
+            forest.Values["SpidersInc"] = 1.05;
             forest.AddObject(new DruidObject(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4100 } }, "SpidersInc", "boughtThings"), 150));
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1000 } }, "SpidersInc", "boughtThings"), 150));
 
             // A modifier for debugging
             //forest.Modifiers.Add(new Modifier("debug", new Dictionary<string, double>() { { "BushesGain", 10000 }, { "OaksGain", 10000 }, { "BirchesGain", 10000 },
