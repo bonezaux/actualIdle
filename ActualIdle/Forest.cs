@@ -25,6 +25,14 @@ namespace ActualIdle {
         public List<Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
         public bool Running { get; private set; }
+        /// <summary>
+        /// The Forest's current path.
+        /// </summary>
+        public Path CurPath { get; private set; }
+        /// <summary>
+        /// The current boss number on the path. Starts at zero
+        /// </summary>
+        public int CurBoss { get; private set; }
 
         /// <summary>
         /// Controls whether the Druid is currently fighting a boss.
@@ -54,7 +62,6 @@ namespace ActualIdle {
             Running = true;
             Fighting = false;
             Values["DefeatedBosses"] = 0;
-            Boss = new Fighter(20, 5, 0, "Ferret", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), "");
         }
 
         /// <summary>
@@ -105,15 +112,12 @@ namespace ActualIdle {
 
             if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
-                Console.WriteLine("You dealt " + Boss.Name + " " + (Attack - Boss.Defense) + " damage!");
-                Boss.Hp -= (Attack-Boss.Defense);
-                if(Boss.Hp <= 0) {
-                    Boss.Lose();
-                    Values["Defeated" + Boss.Name] = 1;
-                    Values["DefeatedBosses"] += 1;
-                    Boss = null;
-                    Fighting = false;
-
+                if(Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
+                    Console.WriteLine("You dealt " + Boss.Name + " " + (Attack - Boss.Defense) + " damage!");
+                    Boss.Hp -= (Attack - Boss.Defense);
+                    if (Boss.Hp <= 0) {
+                        WinBattle();
+                    }
                 }
             }
 
@@ -125,6 +129,35 @@ namespace ActualIdle {
             if (Hp > MaxHp) {
                 Hp = MaxHp;
             }
+        }
+
+        /// <summary>
+        /// Called when the battle against the current boss is won. Can be used to insta-win a boss battle too, if necessary.
+        /// </summary>
+        public void WinBattle() {
+            Boss.Lose();
+            Values["Defeated" + Boss.Name] = 1;
+            Values["DefeatedBosses"] += 1;
+            Boss = null;
+            Fighting = false;
+            CurBoss++;
+            Console.WriteLine("CB:" + CurBoss);
+            if (CurBoss >= CurPath.Length()) {
+                Console.WriteLine("You're through this path now..");
+            } else {
+                Boss = CurPath.Bosses[CurBoss];
+                Console.WriteLine("Changing boss:" + Boss);
+            }
+        }
+
+        /// <summary>
+        /// Sets the currently traveled path.
+        /// </summary>
+        /// <param name="path"></param>
+        public void SetPath(Path path) {
+            CurPath = path;
+            CurBoss = 0;
+            Boss = CurPath.Bosses[CurBoss];
         }
 
         public void StartFighting() {
@@ -276,6 +309,27 @@ namespace ActualIdle {
                 Console.WriteLine("No doable with the name " + doable + " is unlocked");
         }
 
+        public void PickPath() {
+            if(CurBoss < CurPath.Bosses.Count) {
+                Console.WriteLine("You are not at the end of a path right now.");
+                return;
+            } else if(CurPath.EndBranch == null) {
+                Console.WriteLine("There's no branch from here..");
+            }
+            Path nextPath = CurPath.EndBranch.PickPath();
+            if (nextPath != null) {
+                SetPath(nextPath);
+            }
+        }
+
+        public void EchoPath() {
+            if(CurPath != null) {
+                CurPath.Echo();
+            } else {
+                Console.WriteLine("You're not currently on a path.");
+            }
+        }
+
         public void ListModifiers() {
             Console.WriteLine(" --- Modifiers ---");
             foreach(Modifier modifier in Modifiers) {
@@ -363,6 +417,8 @@ namespace ActualIdle {
         /// <param name="requirements"></param>
         /// <returns></returns>
         public bool TextRequirements(string requirements) {
+            if (requirements == "")
+                return true;
             string[] requirementList = requirements.Split('\n');
             foreach(string requirement in requirementList) {
                 if (!TestRequirement(requirement)) return false;

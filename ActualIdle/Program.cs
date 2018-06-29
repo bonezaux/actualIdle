@@ -13,7 +13,7 @@ namespace ActualIdle {
     /// </summary>
     class Statics {
         public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense" };
-        public static string[] skills = new string[] { "Druidcraft" };
+        public static string[] skills = new string[] { "Druidcraft", "Fighting", "Animal Handling" };
     }
 
     public class Program {
@@ -107,7 +107,23 @@ namespace ActualIdle {
 
             Thread calcThread = new Thread(calculation);
             calcThread.Start();
+            
 
+
+
+            Path startPath = new Path(forest, "Forest Street", "A little path through the forest.", "");
+            startPath.AddBoss(new Fighter(10, 2, 0, "Bird", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
+            startPath.AddBoss(new Fighter(20, 5, 0, "Ferret", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
+            startPath.AddBoss(new Fighter(30, 6, 1, "Fox", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
+            Branch crossBranch = new Branch("The Forest Cross", "You're at the forest cross. You have a few ways to go now.");
+            startPath.EndBranch = crossBranch;
+            Path testPath = new Path(forest, "Here you go", "Yes wewy gut", "");
+            testPath.AddBoss(new Fighter(1000, 2, 0, "Megacool", new Resources(new Dictionary<string, double>()), new Dictionary<string, int>(), ""));
+
+            crossBranch.Paths.Add(testPath);
+
+
+            forest.SetPath(startPath);
 
             while (true) {
                 Console.Write("\nWhat do you do? ");
@@ -151,7 +167,7 @@ namespace ActualIdle {
                 } else if (l.StartsWith("hp")) {
                     Console.WriteLine(Math.Round(forest.Hp, 2) + " / " + Math.Round(forest.MaxHp, 2));
                 } else if (l.StartsWith("fight")) {
-                    forest.Fighting = true;
+                    forest.StartFighting();
                 } else if (l.StartsWith("boss")) {
                     forest.EchoBoss();
                 } else if (l.StartsWith("stats")) {
@@ -181,8 +197,12 @@ namespace ActualIdle {
                             }
                         }
                     }
-                } else if(l.StartsWith("modifiers")) {
+                } else if (l.StartsWith("modifiers")) {
                     forest.ListModifiers();
+                } else if (l.StartsWith("branch")) {
+                    forest.PickPath();
+                } else if (l.StartsWith("path")) {
+                    forest.EchoPath(); 
                 } else {
                     printHelp();
                 }
@@ -204,6 +224,7 @@ namespace ActualIdle {
             Console.WriteLine(" - upgrades: List upgrades.");
             Console.WriteLine(" - upgrade <upgrade>: See the description of a single upgrade and maybe buy it, or list upgrades.");
             Console.WriteLine(" - modifiers : List modifiers.");
+            Console.WriteLine(" - branch : If you're currently at a branch, pick your next path..");
         }
         
     }
