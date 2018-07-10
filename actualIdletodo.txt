@@ -27,5 +27,5 @@ En liste over values, der resettes ved næste boss. - DET HER SKAL VIRKE VED TRI
 Trigger system
  Ting skal kalde triggere
  Triggerene skal kunne registreres til injects på forskellige ting somehow.
- 
- Lige nu virker hele det der limited growths noget ik rigtigt - det skal nok nærmere være specialgrowths der bruger det. Som birches.
+
+TROPHIES

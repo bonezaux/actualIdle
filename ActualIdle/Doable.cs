@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ActualIdle {
 
@@ -73,6 +74,10 @@ namespace ActualIdle {
             foreach(codeInject c in Injects["loop"]) {
                 c(forest, this, null);
             }
+        }
+
+        public void Save(XElement doableElement) {
+            XMLUtils.CreateElement(doableElement, "unlocked", Unlocked);
         }
     }
 }

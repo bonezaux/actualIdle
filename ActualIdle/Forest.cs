@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace ActualIdle {
 
@@ -453,11 +454,52 @@ namespace ActualIdle {
         public void Calculation() {
             Count = 0;
             while (Running) {
-                Thread.Sleep((Program.debug ? 2 : 200));
+                Thread.Sleep((Program.debug ? Program.debugCountTime : 200));
                 Count++;
                 loop();
             }
             Console.WriteLine("Terminating");
+        }
+
+        /// <summary>
+        /// Saves the forest to an XML file. 
+        /// </summary>
+        public void Save() {
+            Console.WriteLine("Saving...");
+            XElement element = new XElement("Forest");
+
+            // Saves values 
+            XElement valuesElement = XMLUtils.CreateElement(element, "Values");
+            foreach (KeyValuePair<string, double> entry in Values) {
+                XElement valueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
+            }
+
+            // Saves growths 
+            XElement growthsElement = XMLUtils.CreateElement(element, "Growths");
+            foreach(Growth g in Growths.Values) {
+                XElement growthElement = XMLUtils.CreateElement(growthsElement, g.Name);
+                g.Save(growthElement);
+            }
+
+            // Saves trophies
+            XElement trophiesElement = XMLUtils.CreateElement(element, "Trophies");
+            foreach(Trophy t in Trophies.Values) {
+                XElement trophyElement = XMLUtils.CreateElement(trophiesElement, t.Name);
+                t.Save(trophyElement);
+            }
+
+            // Saves doables
+            XElement doablesElement = XMLUtils.CreateElement(element, "Doables");
+            foreach (Doable d in Doables.Values) {
+                XElement doableElement = XMLUtils.CreateElement(doablesElement, d.Name);
+                d.Save(doableElement);
+            }
+
+
+
+            XDocument xd = new XDocument();
+            xd.Add(element);
+            xd.Save("save.xml") //TODO: SAVE MODIFIERS
         }
     }
 }

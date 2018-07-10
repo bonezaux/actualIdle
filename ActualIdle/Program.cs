@@ -20,6 +20,7 @@ namespace ActualIdle {
 
         public static Path startPath;
         public static bool debug = false;
+        public static int debugCountTime = 2;
 
         public static void init(Forest forest) {
 
@@ -282,8 +283,8 @@ namespace ActualIdle {
                         else {
                             Console.Write("How many? ");
                             int res = 0;
-                            if(int.TryParse(Console.ReadLine(), out res)) {
-                                if(res > 0)
+                            if (int.TryParse(Console.ReadLine(), out res)) {
+                                if (res > 0)
                                     forest.BuyObject(thing, res);
                             }
                         }
@@ -335,8 +336,17 @@ namespace ActualIdle {
                     forest.EchoPath();
                 } else if (l.StartsWith("debug")) {
                     debug = !debug;
+                    if (l.Split(' ').Length > 1) {
+                        int res = 0;
+                        if (int.TryParse(l.Split(' ')[1], out res)) {
+                            if (res > 0)
+                                debugCountTime = res;
+                        }
+                    }
                 } else if (l.StartsWith("time")) {
                     Console.WriteLine(forest.Count);
+                } else if (l.StartsWith("save")) {
+                    forest.Save();
                 } else {
                     printHelp();
                 }

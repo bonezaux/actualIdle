@@ -64,6 +64,7 @@
     <Compile Include="Runtime.cs" />
     <Compile Include="Trophy.cs" />
     <Compile Include="Upgrade.cs" />
+    <Compile Include="XMLUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

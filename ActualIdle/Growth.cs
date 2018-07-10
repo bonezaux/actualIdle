@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ActualIdle  {
     /// <summary>
@@ -17,12 +18,26 @@ namespace ActualIdle  {
     public class Growth : IEntity {
         public string Name { get; set; }
         public Forest forest { get; set; }
+        /// <summary>
+        /// What growths this growth increases every tick by just existing
+        /// </summary>
         public string[] AddedGrowths { get; set; }
+        /// <summary>
+        /// How much the growths specified by AddedGrowths are increased by.
+        /// </summary>
         public Formula[] AddedFormulas { get; set; }
         public Resources Price { get; set; }
-        public bool Unlocked { get; set; }
-        public double Amount { get; set; }
         public string Description { get; set; }
+
+        // THESE ARE RUNTIME VARIABLES
+        /// <summary>
+        /// Whether the growth is unlocked currently.
+        /// </summary>
+        public bool Unlocked { get; set; }
+        /// <summary>
+        /// How many of the growth are currently owned.
+        /// </summary>
+        public double Amount { get; set; }
 
         /// <summary>
         /// Code injects:
@@ -100,6 +115,11 @@ namespace ActualIdle  {
                 result[stat] = forest.GetValue(Name + stat)*Amount;
             }
             return result;
+        }
+
+        public void Save(XElement growthElement) {
+            XMLUtils.CreateElement(growthElement, "Amount", Math.Round(Amount, 3));
+            XMLUtils.CreateElement(growthElement, "Unlocked", Unlocked);
         }
     }
 }
