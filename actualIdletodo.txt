@@ -14,8 +14,18 @@ Specielle formål med de forskellige bosser
  - convince
  
 Et lille starter path med nogle starter bosser.
+ - Lav noget, der autolaver starterbosser, der er ca. 3x? stærkere hver, med lidt intern randomness, og spytter dem ud, og gør, at man kan klare dem med upgrades og lign.
  - En optional boss man nok ikke kan klare i starten.
-En ascension mechanic
-Flere skills, skills der gør noget
+En ascension mechanic - think? Gå tilbage til skoven og tænk? Man skal klare startpathet først, men kan godt klare flere bosser efterfølgende
  
 Upgrades der er mutually exclusive ligesom talent trees eller sådan noget.
+ 
+En liste over values, der resettes ved næste boss. - DET HER SKAL VIRKE VED TRIGGER SYSTEMET
+ - Så man kan lave eksempelvis doables, der kun kan bruges en enkelt gang pr. boss. Så kan man fucke sig selv virkelig meget over.
+
+ 
+Trigger system
+ Ting skal kalde triggere
+ Triggerene skal kunne registreres til injects på forskellige ting somehow.
+ 
+ Lige nu virker hele det der limited growths noget ik rigtigt - det skal nok nærmere være specialgrowths der bruger det. Som birches.

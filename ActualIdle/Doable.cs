@@ -13,7 +13,7 @@ namespace ActualIdle {
         public Forest forest { get; private set; }
         public string Name { get; private set; }
         public Resources ResourceChange { get; private set; }
-        public string Requirements { get; private set; }
+        public string Requirements { get; set; }
         public string Text { get; private set; }
         public string FailText { get; private set; }
         public bool Unlocked { get; set; }

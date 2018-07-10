@@ -138,6 +138,7 @@ namespace ActualIdle {
             Boss.Lose();
             Values["Defeated" + Boss.Name] = 1;
             Values["DefeatedBosses"] += 1;
+            Values["allowedGrowths"] += Boss.AddedGrowths;
             Boss = null;
             Fighting = false;
             CurBoss++;
@@ -145,7 +146,7 @@ namespace ActualIdle {
             if (CurBoss >= CurPath.Length()) {
                 Console.WriteLine("You're through this path now..");
             } else {
-                Boss = CurPath.Bosses[CurBoss];
+                Boss = CurPath.Bosses[CurBoss].Clone();
                 Console.WriteLine("Changing boss:" + Boss);
             }
         }
@@ -157,7 +158,7 @@ namespace ActualIdle {
         public void SetPath(Path path) {
             CurPath = path;
             CurBoss = 0;
-            Boss = CurPath.Bosses[CurBoss];
+            Boss = CurPath.Bosses[CurBoss].Clone();
         }
 
         public void StartFighting() {
@@ -208,6 +209,14 @@ namespace ActualIdle {
             Modifiers.Add(modifier);
         }
 
+        public Modifier GetModifier(string name) {
+            foreach(Modifier mod in Modifiers) {
+                if (mod.Name.Equals(name))
+                    return mod;
+            }
+            return null;
+        }
+
         public void RemoveModifier(Modifier modifier) {
             Modifiers.Remove(modifier);
         }
@@ -231,8 +240,10 @@ namespace ActualIdle {
                 return;
             }
             Console.WriteLine(Boss.Name);
-            Console.WriteLine("Hp: " + Boss.Hp + ", defense: " + Boss.Defense);
-            Console.WriteLine("Attack: " + Boss.Attack);
+            Console.WriteLine("Hp: " + Math.Round(Boss.Hp, 2) + ", defense: " + Math.Round(Boss.Defense, 2));
+            Console.WriteLine("Attack: " + Math.Round(Boss.Attack, 2));
+            if (Program.debug)
+                Console.WriteLine("DEBUG VALUE (hp*(attack-f.def)): " + Boss.Hp * (Boss.Attack - Defense));
             if(Boss.Description != null)
                 Console.WriteLine(Boss.Description);
         }
@@ -277,7 +288,7 @@ namespace ActualIdle {
         public void ListSkills() {
             foreach (string skill in Statics.skills) {
                 int lvl = (int)GetValue("lvl" + skill);
-                double nextXp = Math.Pow(1.1, lvl + 1) * 100;
+                double nextXp = Math.Pow(1.2, lvl + 1) * 100;
                 Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp");
             }
         }
@@ -366,7 +377,7 @@ namespace ActualIdle {
         public double GetValue(string value) {
             if (value.StartsWith("lvl")) {
                 if (Statics.skills.Contains(value.Substring(3)))
-                    return (int)Math.Log(Xp[value.Substring(3)]/100, 1.1);
+                    return (int)Math.Log(Xp[value.Substring(3)]/100, 1.2);
             } else if (value.StartsWith("count")) {
                 if (Growths.ContainsKey(value.Substring(5)))
                     return Growths[value.Substring(5)].Amount;
@@ -442,7 +453,7 @@ namespace ActualIdle {
         public void Calculation() {
             Count = 0;
             while (Running) {
-                Thread.Sleep(200);
+                Thread.Sleep((Program.debug ? 2 : 200));
                 Count++;
                 loop();
             }

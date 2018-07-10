@@ -17,8 +17,12 @@ namespace ActualIdle {
         public string Requirements { get; set; }
         public bool Unlocked { get; set; }
         public string Description { get; set; }
+        /// <summary>
+        /// How many extra growths can be created after this fighter is defeated.
+        /// </summary>
+        public int AddedGrowths { get; set; }
 
-        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null) {
+        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
             MaxHp = maxHp;
             Hp = MaxHp;
             Attack = attack;
@@ -27,6 +31,8 @@ namespace ActualIdle {
             Reward = reward;
             Xp = xp;
             Requirements = requirements;
+            Description = description;
+            AddedGrowths = addedGrowths;
         }
 
         public void FightLoop(Fighter fighter) {
@@ -37,6 +43,10 @@ namespace ActualIdle {
 
         public virtual void Lose() {
             Console.WriteLine("You defeated " + Name + "!");
+        }
+
+        public Fighter Clone() {
+            return new Fighter(MaxHp, Attack, Defense, Name, Reward, Xp, Requirements, Description);
         }
     }
 }

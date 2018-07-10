@@ -22,6 +22,7 @@ namespace ActualIdle  {
         public Resources Price { get; set; }
         public bool Unlocked { get; set; }
         public double Amount { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Code injects:
@@ -46,6 +47,7 @@ namespace ActualIdle  {
                 }
             }
             Amount = 0;
+            Description = "";
         }
 
         public virtual void Loop() {
@@ -66,7 +68,6 @@ namespace ActualIdle  {
                 Price.Print(forest, amount);
                 Price.Apply(forest, amount);
                 Amount += amount;
-                forest.Values["boughtThings"] += amount;
                 return true;
             } else {
                 Console.WriteLine("You don't have enough to buy " + amount + " " + Name + "! You need");
@@ -75,12 +76,14 @@ namespace ActualIdle  {
             return false;
         }
 
-        public void Echo() {
+        public void Echo(bool writeDescription = false) {
             string result = Name + ": " + Math.Round(Amount, 2);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
                 result += ", " + Math.Round(AddedFormulas[loop].Calculate(Amount, forest), 2) + " " + AddedGrowths[loop] + "/t";
             }
             Console.WriteLine(result);
+            if (writeDescription)
+                Console.WriteLine(Description);
         }
 
         public void EchoPrice() {
