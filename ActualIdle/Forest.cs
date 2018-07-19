@@ -293,7 +293,7 @@ namespace ActualIdle {
             Console.WriteLine("You can: ");
             foreach (KeyValuePair<string, Doable> entry in Doables) {
                 if (entry.Value.Unlocked)
-                    Console.WriteLine("\t" + entry.Key);
+                    Console.WriteLine("\t" + entry.Value.GetTooltip());
             }
         }
 

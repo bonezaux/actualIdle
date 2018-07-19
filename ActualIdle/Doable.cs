@@ -23,6 +23,7 @@ namespace ActualIdle {
         /// Doables have two injects:
         ///  - loop: called on every loop
         ///  - perform: Called when successfully performed.
+        ///  - tooltip: Only one allowed, will be written next to the Doable when tooltip is shown.
         /// </summary>
         public Dictionary<string, List<codeInject>> Injects { get; set; }
 
@@ -39,6 +40,7 @@ namespace ActualIdle {
             Injects = new Dictionary<string, List<codeInject>>();
             Injects["loop"] = new List<codeInject>();
             Injects["perform"] = new List<codeInject>();
+            Injects["tooltip"] = new List<codeInject>();
         }
 
         /// <summary>
@@ -82,6 +84,14 @@ namespace ActualIdle {
 
         public void Load(XElement doableElement) {
             Unlocked = XMLUtils.GetBool(doableElement, "Unlocked");
+        }
+
+        public string GetTooltip() {
+            string result = Name;
+            if(Injects["tooltip"].Count > 0) {
+                result += " " + Injects["tooltip"][0](forest, this, null).GetString();
+            }
+            return result;
         }
     }
 }

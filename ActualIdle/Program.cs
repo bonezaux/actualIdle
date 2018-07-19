@@ -143,6 +143,8 @@ namespace ActualIdle {
                 return null;
             });
 
+            // DOABLES
+
             forest.Values["DruidHeal"] = 5;
             forest.Values["RejuvenateCooldownMod"] = 1; //Is a speed, making it higher will make it faster.
             forest.AddDoable(new Doable(forest, "Rejuvenate", null, "", "Rejuvenate!", "Rejuvenate is on cooldown.", true));
@@ -162,6 +164,12 @@ namespace ActualIdle {
                 }
                 return null;
             });
+            forest.Doables["Rejuvenate"].Injects["tooltip"].Add((f, g, arguments) => {
+                if (forest.GetValue("RejuvenateCooldown") > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/((forest.GetValue("RejuvenateCooldown") / forest.GetValue("RejuvenateCooldownMod")) / 5) + "s CD]");
+                }
+                return new RuntimeValue(4, "");
+            });
             forest.Doables["Rejuvenate"].Unlocked = true;
             forest.Doables["Rejuvenate"].Requirements += "RejuvenateCooldown_<=_0";
 
@@ -172,6 +180,8 @@ namespace ActualIdle {
                 return null;
             });
             forest.Doables["Halfhour Offline"].Unlocked = true;
+
+            // TROPHIES
 
             forest.AddTrophy(new Trophy(forest, "Defeated Ferret",
                 new codeInject[] { (f, g, arguments) => {

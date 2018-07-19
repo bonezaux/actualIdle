@@ -40,6 +40,7 @@ namespace ActualIdle {
         /// 1 == double
         /// 2 == int
         /// 3 == bool
+        /// 4 == string
         /// </summary>
         public int Type { get; private set; }
         public Object Value { get; private set; }
@@ -68,6 +69,13 @@ namespace ActualIdle {
                 throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to bool");
             else
                 return (bool)Value;
+        }
+
+        public string GetString() {
+            if (Type != 4)
+                throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to bool");
+            else
+                return (string)Value;
         }
     }
 }
