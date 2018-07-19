@@ -72,7 +72,7 @@ namespace ActualIdle {
         public override string Text(Forest forest, int amount) {
             string result = "";
             foreach (KeyValuePair<string, double> entry in Table) {
-                result += Math.Round(GetThingPrice(forest, entry.Key, amount), 2) + " " + entry.Key + "\n";
+                result += Statics.GetDisplayNumber(GetThingPrice(forest, entry.Key, amount)) + " " + entry.Key + "\n";
             }
             return result.Substring(0, result.Length - 1);
         }

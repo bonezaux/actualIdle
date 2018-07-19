@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ActualIdle {
     /// <summary>
@@ -147,6 +148,55 @@ namespace ActualIdle {
                 res += "\n";
             }
             Console.WriteLine(res);
+        }
+
+        public void Save(XElement modifierElement) {
+            if (ModifiersF != null) {
+                XElement fElement = XMLUtils.CreateElement(modifierElement, "ModifiersF");
+                foreach (KeyValuePair<string, double> sMod in ModifiersF) {
+                    XMLUtils.CreateElement(fElement, sMod.Key, sMod.Value);
+                }
+            }
+            
+            if(ModifiersA != null) {
+                XElement aElement = XMLUtils.CreateElement(modifierElement, "ModifiersA");
+                foreach (KeyValuePair<string, double> sMod in ModifiersA) {
+                    XMLUtils.CreateElement(aElement, sMod.Key, sMod.Value);
+                }
+            }
+
+            if (ModifiersAAfter != null) {
+                XElement aAfterElement = XMLUtils.CreateElement(modifierElement, "ModifiersAAfter");
+                foreach (KeyValuePair<string, double> sMod in ModifiersAAfter) {
+                    XMLUtils.CreateElement(aAfterElement, sMod.Key, sMod.Value);
+                }
+            }
+        }
+
+        public void Load(XElement modifierElement) {
+            XElement fElement = XMLUtils.GetElement(modifierElement, "ModifiersF");
+            if(fElement != null) {
+                ModifiersF = new Dictionary<string, double>();
+                foreach(XElement childElement in fElement.Elements()) {
+                    ModifiersF.Add(XMLUtils.GetName(childElement), double.Parse(childElement.Value));
+                }
+            }
+
+            XElement aElement = XMLUtils.GetElement(modifierElement, "ModifiersA");
+            if (aElement != null) {
+                ModifiersA = new Dictionary<string, double>();
+                foreach (XElement childElement in aElement.Elements()) {
+                    ModifiersA.Add(XMLUtils.GetName(childElement), double.Parse(childElement.Value));
+                }
+            }
+
+            XElement aAfterElement = XMLUtils.GetElement(modifierElement, "ModifiersAAfter");
+            if (aAfterElement != null) {
+                ModifiersAAfter = new Dictionary<string, double>();
+                foreach (XElement childElement in aElement.Elements()) {
+                    ModifiersAAfter.Add(XMLUtils.GetName(childElement), double.Parse(childElement.Value));
+                }
+            }
         }
     }
 }

@@ -77,7 +77,11 @@ namespace ActualIdle {
         }
 
         public void Save(XElement doableElement) {
-            XMLUtils.CreateElement(doableElement, "unlocked", Unlocked);
+            XMLUtils.CreateElement(doableElement, "Unlocked", Unlocked);
+        }
+
+        public void Load(XElement doableElement) {
+            Unlocked = XMLUtils.GetBool(doableElement, "Unlocked");
         }
     }
 }

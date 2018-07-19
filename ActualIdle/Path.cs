@@ -11,6 +11,8 @@ namespace ActualIdle {
     /// Has one inject, unlocked, for determining whether it is unlocked.
     /// </summary>
     public class Path : IEntity{
+        public static List<Path> paths;
+
         public List<Fighter> Bosses { get; private set; }
         public string Name { get; private set; }
         public string DescText { get; private set; }
@@ -71,6 +73,9 @@ namespace ActualIdle {
         /// <param name="requirements">Requirements for picking the Path. the "unlocked" injects do the same.</param>
         /// <param name="showRequirements">Requirements for having the Path even shown in picking. The "shown" injects do the same.</param>
         public Path(Forest forest, string name, string descText, string requirements = "", string showRequirements = "") {
+            if (paths == null)
+                paths = new List<Path>();
+            paths.Add(this);
             this.forest = forest;
             Bosses = new List<Fighter>();
             Name = name;

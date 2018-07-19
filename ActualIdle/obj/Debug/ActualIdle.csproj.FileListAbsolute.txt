@@ -9,3 +9,4 @@ C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.exe
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
+C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.csprojResolveAssemblyReference.cache

@@ -24,5 +24,59 @@ namespace ActualIdle {
             owner.Add(element);
             return element;
         }
+
+        /// <summary>
+        /// Gets an XElement from the specified owner by the specified name. Returns the first child element of that name.
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static XElement GetElement(XElement owner, string name) {
+            name = name.Replace(' ', '_');
+            foreach(XElement possible in owner.Elements()) {
+                if (possible.Name.LocalName.Equals(name))
+                    return possible;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the double value of the child of the element of name.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static double GetDouble(XElement element, string name) {
+            return double.Parse(GetElement(element, name).Value);
+        }
+
+        /// <summary>
+        /// Returns the string value of the child of the element of name.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetString(XElement element, string name) {
+            return (GetElement(element, name).Value);
+        }
+
+        /// <summary>
+        /// Returns the bool value of the child of the element of name.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool GetBool(XElement element, string name) {
+            return bool.Parse(GetElement(element, name).Value);
+        }
+
+        /// <summary>
+        /// Returns the name of the given element, with underscores replaced with _
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static string GetName(XElement element) {
+            return element.Name.LocalName.Trim().Replace('_', ' ');
+        }
     }
 }

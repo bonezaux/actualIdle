@@ -92,9 +92,9 @@ namespace ActualIdle  {
         }
 
         public void Echo(bool writeDescription = false) {
-            string result = Name + ": " + Math.Round(Amount, 2);
+            string result = Name + ": " + Statics.GetDisplayNumber(Amount);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
-                result += ", " + Math.Round(AddedFormulas[loop].Calculate(Amount, forest), 2) + " " + AddedGrowths[loop] + "/t";
+                result += ", " + Statics.GetDisplayNumber(AddedFormulas[loop].Calculate(Amount, forest)) + " " + AddedGrowths[loop] + "/t";
             }
             Console.WriteLine(result);
             if (writeDescription)
@@ -120,6 +120,11 @@ namespace ActualIdle  {
         public void Save(XElement growthElement) {
             XMLUtils.CreateElement(growthElement, "Amount", Math.Round(Amount, 3));
             XMLUtils.CreateElement(growthElement, "Unlocked", Unlocked);
+        }
+
+        public void Load(XElement growthElement) {
+            Amount = XMLUtils.GetDouble(growthElement, "Amount");
+            Unlocked = XMLUtils.GetBool(growthElement, "Unlocked");
         }
     }
 }

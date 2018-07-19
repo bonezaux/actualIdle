@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,6 +15,23 @@ namespace ActualIdle {
     class Statics {
         public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing" };
         public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Alchemy", "Transformation", "Restoration" };
+
+        /// <summary>
+        /// Returns a number equal to leading*10^exponent
+        /// </summary>
+        /// <param name="leading"></param>
+        /// <param name="exponent"></param>
+        public static double GetNumber(double leading, int exponent) {
+            return leading * Math.Pow(10, exponent);
+        }
+
+        public static string GetDisplayNumber(double number) {
+            if (number == 0)
+                return "0";
+            int log = (int)Math.Log10(number);
+            double leading = number / Math.Pow(10, log);
+            return Math.Round(leading, 3) + "E" + log;
+        }
     }
 
     public class Program {
@@ -38,7 +56,6 @@ namespace ActualIdle {
             forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 20 } }, "BushesInc", "countBushes"), 1));
             forest.Growths["Bushes"].Amount = 1;
-            forest.Values["boughtThings"] = 1;
             forest.Growths["Bushes"].Unlocked = true;
             forest.Growths["Bushes"].Description = "Adds 0.2 attack and 0.2 health each.";
 
@@ -77,7 +94,7 @@ namespace ActualIdle {
                 }
                 return null;
             });
-            forest.Growths["Birches"].Description = "Adds 0.25 defense each. Does not count towards the total allowed growths. Each birch costs 3x the last.";
+            forest.Growths["Birches"].Description = "Adds 0.25 defense each. Is a limited growth. Each birch costs 3x the last.";
 
             forest.Values["DruidHeal"] = 5;
             forest.Values["RejuvenateCooldownMod"] = 1; //Is a speed, making it higher will make it faster.
@@ -112,6 +129,7 @@ namespace ActualIdle {
                 }
                 return null;
             });
+            forest.Growths["Birches"].Description = "Adds 4 health each.";
 
             // FLOWERS
             forest.Values["FlowersGain"] = 0;
@@ -147,14 +165,6 @@ namespace ActualIdle {
 
             Item.itemList.Add(new Item("wand", new Modifier("wand", null, new Dictionary<string, double>() { { "XpModDruidcraft", 0.01 } }), "Wand\t+1 wand level"));
             forest.AddItem(Item.itemList[0]);
-
-            forest.AddUpgrade(new Upgrade(forest, "Better Oaks", "This upgrade improves oak gain by 200%. Mutually exclusive with Better Bushes.", "This upgrade improves oak gain by 200%.",
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2000 } }), new Modifier("Better Oaks", new Dictionary<string, double>() { { "OaksGain", 3 } }),
-                "UpgradeBetter BushesBought_==_0"));
-
-            forest.AddUpgrade(new Upgrade(forest, "Better Bushes", "this upgrade improves bushes base attack by 0.3. Mutually exclusive with Better Oaks.", "This upgrade improves oak gain by 200%.",
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 500 } }), new Modifier("Better Bushes", null, new Dictionary<string, double>() { { "BushesAttack", 0.3 } }),
-                "UpgradeBetter OaksBought_==_0"));
 
             ThreadStart calculation = new ThreadStart(forest.Calculation);
             Console.WriteLine("Calculation is starting nao.");
@@ -204,8 +214,34 @@ namespace ActualIdle {
 
 
 
+            forest.AddUpgrade(new Upgrade(forest, "Big Birches", "This upgrade improves birch defense by 1500%.", "This upgrade improves birch defense by 1500%.",
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 15000 } }), new Modifier("Big Birches", new Dictionary<string, double>() { { "BirchesDefense", 16 } })));
+            forest.Upgrades["Big Birches"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("countBirches") >= 4) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
 
+            // First growth upgrade
+            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, (int)Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            CreateGrowthUpgrade(forest, "Bush Growth 1", "Bushes", 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
+            CreateGrowthUpgrade(forest, "Oak Growth 1", "Oaks", 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
+            CreateGrowthUpgrade(forest, "Larger Ants 1", "Ants", 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
+            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, (int)Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
 
+            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, (int)Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
+
+            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
+            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
+            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, (int)Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, (int)Statics.GetNumber(1, 6), 4); //x64 -  6.6E4 / 1.2 + 2.1 E7
+
+            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, (int)Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
+            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, (int)Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
+
+            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, (int)Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
 
             forest.SetPath(startPath);
 
@@ -218,10 +254,37 @@ namespace ActualIdle {
             //    { "HealthRegen", 10000 }, { "Attack", 10000 }, { "Health", 10000 } }));
         }
 
+        /// <summary>
+        /// Creates a new upgrade that increases the gain of a Growth.
+        /// name - name of the upgrade
+        /// target - name of the growth
+        /// amount - how many growths are needed for it
+        /// cost - price of the upgrade
+        /// multiplier - what modF is added to the growth.
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="target"></param>
+        /// <param name="amount"></param>
+        /// <param name="neededAmount"></param>
+        /// <param name="cost"></param>
+        /// <param name="multiplier"></param>
+        public static void CreateGrowthUpgrade(Forest forest, string name, string target, int amount, int cost, double multiplier) {
+
+            forest.AddUpgrade(new Upgrade(forest, name, "This upgrade improves "+target+" gain by "+(multiplier*100-100)+"%.", "This upgrade improves " + target + " gain by " + (multiplier * 100-100) + "%.",
+                new Resources(new Dictionary<string, double>() { { "Organic Material", cost } }), new Modifier(name, new Dictionary<string, double>() { { target+"Gain", multiplier } })));
+            forest.Upgrades[name].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("count"+target) >= amount) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+        }
+
         public static Fighter generateBoss(int boss) {
             boss -= 1;
             Random r = new Random(boss);
-            double powerMult = Math.Pow(3, boss);
+            double powerMult = 900 * boss * Math.Pow(1.1, boss);
             double hpScale = 0.8 + r.NextDouble() * 0.4;
             double attackScale = 0.8 + r.NextDouble() * 0.4;
             double defenseScale = r.NextDouble() - 0.7;
@@ -247,6 +310,8 @@ namespace ActualIdle {
         
 
         static void Main(string[] args) {
+            var culture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = culture;
             Forest forest = new Forest();
 
             init(forest);
@@ -347,6 +412,8 @@ namespace ActualIdle {
                     Console.WriteLine(forest.Count);
                 } else if (l.StartsWith("save")) {
                     forest.Save();
+                } else if (l.StartsWith("load")) {
+                    forest.Load();
                 } else {
                     printHelp();
                 }

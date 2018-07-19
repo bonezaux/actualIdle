@@ -63,7 +63,7 @@ namespace ActualIdle {
         public virtual string Text(Forest forest, int amount) {
             string res = "";
             foreach (KeyValuePair<string, double> entry in Table) {
-                res += (entry.Value * amount + " " + entry.Key) + "\n";
+                res += (Statics.GetDisplayNumber(entry.Value * amount) + " " + entry.Key) + "\n";
             }
             return res.Substring(0, res.Length - 1);
         }

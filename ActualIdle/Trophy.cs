@@ -41,7 +41,11 @@ namespace ActualIdle {
         }
 
         public void Save(XElement trophyElement) {
-            XMLUtils.CreateElement(trophyElement, "unlocked", Unlocked);
+            XMLUtils.CreateElement(trophyElement, "Unlocked", Unlocked);
+        }
+
+        public void Load(XElement trophyElement) {
+            Unlocked = XMLUtils.GetBool(trophyElement, "Unlocked");
         }
     }
 }

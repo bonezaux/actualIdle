@@ -62,7 +62,7 @@ namespace ActualIdle {
                 throw new NotImplementedException();
             }
         }
-        public bool Owned { get; private set; }
+        public bool Owned { get; set; }
         public string Requirements { get; private set; }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace ActualIdle {
         /// </summary>
         public Dictionary<string, double> Xp { get; private set; }
         public List<Item> Items { get; private set; }
-        public List<Modifier> Modifiers { get; private set; }
+        public Dictionary<string, Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
         public bool Running { get; private set; }
         /// <summary>
@@ -52,8 +52,8 @@ namespace ActualIdle {
             Values = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
-            Modifiers = new List<Modifier>();
-            Modifiers.Add(new Modifier("BaseStats", modifiersA: new Dictionary<string, double>() {
+            Modifiers = new Dictionary<string, Modifier>();
+            Modifiers.Add("BaseStats", new Modifier("BaseStats", modifiersA: new Dictionary<string, double>() {
                 { "HealthRegen", 0.2 }
                 }));
             foreach (string skill in Statics.skills) {
@@ -83,7 +83,7 @@ namespace ActualIdle {
                           select new { Name = g.Key, Count = g.Sum(kvp => kvp.Value) }).ToDictionary(item => item.Name, item => item.Count);
             }
             result = (from e in result
-                      select new { Name = e.Key, Count = Modifier.Modify(Modifiers, e.Key, e.Value) }).ToDictionary(item => item.Name, item => item.Count);
+                      select new { Name = e.Key, Count = Modifier.Modify(Modifiers.Values, e.Key, e.Value) }).ToDictionary(item => item.Name, item => item.Count);
             return result;
         }
 
@@ -207,19 +207,20 @@ namespace ActualIdle {
         }
 
         public void AddModifier(Modifier modifier) {
-            Modifiers.Add(modifier);
+            if (Modifiers.ContainsKey(modifier.Name))
+                Modifiers[modifier.Name] = modifier;
+            else
+                Modifiers.Add(modifier.Name, modifier);
         }
 
         public Modifier GetModifier(string name) {
-            foreach(Modifier mod in Modifiers) {
-                if (mod.Name.Equals(name))
-                    return mod;
-            }
+            if (Modifiers.ContainsKey(name))
+                return Modifiers[name];
             return null;
         }
 
         public void RemoveModifier(Modifier modifier) {
-            Modifiers.Remove(modifier);
+            Modifiers.Remove(modifier.Name);
         }
 
         /// <summary>
@@ -355,7 +356,7 @@ namespace ActualIdle {
 
         public void ListModifiers() {
             Console.WriteLine(" --- Modifiers ---");
-            foreach(Modifier modifier in Modifiers) {
+            foreach(Modifier modifier in Modifiers.Values) {
                 modifier.Echo();
             }
         }
@@ -392,7 +393,7 @@ namespace ActualIdle {
             } else if (value.StartsWith("!B")) {
                 return bool.Parse(value.Substring(2)) ? 1 : 0;
             } else if (Values.ContainsKey(value)) {
-                return Modifier.Modify(Modifiers, value, Values[value]);
+                return Modifier.Modify(Modifiers.Values, value, Values[value]);
             }
 
             return 0;
@@ -474,6 +475,12 @@ namespace ActualIdle {
                 XElement valueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
             }
 
+            // Saves skills
+            XElement skillsElement = XMLUtils.CreateElement(element, "skills");
+            foreach(string skill in Statics.skills) {
+                XMLUtils.CreateElement(skillsElement, skill, Xp[skill]);
+            }
+
             // Saves growths 
             XElement growthsElement = XMLUtils.CreateElement(element, "Growths");
             foreach(Growth g in Growths.Values) {
@@ -495,11 +502,105 @@ namespace ActualIdle {
                 d.Save(doableElement);
             }
 
+            XElement modifiersElement = XMLUtils.CreateElement(element, "Modifiers");
+            foreach(Modifier m in Modifiers.Values) {
+                XElement modifierElement = XMLUtils.CreateElement(modifiersElement, m.Name);
+                m.Save(modifierElement);
+            }
 
+            XElement upgradeElement = XMLUtils.CreateElement(element, "Upgrades");
+            foreach(Upgrade u in Upgrades.Values) {
+                XMLUtils.CreateElement(upgradeElement, u.Name, u.Owned);
+            }
+
+            
+            XMLUtils.CreateElement(element, "Path", CurPath.Name);
+            XMLUtils.CreateElement(element, "PathBoss", CurBoss);
+            XMLUtils.CreateElement(element, "Count", Count);
+            XMLUtils.CreateElement(element, "Hp", Hp);
 
             XDocument xd = new XDocument();
             xd.Add(element);
-            xd.Save("save.xml") //TODO: SAVE MODIFIERS
+            xd.Save("save.xml");
+        }
+
+        public void Load() {
+            Console.WriteLine("Loading...");
+            XDocument xd = XDocument.Load(@"save.xml");
+            XElement element = xd.Element("Forest");
+
+            Console.WriteLine("HEYO: " + element.Name);
+            // Loads values 
+            XElement valuesElement = XMLUtils.GetElement(element, "Values");
+            foreach (XElement valueElement in valuesElement.Elements()) {
+                Values[XMLUtils.GetName(valueElement)] = double.Parse(valueElement.Value, System.Globalization.NumberFormatInfo.InvariantInfo);
+            }
+
+            // Loads skills
+            XElement skillsElement = XMLUtils.GetElement(element, "skills");
+            foreach (string skill in Statics.skills) {
+                Console.WriteLine("skill name: " + skill + XMLUtils.GetName(XMLUtils.GetElement(skillsElement, skill)));
+                Xp[skill] = XMLUtils.GetDouble(skillsElement, skill);
+                Console.WriteLine("skill value: " + skill + Xp[skill]);
+            }
+
+            // Loads growths 
+            XElement growthsElement = XMLUtils.GetElement(element, "Growths");
+            foreach (Growth g in Growths.Values) {
+                XElement growthElement = XMLUtils.GetElement(growthsElement, g.Name);
+                if(growthElement != null)
+                    g.Load(growthElement);
+            }
+
+            // Loads trophies
+            XElement trophiesElement = XMLUtils.GetElement(element, "Trophies");
+            foreach (Trophy t in Trophies.Values) {
+                XElement trophyElement = XMLUtils.GetElement(trophiesElement, t.Name);
+                if(trophyElement != null)
+                    t.Load(trophyElement);
+            }
+
+            // Loads doables
+            XElement doablesElement = XMLUtils.GetElement(element, "Doables");
+            foreach (Doable d in Doables.Values) {
+                XElement doableElement = XMLUtils.GetElement(doablesElement, d.Name);
+                if(doableElement != null)
+                    d.Load(doableElement);
+            }
+
+            // Loads modifiers TODO: if anything needs modifiers to stay past loads, do something about it then
+            Modifiers.Clear();
+            XElement modifiersElement = XMLUtils.GetElement(element, "Modifiers");
+            foreach (XElement modifierElement in modifiersElement.Elements()) {
+                Modifier m = new Modifier(XMLUtils.GetName(modifierElement));
+                m.Load(modifierElement);
+                Modifiers[m.Name] = m;
+            }
+
+            // Loads upgrades
+            XElement upgradesElement = XMLUtils.GetElement(element, "Upgrades");
+            foreach (Upgrade u in Upgrades.Values) {
+                XElement upgradeElement = XMLUtils.GetElement(upgradesElement, u.Name);
+                if(upgradeElement != null) {
+                    u.Owned = bool.Parse(upgradeElement.Value);
+                    if(u.Modifier != null && u.Owned) {
+                        AddModifier(u.Modifier);
+                    }
+                }
+            }
+
+            string path = XMLUtils.GetString(element, "Path");
+            CurBoss = (int)XMLUtils.GetDouble(element, "PathBoss");
+            foreach(Path p in Path.paths) {
+                if(p.Name == path) {
+                    CurPath = p;
+                    Boss = p.Bosses[CurBoss];
+                    break;
+                }
+            }
+            Count = (int)XMLUtils.GetDouble(element, "Count");
+            Hp = XMLUtils.GetDouble(element, "Hp");
+
         }
     }
 }
