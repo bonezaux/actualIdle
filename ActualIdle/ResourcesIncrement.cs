@@ -54,9 +54,9 @@ namespace ActualIdle {
             return result;
         }
 
-        public override bool CanAfford(Forest forest, int amount) {
+        public override bool CanAfford(Forest forest, int amount, double availablePart=1) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                if (forest.Growths[entry.Key].Amount < GetThingPrice(forest, entry.Key, amount)) {
+                if (forest.Growths[entry.Key].Amount*availablePart < GetThingPrice(forest, entry.Key, amount)) {
                     return false;
                 }
             }

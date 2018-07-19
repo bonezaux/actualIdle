@@ -20,7 +20,10 @@ namespace ActualIdle {
             IncreaseBoughtThings = increaseBoughtThings;
         }
 
-        public override bool Create(int amount) {
+        public override bool Create(int amount, bool percentage=false) {
+            if(percentage) {
+                return base.Create(amount, percentage);
+            }
             if (IncreaseBoughtThings) {
                 if (forest.Values["boughtThings"] + amount > forest.GetValue("allowedGrowths")) {
                     Console.WriteLine("You cannot have more than " + forest.GetValue("allowedGrowths") + " growths!");

@@ -43,6 +43,10 @@ namespace ActualIdle {
         /// What calculation step we're currently at. Every 5th is a second
         /// </summary>
         public int Count { get; private set; }
+        /// <summary>
+        /// How many offline ticks have gone by.
+        /// </summary>
+        public int OfflineTicks { get; private set; }
 
         public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Growths = new Dictionary<string, Growth>();
@@ -228,8 +232,8 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="amount"></param>
-        public void BuyObject(string obj, int amount) {
-            Growths[obj].Create(amount);
+        public void BuyObject(string obj, int amount, bool percentage=false) {
+            Growths[obj].Create(amount, percentage);
         }
 
         /// <summary>
@@ -248,6 +252,12 @@ namespace ActualIdle {
                 Console.WriteLine("DEBUG VALUE (hp*(attack-f.def)): " + Boss.Hp * (Boss.Attack - Defense));
             if(Boss.Description != null)
                 Console.WriteLine(Boss.Description);
+        }
+
+        public void TickOffline(int ticks) {
+            for(int i=0;i<ticks;i++)
+                loop();
+            OfflineTicks += ticks;
         }
 
         public void ListGrowths() {
@@ -517,6 +527,7 @@ namespace ActualIdle {
             XMLUtils.CreateElement(element, "Path", CurPath.Name);
             XMLUtils.CreateElement(element, "PathBoss", CurBoss);
             XMLUtils.CreateElement(element, "Count", Count);
+            XMLUtils.CreateElement(element, "OfflineTicks", OfflineTicks);
             XMLUtils.CreateElement(element, "Hp", Hp);
 
             XDocument xd = new XDocument();
@@ -600,6 +611,7 @@ namespace ActualIdle {
             }
             Count = (int)XMLUtils.GetDouble(element, "Count");
             Hp = XMLUtils.GetDouble(element, "Hp");
+            OfflineTicks = (int)XMLUtils.GetDouble(element, "OfflineTicks");
 
         }
     }

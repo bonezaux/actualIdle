@@ -28,13 +28,14 @@ namespace ActualIdle {
 
         /// <summary>
         /// Returns whether the forest can afford this resource by checking whether it has all the necessary resources.
+        /// availablePart is used for percentage purchases, it is how much of the forest's resources can be used.
         /// </summary>
         /// <param name="forest"></param>
         /// <param name="amount">How many times it is to be paid for.</param>
         /// <returns></returns>
-        public virtual bool CanAfford(Forest forest, int amount) {
+        public virtual bool CanAfford(Forest forest, int amount, double availablePart = 1) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                if (forest.Growths[entry.Key].Amount < amount * entry.Value)
+                if (forest.Growths[entry.Key].Amount * availablePart < amount * entry.Value)
                     return false;
             }
             return true;
@@ -66,6 +67,19 @@ namespace ActualIdle {
                 res += (Statics.GetDisplayNumber(entry.Value * amount) + " " + entry.Key) + "\n";
             }
             return res.Substring(0, res.Length - 1);
+        }
+
+        /// <summary>
+        /// Tells you how many buys it takes for this to cost the given percentage or less of the forest resources.
+        /// </summary>
+        /// <param name="amount"></param>
+        public virtual int GetBuys(Forest forest, int percentage) {
+            int i = 1;
+            while (true) {
+                if (!CanAfford(forest, i, percentage/100D))
+                    return i - 1;
+                i++;
+            }
         }
     }
 }

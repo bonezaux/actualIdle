@@ -75,7 +75,21 @@ namespace ActualIdle  {
             }
         }
 
-        public virtual bool Create(int amount) {
+        /// <summary>
+        /// If percentage is used, amount is the percentage of total resources to use.
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        public virtual bool Create(int amount, bool percentage=false) {
+            if (percentage) {
+                int resA = Price.GetBuys(forest, amount);
+                Console.WriteLine("Buys : " + resA);
+                if(resA > 0) {
+                    Create(resA);
+                }
+                return true;
+            }
             if (Price.CanAfford(forest, amount)) {
                 foreach (codeInject gci in injects["create"])
                     gci(forest, this, new RuntimeValue[] { new RuntimeValue(2, amount) });
