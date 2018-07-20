@@ -31,7 +31,7 @@ namespace ActualIdle {
                 }
             }
             if (base.Create(amount)) {
-                forest.AddXp(Skill, amount * Xp);
+                forest.Modifiers["Xp Gain"].ModifiersF[Skill + "XpGain"] += Xp * amount * 0.01;
                 if(IncreaseBoughtThings)
                     forest.Values["boughtThings"] += amount;
                 return true;

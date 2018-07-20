@@ -15,6 +15,7 @@ namespace ActualIdle {
     class Statics {
         public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing" };
         public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Alchemy", "Transformation", "Restoration" };
+        public static double xpLogBase = 1000000; // This determines what base on the organic matter the xp will be calculated from
 
         /// <summary>
         /// Returns a number equal to leading*10^exponent
@@ -31,6 +32,32 @@ namespace ActualIdle {
             int log = (int)Math.Log10(number);
             double leading = number / Math.Pow(10, log);
             return Math.Round(leading, 3) + "E" + log;
+        }
+
+        /// <summary>
+        /// Get the corresponding virtual total amount of organic material to an amount of xp
+        /// </summary>
+        /// <param name="xp"></param>
+        /// <returns></returns>
+        public static double GetTotal(double xp) {
+            return Math.Pow(xpLogBase, Math.Log(xp / 100, 10)) -1;
+        }
+
+        /// <summary>
+        /// Gets the gained xp from a given difference in xp given the change in xp.
+        /// </summary>
+        /// <param name="preXp"></param>
+        /// <param name="change"></param>
+        /// <returns></returns>
+        public static double XpGain(double preXp, double change) {
+            double preTotal = GetTotal(preXp);
+            double res = Math.Log(preTotal+change+1, xpLogBase) - Math.Log(preTotal+1, xpLogBase);
+            res = Math.Pow(10, res) * 100 - 100;
+            if (res < 0) {
+                Console.WriteLine("Reduced XP!" + res +" Pre : "+ (preTotal+1) + "Post:" + (preTotal+change+1) + ", log diff: " + res);
+                return 0;
+            }
+            return res;
         }
     }
 
@@ -187,7 +214,7 @@ namespace ActualIdle {
             forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "YewsGain") }, "Yews",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4000 } }, "YewsInc", "countYews"), 40));
             forest.Growths["Yews"].injects["loop"].Add((f, g, arguments) => {
-                if (f.GetValue("lvlDruidcraft") >= 10) {
+                if (f.GetValue("lvlDruidcraft") >= 15) {
                     g.Unlocked = true;
                 }
                 return null;
@@ -308,8 +335,12 @@ namespace ActualIdle {
             forest.Values["wandlevel"] = 0;
             forest.Values["boughtThings"] = 0;
             forest.Values["allowedGrowths"] = 2;
+            forest.Values["DruidcraftXpGain"] = 1;
+            forest.Values["Animal HandlingXpGain"] = 1;
 
-            
+            //Druidcraft XP: Income
+            //Animal Handling XP: Damage givet
+            forest.AddModifier(new Modifier("Xp Gain", new Dictionary<string, double>() { { "DruidcraftXpGain", 0.01 }, { "Animal HandlingXpGain", 0.00 } }));
 
             // BUSHES
             forest.Values["BushesGain"] = 0.6;

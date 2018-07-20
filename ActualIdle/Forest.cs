@@ -143,8 +143,7 @@ namespace ActualIdle {
                 entry.Value.Loop();
             }
             Income = Growths["Organic Material"].Amount - preGold;
-            if (Program.debug)
-                Console.WriteLine(Income);
+            AddXp("Druidcraft", Statics.XpGain(Xp["Druidcraft"], Income) * GetValue("DruidcraftXpGain"));
 
             if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
@@ -157,7 +156,9 @@ namespace ActualIdle {
                     HpIncreaseRounds = 0;
                 }
                 if (Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
-                    Boss.Hp -= (Attack - Boss.Defense);
+                    double damage = (Attack - Boss.Defense);
+                    Boss.Hp -= damage;
+                    AddXp("Animal Handling", Statics.XpGain(Xp["Animal Handling"], damage) * GetValue("Animal HandlingXpGain"));
                     if(GetValue("UpgradeBecome SootherBought") > 0) {
                         Soothe += Soothing;
                     }
@@ -446,7 +447,7 @@ namespace ActualIdle {
         public double GetValue(string value) {
             if (value.StartsWith("lvl")) {
                 if (Statics.skills.Contains(value.Substring(3)))
-                    return (int)Math.Log(Xp[value.Substring(3)]/100, 1.2);
+                    return (int)Math.Log(Xp[value.Substring(3)] / 100, 1.2);
             } else if (value.StartsWith("count")) {
                 if (Growths.ContainsKey(value.Substring(5)))
                     return Growths[value.Substring(5)].Amount;
