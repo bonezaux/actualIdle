@@ -24,3 +24,16 @@ def info(growth, amount, multi):
         res += growth[0]*pow(growth[1], i)
     amount *= growth[2]*multi
     print("%s / %s"%(getNum(amount), getNum(res)));
+
+def xpGain(totalBefore, add):
+    res = math.log(totalBefore+add+1, 1000000) - math.log(totalBefore+1, 10000000)
+    print("%s" %(res))
+    return pow(10, res)*100-100
+
+def xpTotal(total):
+    res = math.log(total+1, 1000000)
+    return pow(10, res)*100
+def total(xp):
+    res = math.log(xp/100, 10)  
+    res = pow(1000000, res)
+    return res-1

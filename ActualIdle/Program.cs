@@ -70,48 +70,45 @@ namespace ActualIdle {
 
         private static void InitUpgrades(Forest forest) {
 
-            // Growth upgrades in order of how many growths you need. If several happen at the same number, they are ordered in the following order:
-            // 1. bushes 2. oaks 3. ants 4. birches 5. yews 6. flowers
-            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
-
-            CreateGrowthUpgrade(forest, "Growing Birches 2", "Birches", 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
-
-            CreateGrowthUpgrade(forest, "Growing Birches 3", "Birches", 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
-
-            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            // Growth upgrades in order of total expense.
             CreateGrowthUpgrade(forest, "Bush Growth 1", "Bushes", 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
             CreateGrowthUpgrade(forest, "Oak Growth 1", "Oaks", 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
+
+            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
             CreateGrowthUpgrade(forest, "Larger Ants 1", "Ants", 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
+            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
+
+            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
+            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
+            CreateGrowthUpgrade(forest, "Growing Birches 2", "Birches", 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
+            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
+            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
+
+            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
+            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
+
+            CreateGrowthUpgrade(forest, "Oak Growth 4", "Oaks", 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
+            CreateGrowthUpgrade(forest, "Larger Ants 4", "Ants", 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
+            CreateGrowthUpgrade(forest, "Bush Growth 4", "Bushes", 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
+            CreateGrowthUpgrade(forest, "Growing Birches 3", "Birches", 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 4", "Yews", 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
+
+            CreateGrowthUpgrade(forest, "Oak Growth 5", "Oaks", 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
+            CreateGrowthUpgrade(forest, "Bush Growth 5", "Bushes", 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            CreateGrowthUpgrade(forest, "Blooming Flowers 1", "Flowers", 150, Statics.GetNumber(2, 10), 8, "FlowersGain_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 5", "Yews", 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
 
             CreateGrowthUpgrade(forest, "Growing Birches 4", "Birches", 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
             forest.Upgrades["Growing Birches 4"].Modifier.ModifiersF.Add("BirchesDefense", 3);
             forest.Upgrades["Growing Birches 4"].PreDescriptionText += " Also doubles birch defense bonus.";
             forest.Upgrades["Growing Birches 4"].PostDescriptionText += " Also doubles birch defense bonus.";
 
-            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
-
-            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
-            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
-            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
-
-            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
-
-            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
-            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
-
-            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
-            CreateGrowthUpgrade(forest, "Gnarly Yews 4", "Yews", 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
-
-            CreateGrowthUpgrade(forest, "Oak Growth 4", "Oaks", 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
-            CreateGrowthUpgrade(forest, "Larger Ants 4", "Ants", 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
-
-            CreateGrowthUpgrade(forest, "Bush Growth 4", "Bushes", 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
-            CreateGrowthUpgrade(forest, "Gnarly Yews 5", "Yews", 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 6.5 + 4.0 E10
-            CreateGrowthUpgrade(forest, "Blooming Flowers 1", "Flowers", 150, Statics.GetNumber(2, 10), 8, "FlowersGain_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (Free Healthcare)
-
-            CreateGrowthUpgrade(forest, "Oak Growth 5", "Oaks", 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
-
-            CreateGrowthUpgrade(forest, "Bush Growth 5", "Bushes", 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            // ----------------------------------------------------------------------------- END OF GROWTH UPGRADES ----------------------------------------------------------------------------------------
 
             // Become soother
             forest.AddUpgrade(new Upgrade(forest, "Become Soother", "Soothing is used in fighting, but all regular damage is removed..", null,
