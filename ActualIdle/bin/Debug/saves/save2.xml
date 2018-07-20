@@ -7,7 +7,7 @@
     <AlchemyXpGain>1</AlchemyXpGain>
     <TransformationXpGain>1</TransformationXpGain>
     <RestorationXpGain>1</RestorationXpGain>
-    <DefeatedBosses>0</DefeatedBosses>
+    <DefeatedBosses>9</DefeatedBosses>
     <Organic_MaterialHealth>0</Organic_MaterialHealth>
     <Organic_MaterialAttack>0</Organic_MaterialAttack>
     <Organic_MaterialHealthRegen>0</Organic_MaterialHealthRegen>
@@ -49,8 +49,8 @@
     <SpidersDefense>0</SpidersDefense>
     <SpidersSoothing>0</SpidersSoothing>
     <wandlevel>0</wandlevel>
-    <boughtThings>0</boughtThings>
-    <allowedGrowths>2</allowedGrowths>
+    <boughtThings>9</boughtThings>
+    <allowedGrowths>11</allowedGrowths>
     <BushesGain>0.6</BushesGain>
     <BushesInc>1.1</BushesInc>
     <OaksGain>2</OaksGain>
@@ -69,10 +69,49 @@
     <RejuvenateCooldownMod>1</RejuvenateCooldownMod>
     <HarmonyDuration>75</HarmonyDuration>
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
+    <RageuvenateCooldownTime>150</RageuvenateCooldownTime>
+    <RageuvenateDamageRounds>4</RageuvenateDamageRounds>
+    <RageuvenateIncome>60</RageuvenateIncome>
+    <Web_SiteMod>0.1</Web_SiteMod>
     <DruidcraftConsideredBonus>0.01</DruidcraftConsideredBonus>
+    <Handled_You_BeforeBonus>0.01</Handled_You_BeforeBonus>
+    <Soothing_ThoughtsBonus>0.01</Soothing_ThoughtsBonus>
     <UpgradeConsidered_DruidcraftBought>1</UpgradeConsidered_DruidcraftBought>
     <UpgradeBush_Growth_1Bought>1</UpgradeBush_Growth_1Bought>
     <UpgradeOak_Growth_1Bought>1</UpgradeOak_Growth_1Bought>
+    <UpgradeHandled_You_BeforeBought>1</UpgradeHandled_You_BeforeBought>
+    <UpgradeSoothing_ThoughtsBought>1</UpgradeSoothing_ThoughtsBought>
+    <RejuvenateCooldown>0</RejuvenateCooldown>
+    <DefeatedBoss_1>1</DefeatedBoss_1>
+    <UpgradeGrowing_Birches_1Bought>1</UpgradeGrowing_Birches_1Bought>
+    <UpgradeBush_Growth_2Bought>1</UpgradeBush_Growth_2Bought>
+    <UpgradeGnarly_Yews_1Bought>1</UpgradeGnarly_Yews_1Bought>
+    <DefeatedBoss_2>1</DefeatedBoss_2>
+    <UpgradeLarger_Ants_1Bought>1</UpgradeLarger_Ants_1Bought>
+    <UpgradeOak_Growth_2Bought>1</UpgradeOak_Growth_2Bought>
+    <UpgradeLarger_Ants_2Bought>1</UpgradeLarger_Ants_2Bought>
+    <DefeatedBoss_3>1</DefeatedBoss_3>
+    <UpgradeSpiderfriendsBought>1</UpgradeSpiderfriendsBought>
+    <DefeatedBoss_4>1</DefeatedBoss_4>
+    <UpgradeGnarly_Yews_2Bought>1</UpgradeGnarly_Yews_2Bought>
+    <UpgradeOak_Growth_3Bought>1</UpgradeOak_Growth_3Bought>
+    <DefeatedBoss_5>1</DefeatedBoss_5>
+    <UpgradeGrowing_Birches_2Bought>1</UpgradeGrowing_Birches_2Bought>
+    <UpgradeBush_Growth_3Bought>1</UpgradeBush_Growth_3Bought>
+    <UpgradeLarger_Ants_3Bought>1</UpgradeLarger_Ants_3Bought>
+    <UpgradeSpiderbefriending_1Bought>1</UpgradeSpiderbefriending_1Bought>
+    <UpgradeSpiderbefriending_2Bought>1</UpgradeSpiderbefriending_2Bought>
+    <DefeatedBoss_6>1</DefeatedBoss_6>
+    <UpgradeTransmogrify_RageuvenationBought>1</UpgradeTransmogrify_RageuvenationBought>
+    <RageuvenateCooldown>0</RageuvenateCooldown>
+    <UpgradeTransmogrify_RageuvenateBought>1</UpgradeTransmogrify_RageuvenateBought>
+    <UpgradeGnarly_Yews_3Bought>1</UpgradeGnarly_Yews_3Bought>
+    <DefeatedBoss_7>1</DefeatedBoss_7>
+    <DefeatedBoss_8>1</DefeatedBoss_8>
+    <DefeatedBoss_9>1</DefeatedBoss_9>
+    <UpgradeLarger_Ants_4Bought>1</UpgradeLarger_Ants_4Bought>
+    <UpgradeGnarly_Yews_4Bought>1</UpgradeGnarly_Yews_4Bought>
+    <UpgradeWeb_SiteBought>1</UpgradeWeb_SiteBought>
     <svThinks>1</svThinks>
   </Values>
   <skills>
@@ -85,36 +124,36 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>63563.796</Amount>
+      <Amount>349187246.48</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>30</Amount>
+      <Amount>154</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
-      <Amount>27</Amount>
+      <Amount>115</Amount>
       <Unlocked>true</Unlocked>
     </Oaks>
     <Ants>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>128</Amount>
+      <Unlocked>true</Unlocked>
     </Ants>
     <Birches>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>9</Amount>
+      <Unlocked>true</Unlocked>
     </Birches>
     <Yews>
-      <Amount>0</Amount>
+      <Amount>100</Amount>
       <Unlocked>true</Unlocked>
     </Yews>
     <Flowers>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>98</Amount>
+      <Unlocked>true</Unlocked>
     </Flowers>
     <Spiders>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>124</Amount>
+      <Unlocked>true</Unlocked>
     </Spiders>
   </Growths>
   <Trophies>
@@ -124,20 +163,23 @@
   </Trophies>
   <Doables>
     <Rejuvenate>
-      <Unlocked>true</Unlocked>
-    </Rejuvenate>
-    <Harmony>
       <Unlocked>false</Unlocked>
-    </Harmony>
+    </Rejuvenate>
     <Halfhour_Offline>
       <Unlocked>true</Unlocked>
     </Halfhour_Offline>
+    <Harmony>
+      <Unlocked>false</Unlocked>
+    </Harmony>
+    <Rageuvenate>
+      <Unlocked>true</Unlocked>
+    </Rageuvenate>
   </Doables>
   <Modifiers>
     <Xp_Gain>
       <ModifiersF>
-        <DruidcraftXpGain>1.11</DruidcraftXpGain>
-        <Animal_HandlingXpGain>0</Animal_HandlingXpGain>
+        <DruidcraftXpGain>55.609999999999992</DruidcraftXpGain>
+        <Animal_HandlingXpGain>10.040000000000001</Animal_HandlingXpGain>
       </ModifiersF>
     </Xp_Gain>
     <Base_Stats>
@@ -165,43 +207,145 @@
         <OaksGain>4</OaksGain>
       </ModifiersF>
     </Oak_Growth_1>
+    <Handled_You_Before>
+      <ModifiersF>
+        <Attack>1.06</Attack>
+      </ModifiersF>
+    </Handled_You_Before>
+    <Soothing_Thoughts>
+      <ModifiersF>
+        <HealthRegen>1.09</HealthRegen>
+      </ModifiersF>
+    </Soothing_Thoughts>
+    <Growing_Birches_1>
+      <ModifiersF>
+        <BirchesGain>10</BirchesGain>
+      </ModifiersF>
+    </Growing_Birches_1>
+    <Bush_Growth_2>
+      <ModifiersF>
+        <BushesGain>5</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_2>
+    <Gnarly_Yews_1>
+      <ModifiersF>
+        <YewsGain>4</YewsGain>
+      </ModifiersF>
+    </Gnarly_Yews_1>
+    <Larger_Ants_1>
+      <ModifiersF>
+        <AntsGain>5</AntsGain>
+      </ModifiersF>
+    </Larger_Ants_1>
+    <Oak_Growth_2>
+      <ModifiersF>
+        <OaksGain>4</OaksGain>
+      </ModifiersF>
+    </Oak_Growth_2>
+    <Larger_Ants_2>
+      <ModifiersF>
+        <AntsGain>5</AntsGain>
+      </ModifiersF>
+    </Larger_Ants_2>
+    <Gnarly_Yews_2>
+      <ModifiersF>
+        <YewsGain>4</YewsGain>
+      </ModifiersF>
+    </Gnarly_Yews_2>
+    <Oak_Growth_3>
+      <ModifiersF>
+        <OaksGain>3</OaksGain>
+      </ModifiersF>
+    </Oak_Growth_3>
+    <Growing_Birches_2>
+      <ModifiersF>
+        <BirchesGain>100</BirchesGain>
+      </ModifiersF>
+    </Growing_Birches_2>
+    <Bush_Growth_3>
+      <ModifiersF>
+        <BushesGain>4</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_3>
+    <Larger_Ants_3>
+      <ModifiersF>
+        <AntsGain>3</AntsGain>
+      </ModifiersF>
+    </Larger_Ants_3>
+    <Spiderbefriending_1>
+      <ModifiersF>
+        <SpidersGain>5</SpidersGain>
+      </ModifiersF>
+    </Spiderbefriending_1>
+    <Spiderbefriending_2>
+      <ModifiersF>
+        <SpidersGain>5</SpidersGain>
+      </ModifiersF>
+    </Spiderbefriending_2>
+    <Gnarly_Yews_3>
+      <ModifiersF>
+        <YewsGain>4</YewsGain>
+      </ModifiersF>
+    </Gnarly_Yews_3>
+    <Larger_Ants_4>
+      <ModifiersF>
+        <AntsGain>6</AntsGain>
+      </ModifiersF>
+    </Larger_Ants_4>
+    <Gnarly_Yews_4>
+      <ModifiersF>
+        <YewsGain>3</YewsGain>
+      </ModifiersF>
+    </Gnarly_Yews_4>
+    <Web_Site>
+      <ModifiersF>
+        <SpidersAttack>1.1</SpidersAttack>
+      </ModifiersF>
+    </Web_Site>
   </Modifiers>
   <Upgrades>
     <Bush_Growth_1>true</Bush_Growth_1>
     <Oak_Growth_1>true</Oak_Growth_1>
-    <Growing_Birches_1>false</Growing_Birches_1>
-    <Larger_Ants_1>false</Larger_Ants_1>
-    <Bush_Growth_2>false</Bush_Growth_2>
-    <Oak_Growth_2>false</Oak_Growth_2>
-    <Gnarly_Yews_1>false</Gnarly_Yews_1>
-    <Larger_Ants_2>false</Larger_Ants_2>
-    <Growing_Birches_2>false</Growing_Birches_2>
-    <Gnarly_Yews_2>false</Gnarly_Yews_2>
-    <Oak_Growth_3>false</Oak_Growth_3>
-    <Bush_Growth_3>false</Bush_Growth_3>
-    <Larger_Ants_3>false</Larger_Ants_3>
-    <Gnarly_Yews_3>false</Gnarly_Yews_3>
+    <Growing_Birches_1>true</Growing_Birches_1>
+    <Larger_Ants_1>true</Larger_Ants_1>
+    <Bush_Growth_2>true</Bush_Growth_2>
+    <Oak_Growth_2>true</Oak_Growth_2>
+    <Gnarly_Yews_1>true</Gnarly_Yews_1>
+    <Larger_Ants_2>true</Larger_Ants_2>
+    <Spiderbefriending_1>true</Spiderbefriending_1>
+    <Growing_Birches_2>true</Growing_Birches_2>
+    <Gnarly_Yews_2>true</Gnarly_Yews_2>
+    <Oak_Growth_3>true</Oak_Growth_3>
+    <Bush_Growth_3>true</Bush_Growth_3>
+    <Larger_Ants_3>true</Larger_Ants_3>
+    <Gnarly_Yews_3>true</Gnarly_Yews_3>
+    <Spiderbefriending_2>true</Spiderbefriending_2>
     <Oak_Growth_4>false</Oak_Growth_4>
-    <Larger_Ants_4>false</Larger_Ants_4>
+    <Larger_Ants_4>true</Larger_Ants_4>
     <Bush_Growth_4>false</Bush_Growth_4>
     <Growing_Birches_3>false</Growing_Birches_3>
-    <Gnarly_Yews_4>false</Gnarly_Yews_4>
+    <Gnarly_Yews_4>true</Gnarly_Yews_4>
     <Oak_Growth_5>false</Oak_Growth_5>
     <Bush_Growth_5>false</Bush_Growth_5>
     <Blooming_Flowers_1>false</Blooming_Flowers_1>
     <Gnarly_Yews_5>false</Gnarly_Yews_5>
     <Growing_Birches_4>false</Growing_Birches_4>
-    <Become_Soother>false</Become_Soother>
     <Big_Birches>false</Big_Birches>
     <Soothing_Rejuvenation>false</Soothing_Rejuvenation>
     <Free_Healthcare>false</Free_Healthcare>
     <Unlock_Harmony>false</Unlock_Harmony>
+    <Spiderfriends>true</Spiderfriends>
+    <Transmogrify_Rageuvenate>true</Transmogrify_Rageuvenate>
+    <Web_Site>true</Web_Site>
+    <Become_Soother>false</Become_Soother>
     <Dense_Forest>false</Dense_Forest>
     <Considered_Druidcraft>true</Considered_Druidcraft>
+    <Handled_You_Before>true</Handled_You_Before>
+    <Soothing_Thoughts>true</Soothing_Thoughts>
   </Upgrades>
   <Path>Forest Street</Path>
-  <PathBoss>0</PathBoss>
-  <Count>35826</Count>
+  <PathBoss>9</PathBoss>
+  <Count>49058</Count>
   <OfflineTicks>0</OfflineTicks>
-  <Hp>26.879999999999605</Hp>
+  <Hp>545.8</Hp>
 </Forest>

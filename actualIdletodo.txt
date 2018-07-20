@@ -30,9 +30,17 @@ Upgrades der er mutually exclusive ligesom talent trees eller sådan noget.
 En liste over values, der resettes ved næste boss. - DET HER SKAL VIRKE VED TRIGGER SYSTEMET
  - Så man kan lave eksempelvis doables, der kun kan bruges en enkelt gang pr. boss. Så kan man fucke sig selv virkelig meget over.
 
+Internet puns til spiders
+ -Search string til at lave en search 
+ 
 skills
  Druidcraft skal måske have xp fra soothing?
  
+Fighting styles
+ Der skal laves en ting til at vælge fighting styles
+ - Druid of the Law (ny skill til det ogs)
+ 
+Gør at navne på ting er properties i en eller anden klasse.
  
 Trigger system
  Ting skal kalde triggere

@@ -143,33 +143,7 @@ namespace ActualIdle {
             AddXp("Druidcraft", Income);
 
             if (Fighting && Count % 5 == 0) {
-                Boss.FightLoop(this);
-                if (LastHp < Hp && LastHp > -1) {
-                    HpIncreaseRounds++;
-                    if(HpIncreaseRounds >= 3) {
-                        WinBattle(1);
-                    }
-                } else {
-                    HpIncreaseRounds = 0;
-                }
-                if (Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
-                    double damage = (Attack - Boss.Defense);
-                    if(damage > 0) {
-                        Boss.Hp -= damage;
-                        AddXp("Animal Handling", damage);
-                    }
-                    if(OwnsUpgrade("Become Soother")) {
-                        Soothe += Soothing;
-                        AddXp("Soothing", Soothing);
-                    }
-                    else {
-                        Soothe += Soothing / 100;
-                    }
-                    if (Boss.Hp <= 0) {
-                        WinBattle();
-                    }
-                }
-                LastHp = Hp;
+                FightTick();
             }
 
             Dictionary<string, double> stats = GetStats();
@@ -178,6 +152,8 @@ namespace ActualIdle {
             MaxHp = stats["Health"];
             Hp += stats["HealthRegen"] / 5.0;
             Soothing = stats["Soothing"];
+            Stall = stats["Stall"];
+            Speed = stats["Speed"];
             if (Hp > MaxHp) {
                 Hp = MaxHp;
             }
@@ -211,6 +187,44 @@ namespace ActualIdle {
             }
         }
 
+        public void FightTick(bool forestAttack=true, bool bossAttack=true) {
+            if(bossAttack) {
+                if (Boss.Hesitation <= 0)
+                    Boss.FightLoop(this);
+                else
+                    Boss.Hesitation--;
+            }
+            if (LastHp < Hp && LastHp > -1) {
+                HpIncreaseRounds++;
+                if (HpIncreaseRounds >= 3) {
+                    WinBattle(1);
+                }
+            } else {
+                HpIncreaseRounds = 0;
+            }
+            if (Fighting && forestAttack) { // Only damage the boss if the boss didn't kill the Druid first.
+                if(Hesitation <= 0) {
+                    double damage = (Attack - Boss.Defense);
+                    if (damage > 0) {
+                        Boss.Hp -= damage;
+                        AddXp("Animal Handling", damage);
+                    }
+                    if (OwnsUpgrade("Become Soother")) {
+                        Soothe += Soothing;
+                        AddXp("Soothing", Soothing);
+                    } else {
+                        Soothe += Soothing / 100;
+                    }
+                    if (Boss.Hp <= 0) {
+                        WinBattle();
+                    }
+                } else {
+                    Hesitation--;
+                }
+            }
+            LastHp = Hp;
+        }
+
         /// <summary>
         /// Sets the currently traveled path.
         /// </summary>
@@ -233,6 +247,27 @@ namespace ActualIdle {
             Soothe = 0;
             HpIncreaseRounds = 0;
             LastHp = -1;
+            double fSpdWin = Speed - Boss.Stall;
+            double bSpdWin = Boss.Speed - Stall;
+            if(fSpdWin >= 1) {
+                int win = (int)fSpdWin;
+                for(int loop=0;loop<win;loop++) {
+                    FightTick(true, false);
+                }
+            } else if(fSpdWin <= -1) {
+                int loss = (int)-fSpdWin;
+                Hesitation = loss;
+            }
+            if (bSpdWin >= 1) {
+                int win = (int)bSpdWin;
+                for (int loop = 0; loop < win; loop++) {
+                    FightTick(false, true);
+                }
+            } else if (bSpdWin <= -1) {
+                int loss = (int)-bSpdWin;
+                Boss.Hesitation = loss;
+            }
+
             Fighting = true;
         }
 

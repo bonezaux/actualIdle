@@ -6,6 +6,7 @@ Ants = [220, 1.1, 3.6]
 Birches = [440, 3, 7]
 Yews = [4000, 1.1, 23]
 Flowers = [2000, 1.1, 1]
+Spiders = [1000, 1.1, 85]
 
 def getNum(num):
     l = math.floor(math.log(num, 10))

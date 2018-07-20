@@ -13,7 +13,7 @@ namespace ActualIdle {
     /// Contains static values.
     /// </summary>
     class Statics {
-        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing" };
+        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing", "Speed", "Stall" };
         public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Soothing", "Alchemy", "Transformation", "Restoration" };
         public static double xpLogBase = 1000000; // This determines what base on the organic matter the xp will be calculated from
 
@@ -68,63 +68,17 @@ namespace ActualIdle {
         public static int debugCountTime = 2;
         public static bool firstInit = true;
 
-        private static void InitUpgrades(Forest forest) {
-
-            // Growth upgrades in order of total expense.
-            CreateGrowthUpgrade(forest, "Bush Growth 1", "Bushes", 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
-            CreateGrowthUpgrade(forest, "Oak Growth 1", "Oaks", 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
-
-            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
-            CreateGrowthUpgrade(forest, "Larger Ants 1", "Ants", 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
-            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
-
-            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
-            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
-            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
-            CreateGrowthUpgrade(forest, "Growing Birches 2", "Birches", 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
-
-            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
-            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
-            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
-
-            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
-            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
-
-            CreateGrowthUpgrade(forest, "Oak Growth 4", "Oaks", 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
-            CreateGrowthUpgrade(forest, "Larger Ants 4", "Ants", 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
-            CreateGrowthUpgrade(forest, "Bush Growth 4", "Bushes", 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
-            CreateGrowthUpgrade(forest, "Growing Birches 3", "Birches", 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
-
-            CreateGrowthUpgrade(forest, "Gnarly Yews 4", "Yews", 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
-
-            CreateGrowthUpgrade(forest, "Oak Growth 5", "Oaks", 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
-            CreateGrowthUpgrade(forest, "Bush Growth 5", "Bushes", 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
-            CreateGrowthUpgrade(forest, "Blooming Flowers 1", "Flowers", 150, Statics.GetNumber(2, 10), 8, "FlowersGain_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
-
-            CreateGrowthUpgrade(forest, "Gnarly Yews 5", "Yews", 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
-
-            CreateGrowthUpgrade(forest, "Growing Birches 4", "Birches", 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
-            forest.Upgrades["Growing Birches 4"].Modifier.ModifiersF.Add("BirchesDefense", 3);
-            forest.Upgrades["Growing Birches 4"].PreDescriptionText += " Also doubles birch defense bonus.";
-            forest.Upgrades["Growing Birches 4"].PostDescriptionText += " Also doubles birch defense bonus.";
-
-            // ----------------------------------------------------------------------------- END OF GROWTH UPGRADES ----------------------------------------------------------------------------------------
-
-            // Become soother
-            forest.AddUpgrade(new Upgrade(forest, "Become Soother", "Soothing is used in fighting, but all regular damage is removed..", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(3, 7) } }), new Modifier("Soother", new Dictionary<string, double>() { { "Attack", 0 } })));
-            forest.Upgrades["Become Soother"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetStats()["Soothing"] > 0) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+        /// <summary>
+        /// Initializes big (booty) birches upgrades
+        /// </summary>
+        /// <param name="forest"></param>
+        private static void UpgradesBigBirches(Forest forest) {
 
             // Birches give more defense
             forest.AddUpgrade(new Upgrade(forest, "Big Birches", "improves Birches defense by 700%.", null,
                 new Resources(new Dictionary<string, double>() { { "Organic Material", 15000 } }), new Modifier("Big Birches", new Dictionary<string, double>() { { "BirchesDefense", 8 } })));
             forest.Upgrades["Big Birches"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("countBirches") >= 4) {
+                if (f.GetValue("countBirches") >= 4 && !f.OwnsUpgrade("Spiderfriends")) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
@@ -165,6 +119,185 @@ namespace ActualIdle {
                 }
                 return new RuntimeValue(3, false);
             });
+
+
+            // Harmony spell, increases defense, regen, and gain, lasts 15s
+            forest.AddDoable(new Doable(forest, "Harmony", null, "", "Harmony!", "Harmony is on cooldown.", true));
+            forest.Doables["Harmony"].Injects["perform"].Add((f, g, arguments) => {
+                f.Values["HarmonyActive"] = f.GetValue("HarmonyDuration");
+                f.Values["HarmonyCooldown"] = f.GetValue("HarmonyCooldownTime") + f.GetValue("HarmonyDuration");
+                f.AddModifier(new Modifier("Harmony",
+                    new Dictionary<string, double>() { { "BirchesDefense", 2 }, { "HealthRegen", 2 }, { "Gain", 10 } },
+                    new Dictionary<string, double>() { { "BirchesGain", 70 }, { "FlowersGain", 200 }, { "OaksGain", 40 } }));
+                return null;
+            });
+            forest.Doables["Harmony"].Injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade("Unlock Harmony")) {
+                    g.Unlocked = true;
+                }
+                if (f.GetValue("HarmonyActive") > 0) {
+                    f.Values["HarmonyActive"] -= 1;
+                    if (f.GetValue("HarmonyActive") <= 0) {
+                        f.RemoveModifier("Harmony");
+                    }
+                }
+                if (f.GetValue("HarmonyCooldown") > 0) {
+                    f.Values["HarmonyCooldown"] -= 1;
+                }
+                return null;
+            });
+            forest.Doables["Harmony"].Injects["tooltip"].Add((f, g, arguments) => {
+                if (forest.GetValue("HarmonyActive") > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyActive") / 5) + "s A]");
+                } else if (forest.GetValue("HarmonyCooldown") > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyCooldown") / 5) + "s CD]");
+                }
+                return new RuntimeValue(4, "");
+            });
+        }
+        private static void UpgradesSpiders(Forest forest) {
+            
+            forest.AddUpgrade(new Upgrade(forest, "Spiderfriends", "Unlocks Spiders.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+4 } })));
+            forest.Upgrades["Spiderfriends"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("DefeatedBosses") >= 3 && f.GetValue("svThinks") > 0 && !f.OwnsUpgrade("BigBirches")) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+
+            forest.AddUpgrade(new Upgrade(forest, "Transmogrify Rageuvenate", "Changes Rejuvenate into a new cool spell!.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 5E+7 } })));
+            forest.Upgrades["Transmogrify Rageuvenate"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("DefeatedBosses") >= 6 && f.OwnsUpgrade("Spiderfriends") && f.GetValue("countSpiders") >= 100) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+
+            forest.AddUpgrade(new Upgrade(forest, "Web Site", "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+9 } }), new Modifier("Web Site",
+                new Dictionary<string, double>() { { "SpidersAttack", 1.1 } })));
+            forest.Upgrades["Web Site"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("DefeatedBosses") >= 9 && f.OwnsUpgrade("Transmogrify Rageuvenate") && f.GetValue("countSpiders") >= 100) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+            forest.Upgrades["Web Site"].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers["Web Site"].ModifiersF["SpidersAttack"] = 1 + f.GetValue("Web SiteMod") * Math.Log10(f.Income);
+                return null;
+            });
+            
+            forest.Values["WebsGain"] = 1E+4;
+            forest.AddModifier(new Modifier("Webs", modifiersA: new Dictionary<string, double>() { { "Stall", 0 } }));
+            forest.Values["WebsInc"] = 10;
+            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Webs",
+                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1E+8 } }, "WebsInc", "countWebs"), 100, "Animal Handling", true));
+            forest.Growths["Webs"].injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade("Web Development")) {
+                    g.Unlocked = true;
+                }
+                if(g.Unlocked)
+                    f.Modifiers["Webs"].ModifiersA["Stall"] = (int)Math.Sqrt(f.GetValue("countWebs"));
+                return null;
+            });
+
+            forest.AddUpgrade(new Upgrade(forest, "Web Development", "Start developing your web! Unlocks growing the Web", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+9 } })));
+            forest.Upgrades["Web Development"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("DefeatedBosses") >= 12 && f.OwnsUpgrade("Web Site")) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+
+            // Rageuvenate spell - deals 4 seconds of damage and gives 12 seconds of current Income TODO: if something at some point gives instant money, this should probably be changed
+            forest.AddDoable(new Doable(forest, "Rageuvenate", null, "", "So angry!", "Rageuvenate is on cooldown.", true));
+            forest.Doables["Rageuvenate"].Injects["perform"].Add((f, g, arguments) => {
+                f.Values["RageuvenateCooldown"] = f.GetValue("RageuvenateCooldownTime");
+                if(f.Fighting) {
+                    f.Boss.Hp -= f.Attack * f.GetValue("RageuvenateDamage");
+                    Console.WriteLine("Dmbobs: " + f.Attack * f.GetValue("RageuvenateDamage"));
+                }
+                f.Growths["Organic Material"].Amount += f.Income * f.GetValue("RageuvenateIncome");
+                return null;
+            });
+            forest.Doables["Rageuvenate"].Injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade("Transmogrify Rageuvenate")) {
+                    g.Unlocked = true;
+                }
+                if (f.GetValue("RageuvenateCooldown") > 0) {
+                    f.Values["RageuvenateCooldown"] -= 1;
+                }
+                return null;
+            });
+            forest.Doables["Rageuvenate"].Injects["tooltip"].Add((f, g, arguments) => {
+                if (forest.GetValue("RageuvenateCooldown") > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("RageuvenateCooldown") / 5) + "s CD]");
+                }
+                return new RuntimeValue(4, "");
+            });
+        }
+
+        private static void InitUpgrades(Forest forest) {
+
+            // Growth upgrades in order of total expense.
+            CreateGrowthUpgrade(forest, "Bush Growth 1", "Bushes", 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
+            CreateGrowthUpgrade(forest, "Oak Growth 1", "Oaks", 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
+
+            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
+            CreateGrowthUpgrade(forest, "Larger Ants 1", "Ants", 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
+            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
+
+            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
+            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
+            CreateGrowthUpgrade(forest, "Spiderbefriending 1", "Spiders", 40, 2E+5, 5); //x5 -  8.8E4 / 4.4 + 2 E5
+            CreateGrowthUpgrade(forest, "Growing Birches 2", "Birches", 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
+            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
+            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
+
+            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
+            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
+            CreateGrowthUpgrade(forest, "Spiderbefriending 2", "Spiders", 80, 5E+7, 5); //x25 -  1.7E5 / 2 + 5 E7
+
+            CreateGrowthUpgrade(forest, "Oak Growth 4", "Oaks", 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
+            CreateGrowthUpgrade(forest, "Larger Ants 4", "Ants", 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
+            CreateGrowthUpgrade(forest, "Bush Growth 4", "Bushes", 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
+            CreateGrowthUpgrade(forest, "Growing Birches 3", "Birches", 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 4", "Yews", 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
+
+            CreateGrowthUpgrade(forest, "Oak Growth 5", "Oaks", 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
+            CreateGrowthUpgrade(forest, "Bush Growth 5", "Bushes", 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            CreateGrowthUpgrade(forest, "Blooming Flowers 1", "Flowers", 150, Statics.GetNumber(2, 10), 8, "FlowersGain_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
+
+            CreateGrowthUpgrade(forest, "Gnarly Yews 5", "Yews", 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
+
+            CreateGrowthUpgrade(forest, "Growing Birches 4", "Birches", 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
+            forest.Upgrades["Growing Birches 4"].Modifier.ModifiersF.Add("BirchesDefense", 3);
+            forest.Upgrades["Growing Birches 4"].PreDescriptionText += " Also doubles birch defense bonus.";
+            forest.Upgrades["Growing Birches 4"].PostDescriptionText += " Also doubles birch defense bonus.";
+
+            // ----------------------------------------------------------------------------- END OF GROWTH UPGRADES ----------------------------------------------------------------------------------------
+
+            // Paths
+            UpgradesBigBirches(forest);
+            UpgradesSpiders(forest);
+
+            // Other Upgrades
+            // Become soother TODO: move
+            forest.AddUpgrade(new Upgrade(forest, "Become Soother", "Soothing is used in fighting, but all regular damage is removed..", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(3, 7) } }), new Modifier("Soother", new Dictionary<string, double>() { { "Attack", 0 } })));
+            forest.Upgrades["Become Soother"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetStats()["Soothing"] > 0) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
             // Dense forest bonus (700 forest growths)
             forest.AddUpgrade(new Upgrade(forest, "Dense Forest", "Gives 300% production bonus to everything.", null,
                 new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 10) } }), new Modifier("Dense Forest", new Dictionary<string, double>() { { "Gain", 4 } })));
@@ -174,6 +307,7 @@ namespace ActualIdle {
                 }
                 return new RuntimeValue(3, false);
             });
+
 
 
             // Thinking skill upgrades
@@ -272,11 +406,11 @@ namespace ActualIdle {
                 return null;
             });
 
-            // Spiders 
+            // Spiders, Unlocked by spider path
             forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1000 } }, "SpidersInc", "countSpiders"), 5, "Animal Handling"));
             forest.Growths["Spiders"].injects["loop"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedSwallow") > 0) {
+                if (f.OwnsUpgrade("Spiderfriends")) {
                     g.Unlocked = true;
                 }
                 forest.GetModifier("SpiderAttackMod").ModifiersF["SpidersAttack"] = 1 + 0.05 * forest.GetValue("lvlAnimal Handling");
@@ -299,6 +433,9 @@ namespace ActualIdle {
                 if (forest.GetValue("RejuvenateCooldown") > 0) {
                     forest.Values["RejuvenateCooldown"] -= forest.GetValue("RejuvenateCooldownMod");
                 }
+                if (f.OwnsUpgrade("Transmogrify Rageuvenate")) {
+                    g.Unlocked = false;
+                }
                 return null;
             });
             forest.Doables["Rejuvenate"].Injects["tooltip"].Add((f, g, arguments) => {
@@ -308,39 +445,6 @@ namespace ActualIdle {
                 return new RuntimeValue(4, "");
             });
 
-            // Harmony, increases defense, regen, and gain, lasts 15s
-            forest.AddDoable(new Doable(forest, "Harmony", null, "", "Harmony!", "Harmony is on cooldown.", true));
-            forest.Doables["Harmony"].Injects["perform"].Add((f, g, arguments) => {
-                f.Values["HarmonyActive"] = f.GetValue("HarmonyDuration");
-                f.Values["HarmonyCooldown"] = f.GetValue("HarmonyCooldownTime") + f.GetValue("HarmonyDuration");
-                f.AddModifier(new Modifier("Harmony",
-                    new Dictionary<string, double>() { { "BirchesDefense", 2 }, { "HealthRegen", 2 }, { "Gain", 10 } },
-                    new Dictionary<string, double>() { { "BirchesGain", 70 }, { "FlowersGain", 200 }, { "OaksGain", 40 } }));
-                return null;
-            });
-            forest.Doables["Harmony"].Injects["loop"].Add((f, g, arguments) => {
-                if (f.OwnsUpgrade("Unlock Harmony")) {
-                    g.Unlocked = true;
-                }
-                if (f.GetValue("HarmonyActive") > 0) {
-                    f.Values["HarmonyActive"] -= 1;
-                    if (f.GetValue("HarmonyActive") <= 0) {
-                        f.RemoveModifier("Harmony");
-                    }
-                }
-                if (f.GetValue("HarmonyCooldown") > 0) {
-                    f.Values["HarmonyCooldown"] -= 1;
-                }
-                return null;
-            });
-            forest.Doables["Harmony"].Injects["tooltip"].Add((f, g, arguments) => {
-                if (forest.GetValue("HarmonyActive") > 0) {
-                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyActive") / 5) + "s A]");
-                } else if (forest.GetValue("HarmonyCooldown") > 0) {
-                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyCooldown") / 5) + "s CD]");
-                }
-                return new RuntimeValue(4, "");
-            });
 
             // DEBUG DOABLE; HALF HOUR GENERATION
             forest.AddDoable(new Doable(forest, "Halfhour Offline", null, "", "Halfhour Offline!", "", true));
@@ -443,12 +547,19 @@ namespace ActualIdle {
             forest.Doables["Rejuvenate"].Requirements += "RejuvenateCooldown_<=_0";
 
 
-            // ----------------------------------------- Harmony --------------------------------------------------------------------------
+            // Harmony 
             forest.Values["HarmonyDuration"] = 15*5; // Ticks harmony lasts
             forest.Values["HarmonyCooldownTime"] = 60*5; // Ticks harmony cooldowns
             forest.Doables["Harmony"].Unlocked = false;
             forest.Doables["Harmony"].Requirements += "HarmonyCooldown_<=_0";
-            forest.Doables["Harmony"].Requirements += "HarmonyActive_<=_0";
+
+            // Rageuvenate
+            forest.Values["RageuvenateCooldownTime"] = 30 * 5;
+            forest.Doables["Rageuvenate"].Requirements += "RageuvenateCooldown_<=_0";
+            forest.Values["RageuvenateDamageRounds"] = 4; // How many rounds of damage Rageuvenate deals
+            forest.Values["RageuvenateIncome"] = 12 * 5; // How many ticks of income Rageuvenate gives
+
+            forest.Values["Web SiteMod"] = 0.2; // How much each magnitude of income increases the floating point modifier on spider attack.
 
             // Testing doable that gives half an hour of passive generation.
             forest.Doables["Halfhour Offline"].Unlocked = true;

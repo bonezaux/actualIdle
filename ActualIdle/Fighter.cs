@@ -11,6 +11,8 @@ namespace ActualIdle {
         public double MaxHp { get; set; }
         public double Attack { get; set; }
         public double Defense { get; set; }
+        public double Stall { get; set; }
+        public double Speed { get; set; }
         public string Name { get; set; }
         public Resources Reward { get; set; }
         public Dictionary<string, int> Xp { get; set; }
@@ -21,6 +23,7 @@ namespace ActualIdle {
         /// How many extra growths can be created after this fighter is defeated.
         /// </summary>
         public int AddedGrowths { get; set; }
+        public int Hesitation { get; set; }
 
         public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
             MaxHp = maxHp;
