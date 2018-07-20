@@ -75,46 +75,46 @@ namespace ActualIdle {
         private static void UpgradesBigBirches(Forest forest) {
 
             // Birches give more defense
-            forest.AddUpgrade(new Upgrade(forest, "Big Birches", "improves Birches defense by 700%.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 15000 } }), new Modifier("Big Birches", new Dictionary<string, double>() { { "BirchesDefense", 8 } })));
-            forest.Upgrades["Big Birches"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("countBirches") >= 4 && !f.OwnsUpgrade("Spiderfriends")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_BIG_BIRCHES, "improves Birches defense by 700%.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 15000 } }), new Modifier(E.UPG_BIG_BIRCHES, new Dictionary<string, double>() { { E.BIRCHES+E.DEFENSE, 8 } })));
+            forest.Upgrades[E.UPG_BIG_BIRCHES].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("count"+E.BIRCHES) >= 4 && !f.OwnsUpgrade(E.UPG_SPIDERFRIENDS)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
             // Soothing upgrades Rejuvenate
-            forest.AddUpgrade(new Upgrade(forest, "Soothing Rejuvenation", "Rejuvenation scales on Soothing, adding Soothing+2%*lvlDruidcraft to the health restoration.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(3, 7) } }), null));
-            forest.Upgrades["Soothing Rejuvenation"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("countFlowers") >= 80 && f.OwnsUpgrade("Big Birches")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_SOOTHING_REJUVENATION, "Rejuvenation scales on Soothing, adding Soothing+2%*lvlDruidcraft to the health restoration.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 7) } }), null));
+            forest.Upgrades[E.UPG_SOOTHING_REJUVENATION].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("count"+E.FLOWERS) >= 80 && f.OwnsUpgrade(E.UPG_BIG_BIRCHES)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
             // Increases hp, soothing and health regen. Makes the flower generate 20 and increase by 4% per flower multiplicatively
-            forest.AddUpgrade(new Upgrade(forest, "Free Healthcare", "Increases Hp by 60%, Soothing by 30% and flower Health Regen by 200%. Flowers generate 20 organic matter per second, increased multiplicatively by 4% per flower.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 9) } }), new Modifier("Free Healthcare",
-                new Dictionary<string, double>() { { "Health", 1.6 }, { "Soothing", 1.3 }, { "FlowersHealthRegen", 3 }, { "FlowersGain", 1.04 } }, // Multiplicative modifiers
-                new Dictionary<string, double>() { { "FlowersGain", 20 } }))); // Absolute modifiers
-            forest.Upgrades["Free Healthcare"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 9 && f.GetValue("countFlowers") >= 100 && f.OwnsUpgrade("Soothing Rejuvenation")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_FREE_HEALTHCARE, "Increases Hp by 60%, Soothing by 30% and flower Health Regen by 200%. Flowers generate 20 organic matter per second, increased multiplicatively by 4% per flower.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 9) } }), new Modifier(E.UPG_FREE_HEALTHCARE,
+                new Dictionary<string, double>() { { E.HEALTH, 1.6 }, { E.SOOTHING, 1.3 }, { E.FLOWERS+E.HEALTHREGEN, 3 }, { E.FLOWERS+E.GAIN, 1.04 } }, // Multiplicative modifiers
+                new Dictionary<string, double>() { { E.FLOWERS+E.GAIN, 20 } }))); // Absolute modifiers
+            forest.Upgrades[E.UPG_FREE_HEALTHCARE].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 9 && f.GetValue("count"+E.FLOWERS) >= 100 && f.OwnsUpgrade(E.UPG_SOOTHING_REJUVENATION)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
-            forest.Upgrades["Free Healthcare"].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers["Free Healthcare"].ModifiersF["FlowersGain"] = Math.Pow(1.04, f.GetValue("countFlowers"));
+            forest.Upgrades[E.UPG_FREE_HEALTHCARE].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers[E.UPG_FREE_HEALTHCARE].ModifiersF[E.FLOWERS + E.GAIN] = Math.Pow(1.04, f.GetValue("count"+E.FLOWERS));
                 return null;
             });
 
             // Unlocks spell Harmony
-            forest.AddUpgrade(new Upgrade(forest, "Unlock Harmony", "Unlocks the spell Harmony.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(3, 9) } }), null));
-            forest.Upgrades["Unlock Harmony"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 15 && f.OwnsUpgrade("Free Healthcare")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_UNLOCK_HARMONY, "Unlocks the spell Harmony.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 9) } }), null));
+            forest.Upgrades[E.UPG_UNLOCK_HARMONY].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 15 && f.OwnsUpgrade(E.UPG_FREE_HEALTHCARE)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
@@ -122,117 +122,122 @@ namespace ActualIdle {
 
 
             // Harmony spell, increases defense, regen, and gain, lasts 15s
-            forest.AddDoable(new Doable(forest, "Harmony", null, "", "Harmony!", "Harmony is on cooldown.", true));
-            forest.Doables["Harmony"].Injects["perform"].Add((f, g, arguments) => {
-                f.Values["HarmonyActive"] = f.GetValue("HarmonyDuration");
-                f.Values["HarmonyCooldown"] = f.GetValue("HarmonyCooldownTime") + f.GetValue("HarmonyDuration");
-                f.AddModifier(new Modifier("Harmony",
-                    new Dictionary<string, double>() { { "BirchesDefense", 2 }, { "HealthRegen", 2 }, { "Gain", 10 } },
-                    new Dictionary<string, double>() { { "BirchesGain", 70 }, { "FlowersGain", 200 }, { "OaksGain", 40 } }));
+            forest.AddDoable(new Doable(forest, E.HARMONY, null, "", "Harmony!", "Harmony is on cooldown.", true));
+            forest.Doables[E.HARMONY].Injects["perform"].Add((f, g, arguments) => {
+                f.Values[E.HARMONY+E.ACTIVE] = f.GetValue(E.HARMONY+E.TIME);
+                f.Values[E.HARMONY+E.COOLDOWN] = f.GetValue(E.HARMONY+E.COOLDOWN+E.TIME) + f.GetValue(E.HARMONY+E.TIME);
+                f.AddModifier(new Modifier(E.HARMONY,
+                    new Dictionary<string, double>() { { E.BIRCHES+E.DEFENSE, 2 }, { E.HEALTHREGEN, 2 }, { E.GAIN, 10 } },
+                    new Dictionary<string, double>() { { E.BIRCHES+E.GAIN, 70 }, { E.FLOWERS+E.GAIN, 200 }, { E.OAKS+E.GAIN, 40 } }));
                 return null;
             });
-            forest.Doables["Harmony"].Injects["loop"].Add((f, g, arguments) => {
-                if (f.OwnsUpgrade("Unlock Harmony")) {
+            forest.Doables[E.HARMONY].Injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade(E.UPG_UNLOCK_HARMONY)) {
                     g.Unlocked = true;
                 }
-                if (f.GetValue("HarmonyActive") > 0) {
-                    f.Values["HarmonyActive"] -= 1;
-                    if (f.GetValue("HarmonyActive") <= 0) {
-                        f.RemoveModifier("Harmony");
+                if (f.GetValue(E.HARMONY+E.ACTIVE) > 0) {
+                    f.Values[E.HARMONY + E.ACTIVE] -= 1;
+                    if (f.GetValue(E.HARMONY + E.ACTIVE) <= 0) {
+                        f.RemoveModifier(E.HARMONY);
                     }
                 }
-                if (f.GetValue("HarmonyCooldown") > 0) {
-                    f.Values["HarmonyCooldown"] -= 1;
+                if (f.GetValue(E.HARMONY + E.COOLDOWN) > 0) {
+                    f.Values[E.HARMONY + E.COOLDOWN] -= 1;
                 }
                 return null;
             });
-            forest.Doables["Harmony"].Injects["tooltip"].Add((f, g, arguments) => {
-                if (forest.GetValue("HarmonyActive") > 0) {
-                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyActive") / 5) + "s A]");
-                } else if (forest.GetValue("HarmonyCooldown") > 0) {
-                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("HarmonyCooldown") / 5) + "s CD]");
+            forest.Doables[E.HARMONY].Injects["tooltip"].Add((f, g, arguments) => {
+                if (forest.GetValue(E.HARMONY + E.ACTIVE) > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue(E.HARMONY + E.ACTIVE) / 5) + "s A]");
+                } else if (forest.GetValue(E.HARMONY + E.COOLDOWN) > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue(E.HARMONY + E.COOLDOWN) / 5) + "s CD]");
                 }
                 return new RuntimeValue(4, "");
             });
         }
         private static void UpgradesSpiders(Forest forest) {
             
-            forest.AddUpgrade(new Upgrade(forest, "Spiderfriends", "Unlocks Spiders.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+4 } })));
-            forest.Upgrades["Spiderfriends"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 3 && f.GetValue("svThinks") > 0 && !f.OwnsUpgrade("BigBirches")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_SPIDERFRIENDS, "Unlocks Spiders.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+4 } })));
+            forest.Upgrades[E.UPG_SPIDERFRIENDS].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 3 && f.GetValue(E.THINKS) > 0 && !f.OwnsUpgrade(E.UPG_BIG_BIRCHES)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
-            forest.AddUpgrade(new Upgrade(forest, "Transmogrify Rageuvenate", "Changes Rejuvenate into a new cool spell!.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 5E+7 } })));
-            forest.Upgrades["Transmogrify Rageuvenate"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 6 && f.OwnsUpgrade("Spiderfriends") && f.GetValue("countSpiders") >= 100) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_TRANSMOGRIFY_RAGEUVENATE, "Changes Rejuvenate into a new cool spell!.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 5E+7 } })));
+            forest.Upgrades[E.UPG_TRANSMOGRIFY_RAGEUVENATE].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 6 && f.OwnsUpgrade(E.UPG_SPIDERFRIENDS) && f.GetValue("count"+E.SPIDERS) >= 100) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
-            forest.AddUpgrade(new Upgrade(forest, "Web Site", "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+8 } }), new Modifier("Web Site",
-                new Dictionary<string, double>() { { "SpidersAttack", 1.1 } })));
-            forest.Upgrades["Web Site"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 9 && f.OwnsUpgrade("Transmogrify Rageuvenate") && f.GetValue("countSpiders") >= 100) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_WEB_SITE, "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } }), new Modifier(E.UPG_WEB_SITE,
+                new Dictionary<string, double>() { { E.SPIDERS+E.ATTACK, 1.1 } })));
+            forest.Upgrades[E.UPG_WEB_SITE].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 9 && f.OwnsUpgrade(E.UPG_TRANSMOGRIFY_RAGEUVENATE) && f.GetValue("count"+E.SPIDERS) >= 100) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
-            forest.Upgrades["Web Site"].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers["Web Site"].ModifiersF["SpidersAttack"] = 1 + f.GetValue("Web SiteMod") * Math.Log10(f.Income);
+            forest.Upgrades[E.UPG_WEB_SITE].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers[E.UPG_WEB_SITE].ModifiersF[E.SPIDERS+E.ATTACK] = 1 + f.GetValue(E.UPG_WEB_SITE+E.MOD) * Math.Log10(f.Income);
                 return null;
             });
             
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Webs",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1E+8 } }, "WebsInc", "countWebs"), 100, "Animal Handling", true));
-            forest.Growths["Webs"].injects["loop"].Add((f, g, arguments) => {
-                if (f.OwnsUpgrade("Web Development")) {
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", E.SPIDERS+E.GAIN) }, E.WEBS,
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 1E+8 } }, E.WEBS+E.INC, E.COUNT+E.WEBS), 100, E.ANIMAL_HANDLING, true));
+            forest.Growths[E.WEBS].injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade(E.UPG_WEB_DEVELOPMENT)) {
                     g.Unlocked = true;
                 }
                 if (g.Unlocked) {
-                    f.Modifiers["Webs"].ModifiersA["Stall"] = (int)Math.Sqrt(f.GetValue("countWebs"));
-                    f.Modifiers["Webs"].ModifiersA["SpidersAttack"] = f.GetValue("countWebs")*0.1;
+                    f.Modifiers[E.WEBS].ModifiersA[E.STALL] = (int)Math.Sqrt(f.GetValue(E.COUNT+E.WEBS));
+                    f.Modifiers[E.WEBS].ModifiersA[E.SPIDERS + E.ATTACK] = f.GetValue(E.COUNT + E.WEBS) *0.1;
                 }
                 return null;
             });
 
-            forest.AddUpgrade(new Upgrade(forest, "Web Development", "Start developing your web! Unlocks growing the Web", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+8 } })));
-            forest.Upgrades["Web Development"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("DefeatedBosses") >= 12 && f.OwnsUpgrade("Web Site")) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_WEB_DEVELOPMENT, "Start developing your web! Unlocks growing Webs, which stall your enemies. Increases Rageuvenate damage based on missing health, up to 100% at 0.01 health.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } })));
+            forest.Upgrades[E.UPG_WEB_DEVELOPMENT].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.DEFEATED_BOSSES) >= 12 && f.OwnsUpgrade(E.UPG_WEB_SITE)) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
             // Rageuvenate spell - deals 4 seconds of damage and gives 12 seconds of current Income TODO: if something at some point gives instant money, this should probably be changed
-            forest.AddDoable(new Doable(forest, "Rageuvenate", null, "", "So angry!", "Rageuvenate is on cooldown.", true));
-            forest.Doables["Rageuvenate"].Injects["perform"].Add((f, g, arguments) => {
-                f.Values["RageuvenateCooldown"] = f.GetValue("RageuvenateCooldownTime");
+            forest.AddDoable(new Doable(forest, E.RAGEUVENATE, null, "", "So angry!", "Rageuvenate is on cooldown.", true));
+            forest.Doables[E.RAGEUVENATE].Injects["perform"].Add((f, g, arguments) => {
+                f.Values[E.RAGEUVENATE+E.COOLDOWN] = f.GetValue(E.RAGEUVENATE+E.COOLDOWN+E.TIME);
                 if(f.Fighting) {
-                    f.DealDamage(f.Attack * f.GetValue("RageuvenateDamageRounds"), false);
+                    double damage = f.GetValue(E.RAGEUVENATE + E.DAMAGE + E.TIME);
+                    if(f.OwnsUpgrade(E.UPG_WEB_DEVELOPMENT)) {
+                        damage *= (2 - (f.Hp / f.MaxHp));
+                    }
+                    Console.WriteLine("Rageuvenate dealing " + damage * f.Attack + " damage!"); 
+                    f.DealDamage(f.Attack * damage, false);
                 }
-                f.Growths["Organic Material"].Amount += f.Income * f.GetValue("RageuvenateIncome");
+                f.Growths[E.ORGANIC_MATERIAL].Amount += f.Income * f.GetValue(E.RAGEUVENATE+E.INCOME+E.TIME);
                 return null;
             });
-            forest.Doables["Rageuvenate"].Injects["loop"].Add((f, g, arguments) => {
-                if (f.OwnsUpgrade("Transmogrify Rageuvenate")) {
+            forest.Doables[E.RAGEUVENATE].Injects["loop"].Add((f, g, arguments) => {
+                if (f.OwnsUpgrade(E.UPG_TRANSMOGRIFY_RAGEUVENATE)) {
                     g.Unlocked = true;
                 }
-                if (f.GetValue("RageuvenateCooldown") > 0) {
-                    f.Values["RageuvenateCooldown"] -= 1;
+                if (f.GetValue(E.RAGEUVENATE + E.COOLDOWN) > 0) {
+                    f.Values[E.RAGEUVENATE + E.COOLDOWN] -= 1;
                 }
                 return null;
             });
-            forest.Doables["Rageuvenate"].Injects["tooltip"].Add((f, g, arguments) => {
-                if (forest.GetValue("RageuvenateCooldown") > 0) {
-                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue("RageuvenateCooldown") / 5) + "s CD]");
+            forest.Doables[E.RAGEUVENATE].Injects["tooltip"].Add((f, g, arguments) => {
+                if (forest.GetValue(E.RAGEUVENATE+E.COOLDOWN) > 0) {
+                    return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue(E.RAGEUVENATE+E.COOLDOWN) / 5) + "s CD]");
                 }
                 return new RuntimeValue(4, "");
             });
@@ -241,44 +246,44 @@ namespace ActualIdle {
         private static void InitUpgrades(Forest forest) {
 
             // Growth upgrades in order of total expense.
-            CreateGrowthUpgrade(forest, "Bush Growth 1", "Bushes", 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
-            CreateGrowthUpgrade(forest, "Oak Growth 1", "Oaks", 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 1", E.BUSHES, 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 1", E.OAKS, 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
 
-            CreateGrowthUpgrade(forest, "Growing Birches 1", "Birches", 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
-            CreateGrowthUpgrade(forest, "Larger Ants 1", "Ants", 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
-            CreateGrowthUpgrade(forest, "Bush Growth 2", "Bushes", 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 1", E.BIRCHES, 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 1", E.ANTS, 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 2", E.BUSHES, 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
 
-            CreateGrowthUpgrade(forest, "Oak Growth 2", "Oaks", 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
-            CreateGrowthUpgrade(forest, "Gnarly Yews 1", "Yews", 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
-            CreateGrowthUpgrade(forest, "Larger Ants 2", "Ants", 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
-            CreateGrowthUpgrade(forest, "Spiderbefriending 1", "Spiders", 40, 2E+5, 5); //x5 -  8.8E4 / 4.4 + 2 E5
-            CreateGrowthUpgrade(forest, "Growing Birches 2", "Birches", 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 2", E.OAKS, 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 1", E.YEWS, 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 2", E.ANTS, 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 1", E.SPIDERS, 40, 2E+5, 5); //x5 -  8.8E4 / 4.4 + 2 E5
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 2", E.BIRCHES, 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
 
-            CreateGrowthUpgrade(forest, "Gnarly Yews 2", "Yews", 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
-            CreateGrowthUpgrade(forest, "Oak Growth 3", "Oaks", 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
-            CreateGrowthUpgrade(forest, "Bush Growth 3", "Bushes", 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 2", E.YEWS, 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 3", E.OAKS, 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 3", E.BUSHES, 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
 
-            CreateGrowthUpgrade(forest, "Larger Ants 3", "Ants", 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
-            CreateGrowthUpgrade(forest, "Gnarly Yews 3", "Yews", 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
-            CreateGrowthUpgrade(forest, "Spiderbefriending 2", "Spiders", 80, 5E+7, 5); //x25 -  1.7E5 / 2 + 5 E7
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 3", E.ANTS, 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 3", E.YEWS, 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 2", E.SPIDERS, 80, 5E+7, 5); //x25 -  1.7E5 / 2 + 5 E7
 
-            CreateGrowthUpgrade(forest, "Oak Growth 4", "Oaks", 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
-            CreateGrowthUpgrade(forest, "Larger Ants 4", "Ants", 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
-            CreateGrowthUpgrade(forest, "Bush Growth 4", "Bushes", 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
-            CreateGrowthUpgrade(forest, "Growing Birches 3", "Birches", 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 4", E.OAKS, 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 4", E.ANTS, 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 4", E.BUSHES, 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 3", E.BIRCHES, 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
 
-            CreateGrowthUpgrade(forest, "Gnarly Yews 4", "Yews", 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 4", E.YEWS, 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
 
-            CreateGrowthUpgrade(forest, "Oak Growth 5", "Oaks", 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
-            CreateGrowthUpgrade(forest, "Bush Growth 5", "Bushes", 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
-            CreateGrowthUpgrade(forest, "Blooming Flowers 1", "Flowers", 150, Statics.GetNumber(2, 10), 8, "FlowersGain_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 5", E.OAKS, 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 5", E.BUSHES, 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH + " 1", E.FLOWERS, 150, Statics.GetNumber(2, 10), 8, E.FLOWERS+E.GAIN+"_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
 
-            CreateGrowthUpgrade(forest, "Gnarly Yews 5", "Yews", 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 5", E.YEWS, 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
 
-            CreateGrowthUpgrade(forest, "Growing Birches 4", "Birches", 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
-            forest.Upgrades["Growing Birches 4"].Modifier.ModifiersF.Add("BirchesDefense", 3);
-            forest.Upgrades["Growing Birches 4"].PreDescriptionText += " Also doubles birch defense bonus.";
-            forest.Upgrades["Growing Birches 4"].PostDescriptionText += " Also doubles birch defense bonus.";
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 4", E.BIRCHES, 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
+            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].Modifier.ModifiersF.Add(E.BIRCHES+E.DEFENSE, 3);
+            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].PreDescriptionText += " Also doubles birch defense bonus.";
+            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].PostDescriptionText += " Also doubles birch defense bonus.";
 
             // ----------------------------------------------------------------------------- END OF GROWTH UPGRADES ----------------------------------------------------------------------------------------
 
@@ -288,19 +293,19 @@ namespace ActualIdle {
 
             // Other Upgrades
             // Become soother TODO: move
-            forest.AddUpgrade(new Upgrade(forest, "Become Soother", "Soothing is used in fighting, but all regular damage is removed..", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(3, 7) } }), new Modifier("Soother", new Dictionary<string, double>() { { "Attack", 0 } })));
-            forest.Upgrades["Become Soother"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetStats()["Soothing"] > 0) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_BECOME_SOOTHER, "Soothing is used in fighting, but all regular damage is removed..", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 7) } }), new Modifier(E.SOOTHER, new Dictionary<string, double>() { { E.ATTACK, 0 } })));
+            forest.Upgrades[E.UPG_BECOME_SOOTHER].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetStats()[E.SOOTHING] > 0) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
             // Dense forest bonus (700 forest growths)
-            forest.AddUpgrade(new Upgrade(forest, "Dense Forest", "Gives 300% production bonus to everything.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 10) } }), new Modifier("Dense Forest", new Dictionary<string, double>() { { "Gain", 4 } })));
-            forest.Upgrades["Dense Forest"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("countOaks") + f.GetValue("countYews") + f.GetValue("countBirches") + f.GetValue("countFlowers") + f.GetValue("countBushes") >= 700) {
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_DENSE_FOREST, "Gives 300% production bonus to everything.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 10) } }), new Modifier(E.UPG_DENSE_FOREST, new Dictionary<string, double>() { { E.GAIN, 4 } })));
+            forest.Upgrades[E.UPG_DENSE_FOREST].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.COUNT+E.OAKS) + f.GetValue(E.COUNT+E.YEWS) + f.GetValue(E.COUNT+E.BIRCHES) + f.GetValue(E.COUNT+E.FLOWERS) + f.GetValue(E.COUNT+E.BUSHES) >= 700) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
@@ -311,42 +316,42 @@ namespace ActualIdle {
             // Thinking skill upgrades
 
             //Druidcraft
-            forest.AddUpgrade(new Upgrade(forest, "Considered Druidcraft", "Gives 1% production bonus per Druidcraft level.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Considered Druidcraft", new Dictionary<string, double>() { { "Gain", 0.01 } })));
-            forest.Upgrades["Considered Druidcraft"].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers["Considered Druidcraft"].ModifiersF["Gain"] = f.GetValue("lvlDruidcraft")*f.GetValue("DruidcraftConsideredBonus")+1;
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_DRUIDCRAFT_CONSIDERED, "Gives 1% production bonus per Druidcraft level.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_DRUIDCRAFT_CONSIDERED, new Dictionary<string, double>() { { E.GAIN, 0.01 } })));
+            forest.Upgrades[E.UPG_DRUIDCRAFT_CONSIDERED].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers[E.UPG_DRUIDCRAFT_CONSIDERED].ModifiersF[E.GAIN] = f.GetValue("lvl"+E.DRUIDCRAFT)*f.GetValue(E.UPG_DRUIDCRAFT_CONSIDERED+E.MOD) +1;
                 return null;
             });
-            forest.Upgrades["Considered Druidcraft"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("svThinks") > 0) {
+            forest.Upgrades[E.UPG_DRUIDCRAFT_CONSIDERED].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.THINKS) > 0) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
             //Animal Handling
-            forest.AddUpgrade(new Upgrade(forest, "Handled You Before", "Gives 1% attack bonus per Animal Handling level.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Handled You Before", new Dictionary<string, double>() { { "Attack", 0.01 } })));
-            forest.Upgrades["Handled You Before"].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers["Handled You Before"].ModifiersF["Attack"] = f.GetValue("lvlAnimal Handling") * f.GetValue("Handled You BeforeBonus") + 1;
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_HANDLED_YOU_BEFORE, "Gives 1% attack bonus per Animal Handling level.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier("Handled You Before", new Dictionary<string, double>() { { "Attack", 0.01 } })));
+            forest.Upgrades[E.UPG_HANDLED_YOU_BEFORE].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers[E.UPG_HANDLED_YOU_BEFORE].ModifiersF[E.ATTACK] = f.GetValue("lvl"+E.ANIMAL_HANDLING) * f.GetValue(E.UPG_HANDLED_YOU_BEFORE+E.MOD) + 1;
                 return null;
             });
-            forest.Upgrades["Handled You Before"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("svThinks") > 0) {
+            forest.Upgrades[E.UPG_HANDLED_YOU_BEFORE].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.THINKS) > 0) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
             });
 
             //Soothing
-            forest.AddUpgrade(new Upgrade(forest, "Soothing Thoughts", "Gives 1% Health regen per Soothing level.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Soothing Thoughts", new Dictionary<string, double>() { { "HealthRegen", 0.01 } })));
-            forest.Upgrades["Soothing Thoughts"].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers["Soothing Thoughts"].ModifiersF["HealthRegen"] = f.GetValue("lvlSoothing") * f.GetValue("Soothing ThoughtsBonus") + 1;
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_SOOTHING_THOUGHTS, "Gives 1% Health regen per Soothing level.", null,
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_SOOTHING_THOUGHTS, new Dictionary<string, double>() { { E.HEALTHREGEN, 0.01 } })));
+            forest.Upgrades[E.UPG_SOOTHING_THOUGHTS].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers[E.UPG_SOOTHING_THOUGHTS].ModifiersF[E.HEALTHREGEN] = f.GetValue("lvl"+E.SOOTHING) * f.GetValue(E.UPG_SOOTHING_THOUGHTS+E.MOD) + 1;
                 return null;
             });
-            forest.Upgrades["Soothing Thoughts"].Injects["unlocked"].Add((f, g, arguments) => {
-                if (f.GetValue("svThinks") > 0 && f.GetValue("lvlSoothing") > 0) {
+            forest.Upgrades[E.UPG_SOOTHING_THOUGHTS].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue(E.THINKS) > 0 && f.GetValue("lvl"+E.SOOTHING) > 0) {
                     return new RuntimeValue(3, true);
                 }
                 return new RuntimeValue(3, false);
@@ -354,19 +359,19 @@ namespace ActualIdle {
         }
         public static void FirstInit(Forest forest) {
 
-            forest.AddObject(new Growth(forest, "Organic Material", new string[] { null }, new Formula[] { new Formula() }, null));
+            forest.AddObject(new Growth(forest, E.ORGANIC_MATERIAL, new string[] { null }, new Formula[] { new Formula() }, null));
 
             // Bushes
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 20 } }, "BushesInc", "countBushes"), 1));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "BushesGain") }, "Bushes",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 20 } }, "BushesInc", "countBushes"), 1));
 
             // Oaks
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "OaksGain") }, "Oaks",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 100 } }, "OaksInc", "countOaks"), 3));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "OaksGain") }, "Oaks",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 100 } }, "OaksInc", "countOaks"), 3));
 
             // Ants
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "AntsGain") }, "Ants",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 220 } }, "AntsInc", "countAnts"), 3, "Animal Handling"));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "AntsGain") }, "Ants",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 220 } }, "AntsInc", "countAnts"), 3, "Animal Handling"));
             forest.Growths["Ants"].injects["loop"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 1) {
                     g.Unlocked = true;
@@ -375,8 +380,8 @@ namespace ActualIdle {
             });
 
             // Birches
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "BirchesGain") }, "Birches",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 440 } }, "BirchesInc", "countBirches"), 20, increaseBoughtThings: true));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "BirchesGain") }, "Birches",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 440 } }, "BirchesInc", "countBirches"), 20, increaseBoughtThings: true));
             forest.Growths["Birches"].injects["loop"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 1) {
                     g.Unlocked = true;
@@ -385,8 +390,8 @@ namespace ActualIdle {
             });
 
             // Yews; unlocked at 10 druidcraft
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "YewsGain") }, "Yews",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 4000 } }, "YewsInc", "countYews"), 40));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "YewsGain") }, "Yews",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 4000 } }, "YewsInc", "countYews"), 40));
             forest.Growths["Yews"].injects["loop"].Add((f, g, arguments) => {
                 if (f.GetValue("lvlDruidcraft") >= 15) {
                     g.Unlocked = true;
@@ -395,8 +400,8 @@ namespace ActualIdle {
             });
 
             // Flowers
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "FlowersGain") }, "Flowers",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 2000 } }, "FlowersInc", "countFlowers"), 9));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "FlowersGain") }, "Flowers",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2000 } }, "FlowersInc", "countFlowers"), 9));
             forest.Growths["Flowers"].injects["loop"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 6) {
                     g.Unlocked = true;
@@ -405,13 +410,13 @@ namespace ActualIdle {
             });
 
             // Spiders, Unlocked by spider path
-            forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
-                new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1000 } }, "SpidersInc", "countSpiders"), 5, "Animal Handling"));
+            forest.AddObject(new GrowthDruid(forest, new string[] { E.ORGANIC_MATERIAL }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Spiders",
+                new ResourcesIncrement(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 1000 } }, "SpidersInc", "countSpiders"), 5, "Animal Handling"));
             forest.Growths["Spiders"].injects["loop"].Add((f, g, arguments) => {
                 if (f.OwnsUpgrade("Spiderfriends")) {
                     g.Unlocked = true;
                 }
-                forest.GetModifier("SpiderAttackMod").ModifiersF["SpidersAttack"] = 1 + 0.05 * forest.GetValue("lvlAnimal Handling");
+                forest.GetModifier(E.SPIDERS+E.ATTACK+E.MOD).ModifiersF["SpidersAttack"] = 1 + 0.05 * forest.GetValue("lvlAnimal Handling");
                 return null;
             });
 
@@ -491,7 +496,7 @@ namespace ActualIdle {
             }
 
             Path avgPath = new Path(forest, "Forest standard dudes", "Standard people.", "");
-            avgPath.ShowRequirements = "svThinks_>_0";
+            avgPath.ShowRequirements = E.THINKS+"_>_0";
             
             Branch startBranch = new Branch(forest, "firstBranch", "Branch");
             startBranch.AddPath(avgPath);
@@ -619,7 +624,7 @@ namespace ActualIdle {
 
             if(bossType == 1) {
                 attackScale /= 1.5;
-                hpScale *= 3;
+                hpScale *= 4.5;
             }
 
             if(defenseScale > 0) {

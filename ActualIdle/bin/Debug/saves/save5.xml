@@ -395,7 +395,7 @@
     <Soothing_Thoughts>true</Soothing_Thoughts>
   </Upgrades>
   <Path>Forest Street</Path>
-  <PathBoss>12</PathBoss>
+  <PathBoss>11</PathBoss>
   <Count>55089</Count>
   <OfflineTicks>9000</OfflineTicks>
   <Hp>105.51199999999997</Hp>

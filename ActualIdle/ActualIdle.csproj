@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Branch.cs" />
     <Compile Include="Doable.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="GrowthDruid.cs" />
     <Compile Include="Fighter.cs" />
     <Compile Include="Forest.cs" />

@@ -7,7 +7,7 @@
     <AlchemyXpGain>1</AlchemyXpGain>
     <TransformationXpGain>1</TransformationXpGain>
     <RestorationXpGain>1</RestorationXpGain>
-    <DefeatedBosses>14</DefeatedBosses>
+    <DefeatedBosses>15</DefeatedBosses>
     <BushesHealth>0.2</BushesHealth>
     <BushesAttack>0.2</BushesAttack>
     <OaksHealth>1</OaksHealth>
@@ -17,8 +17,10 @@
     <FlowersHealthRegen>0.2</FlowersHealthRegen>
     <FlowersSoothing>2</FlowersSoothing>
     <SpidersAttack>1</SpidersAttack>
+    <WebsAttack>5</WebsAttack>
+    <WebsDefense>50</WebsDefense>
     <boughtThings>13</boughtThings>
-    <allowedGrowths>16</allowedGrowths>
+    <allowedGrowths>17</allowedGrowths>
     <BushesGain>0.6</BushesGain>
     <BushesInc>1.1</BushesInc>
     <OaksGain>2</OaksGain>
@@ -32,16 +34,23 @@
     <FlowersInc>1.1</FlowersInc>
     <SpidersGain>85</SpidersGain>
     <SpidersInc>1.1</SpidersInc>
-    <DruidHeal>5</DruidHeal>
+    <RejuvenateMod>5</RejuvenateMod>
     <RejuvenateCooldownMod>1</RejuvenateCooldownMod>
-    <HarmonyDuration>75</HarmonyDuration>
+    <HarmonyTime>75</HarmonyTime>
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
     <RageuvenateCooldownTime>150</RageuvenateCooldownTime>
-    <RageuvenateDamageRounds>4</RageuvenateDamageRounds>
-    <RageuvenateIncome>60</RageuvenateIncome>
+    <RageuvenateDamageTime>2</RageuvenateDamageTime>
+    <RageuvenateIncomeTime>60</RageuvenateIncomeTime>
     <Web_SiteMod>0.1</Web_SiteMod>
     <WebsGain>10000</WebsGain>
     <WebsInc>10</WebsInc>
+    <Druidcraft_ConsideredMod>0.01</Druidcraft_ConsideredMod>
+    <Handled_You_BeforeMod>0.01</Handled_You_BeforeMod>
+    <Soothing_ThoughtsMod>0.01</Soothing_ThoughtsMod>
+    <DruidHeal>5</DruidHeal>
+    <HarmonyDuration>75</HarmonyDuration>
+    <RageuvenateDamageRounds>4</RageuvenateDamageRounds>
+    <RageuvenateIncome>60</RageuvenateIncome>
     <DruidcraftConsideredBonus>0.01</DruidcraftConsideredBonus>
     <Handled_You_BeforeBonus>0.01</Handled_You_BeforeBonus>
     <Soothing_ThoughtsBonus>0.01</Soothing_ThoughtsBonus>
@@ -71,7 +80,6 @@
     <UpgradeSpiderbefriending_2Bought>1</UpgradeSpiderbefriending_2Bought>
     <DefeatedBoss_6>1</DefeatedBoss_6>
     <UpgradeTransmogrify_RageuvenationBought>1</UpgradeTransmogrify_RageuvenationBought>
-    <RageuvenateCooldown>51</RageuvenateCooldown>
     <UpgradeTransmogrify_RageuvenateBought>1</UpgradeTransmogrify_RageuvenateBought>
     <UpgradeGnarly_Yews_3Bought>1</UpgradeGnarly_Yews_3Bought>
     <DefeatedBoss_7>1</DefeatedBoss_7>
@@ -87,11 +95,13 @@
     <DefeatedBoss_12>1</DefeatedBoss_12>
     <UpgradeWeb_DevelopmentBought>1</UpgradeWeb_DevelopmentBought>
     <DefeatedBoss_13>1</DefeatedBoss_13>
+    <DefeatedBoss_14>1</DefeatedBoss_14>
+    <UpgradeDruidcraft_ConsideredBought>1</UpgradeDruidcraft_ConsideredBought>
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15535.404876977102</Druidcraft>
-    <Animal_Handling>1030.5220196843206</Animal_Handling>
+    <Druidcraft>15538.807511449631</Druidcraft>
+    <Animal_Handling>1042.8285931333412</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
     <Transformation>100</Transformation>
@@ -99,7 +109,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>2244745582.477</Amount>
+      <Amount>2911509277.123</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -166,16 +176,11 @@
         <HealthRegen>0.2</HealthRegen>
       </ModifiersA>
     </Base_Stats>
-    <SpiderAttackMod>
+    <SpidersAttackMod>
       <ModifiersF>
         <SpidersAttack>1.6</SpidersAttack>
       </ModifiersF>
-    </SpiderAttackMod>
-    <Considered_Druidcraft>
-      <ModifiersF>
-        <Gain>1.27</Gain>
-      </ModifiersF>
-    </Considered_Druidcraft>
+    </SpidersAttackMod>
     <Bush_Growth_1>
       <ModifiersF>
         <BushesGain>3</BushesGain>
@@ -297,6 +302,11 @@
         <SpidersAttack>0.2</SpidersAttack>
       </ModifiersA>
     </Webs>
+    <Druidcraft_Considered>
+      <ModifiersF>
+        <Gain>1.27</Gain>
+      </ModifiersF>
+    </Druidcraft_Considered>
   </Modifiers>
   <Upgrades>
     <Bush_Growth_1>true</Bush_Growth_1>
@@ -335,13 +345,13 @@
     <Web_Development>true</Web_Development>
     <Become_Soother>false</Become_Soother>
     <Dense_Forest>false</Dense_Forest>
-    <Considered_Druidcraft>true</Considered_Druidcraft>
+    <Druidcraft_Considered>true</Druidcraft_Considered>
     <Handled_You_Before>true</Handled_You_Before>
     <Soothing_Thoughts>true</Soothing_Thoughts>
   </Upgrades>
   <Path>Forest standard dudes</Path>
-  <PathBoss>1</PathBoss>
-  <Count>56415</Count>
+  <PathBoss>2</PathBoss>
+  <Count>56760</Count>
   <OfflineTicks>9000</OfflineTicks>
   <Hp>697.2</Hp>
 </Forest>
