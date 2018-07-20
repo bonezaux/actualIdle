@@ -176,7 +176,7 @@ namespace ActualIdle {
             });
 
             forest.AddUpgrade(new Upgrade(forest, "Web Site", "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+9 } }), new Modifier("Web Site",
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+8 } }), new Modifier("Web Site",
                 new Dictionary<string, double>() { { "SpidersAttack", 1.1 } })));
             forest.Upgrades["Web Site"].Injects["unlocked"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 9 && f.OwnsUpgrade("Transmogrify Rageuvenate") && f.GetValue("countSpiders") >= 100) {
@@ -189,22 +189,21 @@ namespace ActualIdle {
                 return null;
             });
             
-            forest.Values["WebsGain"] = 1E+4;
-            forest.AddModifier(new Modifier("Webs", modifiersA: new Dictionary<string, double>() { { "Stall", 0 } }));
-            forest.Values["WebsInc"] = 10;
             forest.AddObject(new GrowthDruid(forest, new string[] { "Organic Material" }, new Formula[] { new FormulaLinear("!I0", "SpidersGain") }, "Webs",
                 new ResourcesIncrement(new Dictionary<string, double>() { { "Organic Material", 1E+8 } }, "WebsInc", "countWebs"), 100, "Animal Handling", true));
             forest.Growths["Webs"].injects["loop"].Add((f, g, arguments) => {
                 if (f.OwnsUpgrade("Web Development")) {
                     g.Unlocked = true;
                 }
-                if(g.Unlocked)
+                if (g.Unlocked) {
                     f.Modifiers["Webs"].ModifiersA["Stall"] = (int)Math.Sqrt(f.GetValue("countWebs"));
+                    f.Modifiers["Webs"].ModifiersA["SpidersAttack"] = f.GetValue("countWebs")*0.1;
+                }
                 return null;
             });
 
             forest.AddUpgrade(new Upgrade(forest, "Web Development", "Start developing your web! Unlocks growing the Web", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+9 } })));
+                new Resources(new Dictionary<string, double>() { { "Organic Material", 2E+8 } })));
             forest.Upgrades["Web Development"].Injects["unlocked"].Add((f, g, arguments) => {
                 if (f.GetValue("DefeatedBosses") >= 12 && f.OwnsUpgrade("Web Site")) {
                     return new RuntimeValue(3, true);
@@ -217,8 +216,7 @@ namespace ActualIdle {
             forest.Doables["Rageuvenate"].Injects["perform"].Add((f, g, arguments) => {
                 f.Values["RageuvenateCooldown"] = f.GetValue("RageuvenateCooldownTime");
                 if(f.Fighting) {
-                    f.Boss.Hp -= f.Attack * f.GetValue("RageuvenateDamage");
-                    Console.WriteLine("Dmbobs: " + f.Attack * f.GetValue("RageuvenateDamage"));
+                    f.DealDamage(f.Attack * f.GetValue("RageuvenateDamageRounds"), false);
                 }
                 f.Growths["Organic Material"].Amount += f.Income * f.GetValue("RageuvenateIncome");
                 return null;
@@ -476,99 +474,7 @@ namespace ActualIdle {
             if (firstInit)
                 FirstInit(forest);
 
-            forest.Growths["Organic Material"].Unlocked = true;
-
-            forest.Values["wandlevel"] = 0;
-            forest.Values["boughtThings"] = 0;
-            forest.Values["allowedGrowths"] = 2;
-
-            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 } }));
-
-            //Modifier som GrowthDruids can increase når de increaser xp gain af noget
-            //Druidcraft XP: Income
-            //Animal Handling XP: Damage givet
-            //Soothing XP: Soothing udført
-            forest.AddModifier(new Modifier("Xp Gain", new Dictionary<string, double>() { { "DruidcraftXpGain", 0.01 }, { "Animal HandlingXpGain", 0.00 } }));
-
-            // BUSHES
-            forest.Values["BushesGain"] = 0.6;
-            forest.Values["BushesAttack"] = 0.2;
-            forest.Values["BushesHealth"] = 0.2;
-            forest.Values["BushesInc"] = 1.1;
-            forest.Growths["Bushes"].Amount = 1;
-            forest.Growths["Bushes"].Unlocked = true;
-            forest.Growths["Bushes"].Description = "Adds 0.2 attack and 0.2 health each.";
-
-            // OAKS
-            forest.Values["OaksGain"] = 2;
-            forest.Values["OaksHealth"] = 1;
-            forest.Values["OaksInc"] = 1.1;
-            forest.Growths["Oaks"].Unlocked = true;
-            forest.Growths["Oaks"].Description = "Adds 1 health each.";
-
-            // ANTS
-            forest.Values["AntsGain"] = 3.6;
-            forest.Values["AntsAttack"] = 0.8;
-            forest.Values["AntsInc"] = 1.1;
-            forest.Growths["Ants"].Description = "Adds 0.8 attack each. Gives 3xp in Animal handling.";
-
-            // BIRCHES
-            forest.Values["BirchesGain"] = 7;
-            forest.Values["BirchesDefense"] = 0.25;
-            forest.Values["BirchesInc"] = 3;
-            forest.Growths["Birches"].Description = "Adds 0.25 defense each. Is a limited growth. Each birch costs 3x the last.";
-
-
-
-            // YEWS
-            forest.Values["YewsGain"] = 23;
-            forest.Values["YewsHealth"] = 4;
-            forest.Values["YewsAttack"] = 0;
-            forest.Values["YewsInc"] = 1.1;
-            forest.Growths["Birches"].Description = "Adds 4 health each.";
-
-            // FLOWERS
-            forest.Values["FlowersGain"] = 0;
-            forest.Values["FlowersHealthRegen"] = 0.2;
-            forest.Values["FlowersSoothing"] = 2;
-            forest.Values["FlowersInc"] = 1.1;
-
-            // SPIDERS
-            forest.Values["SpidersGain"] = 85;
-            forest.Values["SpidersAttack"] = 1;
-            forest.AddModifier(new Modifier("SpiderAttackMod", new Dictionary<string, double>() { { "SpidersAttack",  1 } }));
-            forest.Values["SpidersInc"] = 1.1;
-
-            // DOABLES
-
-            forest.Values["DruidHeal"] = 5;
-            forest.Values["RejuvenateCooldownMod"] = 1; //Is a speed, making it higher will make it faster.
-            forest.Doables["Rejuvenate"].Unlocked = true;
-            forest.Doables["Rejuvenate"].Requirements += "RejuvenateCooldown_<=_0";
-
-
-            // Harmony 
-            forest.Values["HarmonyDuration"] = 15*5; // Ticks harmony lasts
-            forest.Values["HarmonyCooldownTime"] = 60*5; // Ticks harmony cooldowns
-            forest.Doables["Harmony"].Unlocked = false;
-            forest.Doables["Harmony"].Requirements += "HarmonyCooldown_<=_0";
-
-            // Rageuvenate
-            forest.Values["RageuvenateCooldownTime"] = 30 * 5;
-            forest.Doables["Rageuvenate"].Requirements += "RageuvenateCooldown_<=_0";
-            forest.Values["RageuvenateDamageRounds"] = 4; // How many rounds of damage Rageuvenate deals
-            forest.Values["RageuvenateIncome"] = 12 * 5; // How many ticks of income Rageuvenate gives
-
-            forest.Values["Web SiteMod"] = 0.2; // How much each magnitude of income increases the floating point modifier on spider attack.
-
-            // Testing doable that gives half an hour of passive generation.
-            forest.Doables["Halfhour Offline"].Unlocked = true;
-
-            // Think upgrades
-            forest.Values["DruidcraftConsideredBonus"] = 0.01; //How much production boost in % each level of druidcraft gives.
-            forest.Values["Handled You BeforeBonus"] = 0.01; //How much attack boost in % each level of Animal Handling gives.
-            forest.Values["Soothing ThoughtsBonus"] = 0.01; //How much attack boost in % each level of Animal Handling gives.
-
+            ResetValues.InitValues(forest);
 
 
 
@@ -578,8 +484,22 @@ namespace ActualIdle {
             for(int loop=1; loop<=12; loop++) {
                 startPath.AddBoss(generateBoss(loop));
             }
-            for(int loop=13; loop<=24; loop++) {
-                startPath.AddBoss(generateBoss(loop, 1));
+            Path hpPath = new Path(forest, "Forest heavy dudes", "Heavy people.", "");
+
+            for (int loop=13; loop<=24; loop++) {
+                hpPath.AddBoss(generateBoss(loop, 1));
+            }
+
+            Path avgPath = new Path(forest, "Forest standard dudes", "Standard people.", "");
+            avgPath.ShowRequirements = "svThinks_>_0";
+            
+            Branch startBranch = new Branch(forest, "firstBranch", "Branch");
+            startBranch.AddPath(avgPath);
+            startBranch.AddPath(hpPath);
+            startPath.EndBranch = startBranch;
+
+            for (int loop = 13; loop <= 24; loop++) {
+                avgPath.AddBoss(generateBoss(loop));
             }
             forest.SetPath(startPath);
 

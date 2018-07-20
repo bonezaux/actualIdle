@@ -30,6 +30,10 @@ namespace ActualIdle {
             DescText = descText;
         }
 
+        public void AddPath(Path path) {
+            Paths.Add(path);
+        }
+
         /// <summary>
         /// Writes out the path's information.
         /// </summary>

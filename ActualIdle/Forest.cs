@@ -213,7 +213,7 @@ namespace ActualIdle {
                         Soothe += Soothing;
                         AddXp("Soothing", Soothing);
                     } else {
-                        Soothe += Soothing / 100;
+                        Soothe += Soothing / 20;
                     }
                     if (Boss.Hp <= 0) {
                         WinBattle();
@@ -300,10 +300,9 @@ namespace ActualIdle {
         /// <param name="change"></param>
         public void AddXp(string skillName, double change) {
             double xp = Statics.XpGain(Xp[skillName], change) * GetValue(skillName+"XpGain");
-
             if (Statics.skills.Contains(skillName)) {
                 int preLevel = (int)GetValue("lvl" + skillName);
-                Xp[skillName] += xp * GetValue("XpMod"+ skillName);
+                Xp[skillName] += xp * GetValue(skillName+"XpGain");
                 int postLevel = (int)GetValue("lvl" + skillName);
                 if(postLevel > preLevel) {
                     Console.WriteLine("Level up! " + skillName + " " + preLevel + "->" + postLevel);
@@ -326,6 +325,13 @@ namespace ActualIdle {
 
         public void RemoveModifier(string modifier) {
             Modifiers.Remove(modifier);
+        }
+
+        public void DealDamage(double damage, bool armor = true) {
+            if (armor)
+                damage = damage - Boss.Defense;
+            AddXp("Animal Handling", damage);
+            Boss.Hp -= damage;
         }
 
         /// <summary>
@@ -603,11 +609,13 @@ namespace ActualIdle {
             // Saves values 
             XElement valuesElement = XMLUtils.CreateElement(element, "Values");
             foreach (KeyValuePair<string, double> entry in Values) {
-                XElement valueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
+                if(entry.Value != 0)
+                    XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
             }
             // Saves soft values
             foreach (KeyValuePair<string, double> entry in SoftValues) {
-                XElement softValueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
+                if (entry.Value != 0)
+                    XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
             }
 
             // Saves skills
