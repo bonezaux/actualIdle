@@ -1,4 +1,12 @@
-
+Systems
+ -Spells
+  Rejuvenate, Harmony
+ -Skills
+   Xp corresponds to a sixth of the magnitude of a virtual total (Maybe the magnitude relation should be different for each skill)
+  Druidcraft xp ved income
+  Animal handling xp ved fighting
+  Soothing x ved soothing
+ 
 sådan noget
 Forskellige ting giver mere/mindre bonus til det
 Bossfights x
@@ -9,9 +17,8 @@ Bossfights x
   -Nak
   -Bring på din side
 Specielle formål med de forskellige bosser
- - incapacitate
- - set at ease
- - convince
+ - Fight
+ - Soothe
  
 Et lille starter path med nogle starter bosser.
  - Lav noget, der autolaver starterbosser, der er ca. 3x? stærkere hver, med lidt intern randomness, og spytter dem ud, og gør, at man kan klare dem med upgrades og lign.
@@ -23,6 +30,9 @@ Upgrades der er mutually exclusive ligesom talent trees eller sådan noget.
 En liste over values, der resettes ved næste boss. - DET HER SKAL VIRKE VED TRIGGER SYSTEMET
  - Så man kan lave eksempelvis doables, der kun kan bruges en enkelt gang pr. boss. Så kan man fucke sig selv virkelig meget over.
 
+skills
+ Druidcraft skal måske have xp fra soothing?
+ 
  
 Trigger system
  Ting skal kalde triggere

@@ -78,5 +78,15 @@ namespace ActualIdle {
         public static string GetName(XElement element) {
             return element.Name.LocalName.Trim().Replace('_', ' ');
         }
+
+        /// <summary>
+        /// Returns whether the element has a child by the given name.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public static bool HasChild(XElement element, string child) {
+            return GetElement(element, child) != null;
+        }
     }
 }

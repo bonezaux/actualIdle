@@ -134,7 +134,7 @@ namespace ActualIdle {
             if (ModifiersF!= null) {
                 res += "Relative modifiers: ";
                 foreach (KeyValuePair<string, double> modifiedValue in ModifiersF) {
-                    res += modifiedValue.Key + " " + (modifiedValue.Value > 0 ? "+" : "") + (modifiedValue.Value*100) + "%, ";
+                    res += modifiedValue.Key + " " + (modifiedValue.Value > 1 ? "+" : "") + (modifiedValue.Value*100-100) + "%, ";
                 }
                 res = res.Substring(0, res.Length - 2);
                 res += "\n";

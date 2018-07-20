@@ -108,7 +108,9 @@ namespace ActualIdle  {
         public void Echo(bool writeDescription = false) {
             string result = Name + ": " + Statics.GetDisplayNumber(Amount);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
-                result += ", " + Statics.GetDisplayNumber(AddedFormulas[loop].Calculate(Amount, forest)) + " " + AddedGrowths[loop] + "/t";
+                double add = AddedFormulas[loop].Calculate(Amount, forest);
+                add = Modifier.Modify(forest.Modifiers.Values, "Gain", add);
+                result += ", " + Statics.GetDisplayNumber(add) + " ("+Math.Round(add*100 / forest.Income, 3) +"%)" + AddedGrowths[loop] + "/t";
             }
             Console.WriteLine(result);
             if (writeDescription)

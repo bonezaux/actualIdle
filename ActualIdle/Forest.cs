@@ -76,12 +76,9 @@ namespace ActualIdle {
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
             Modifiers = new Dictionary<string, Modifier>();
-            Modifiers.Add("BaseStats", new Modifier("BaseStats", modifiersA: new Dictionary<string, double>() {
-                { "HealthRegen", 0.2 }
-                }));
             foreach (string skill in Statics.skills) {
                 Xp[skill] = 100;
-                Values["XpMod" + skill] = 1;
+                Values[skill+"XpGain"] = 1;
             }
 
             Running = true;
@@ -125,7 +122,7 @@ namespace ActualIdle {
             base.takeDamage(damage, attacker);
         }
 
-        public void loop() {
+        public void Loop() {
             double preGold = Growths["Organic Material"].Amount;
             foreach (KeyValuePair<string, Growth> entry in Growths) {
                 entry.Value.Loop();
@@ -143,24 +140,27 @@ namespace ActualIdle {
                 entry.Value.Loop();
             }
             Income = Growths["Organic Material"].Amount - preGold;
-            AddXp("Druidcraft", Statics.XpGain(Xp["Druidcraft"], Income) * GetValue("DruidcraftXpGain"));
+            AddXp("Druidcraft", Income);
 
             if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
                 if (LastHp < Hp && LastHp > -1) {
                     HpIncreaseRounds++;
                     if(HpIncreaseRounds >= 3) {
-                        WinBattle();
+                        WinBattle(1);
                     }
                 } else {
                     HpIncreaseRounds = 0;
                 }
                 if (Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
                     double damage = (Attack - Boss.Defense);
-                    Boss.Hp -= damage;
-                    AddXp("Animal Handling", Statics.XpGain(Xp["Animal Handling"], damage) * GetValue("Animal HandlingXpGain"));
-                    if(GetValue("UpgradeBecome SootherBought") > 0) {
+                    if(damage > 0) {
+                        Boss.Hp -= damage;
+                        AddXp("Animal Handling", damage);
+                    }
+                    if(OwnsUpgrade("Become Soother")) {
                         Soothe += Soothing;
+                        AddXp("Soothing", Soothing);
                     }
                     else {
                         Soothe += Soothing / 100;
@@ -257,10 +257,18 @@ namespace ActualIdle {
             Upgrades.Add(upgrade.Name, upgrade);
         }
 
-        public void AddXp(string skillName, double xp) {
+        /// <summary>
+        /// Adds xp based on a change in the value that the skill uses for xp.
+        /// change is this change (The change in the virtual total that the xp is equal to a sixth of the magnitude times 100 to.)
+        /// </summary>
+        /// <param name="skillName"></param>
+        /// <param name="change"></param>
+        public void AddXp(string skillName, double change) {
+            double xp = Statics.XpGain(Xp[skillName], change) * GetValue(skillName+"XpGain");
+
             if (Statics.skills.Contains(skillName)) {
                 int preLevel = (int)GetValue("lvl" + skillName);
-                Xp[skillName] += xp*GetValue("XpMod"+ skillName);
+                Xp[skillName] += xp * GetValue("XpMod"+ skillName);
                 int postLevel = (int)GetValue("lvl" + skillName);
                 if(postLevel > preLevel) {
                     Console.WriteLine("Level up! " + skillName + " " + preLevel + "->" + postLevel);
@@ -314,7 +322,7 @@ namespace ActualIdle {
 
         public void TickOffline(int ticks) {
             for(int i=0;i<ticks;i++)
-                loop();
+                Loop();
             OfflineTicks += ticks;
         }
 
@@ -357,6 +365,8 @@ namespace ActualIdle {
 
         public void ListSkills() {
             foreach (string skill in Statics.skills) {
+                if (Xp[skill] < 101)
+                    continue;
                 int lvl = (int)GetValue("lvl" + skill);
                 double nextXp = Math.Pow(1.2, lvl + 1) * 100;
                 Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp");
@@ -543,7 +553,7 @@ namespace ActualIdle {
             while (Running) {
                 Thread.Sleep((Program.debug ? Program.debugCountTime : 200));
                 Count++;
-                loop();
+                Loop();
             }
             Console.WriteLine("Terminating");
         }
@@ -649,12 +659,11 @@ namespace ActualIdle {
                     Values[XMLUtils.GetName(valueElement)] = double.Parse(valueElement.Value, System.Globalization.NumberFormatInfo.InvariantInfo);
             }
 
-            // Loads skills
+            // Loads skills 
             XElement skillsElement = XMLUtils.GetElement(element, "skills");
             foreach (string skill in Statics.skills) {
-                Console.WriteLine("skill name: " + skill + XMLUtils.GetName(XMLUtils.GetElement(skillsElement, skill)));
-                Xp[skill] = XMLUtils.GetDouble(skillsElement, skill);
-                Console.WriteLine("skill value: " + skill + Xp[skill]);
+                if (XMLUtils.HasChild(skillsElement, skill))
+                    Xp[skill] = XMLUtils.GetDouble(skillsElement, skill);
             }
 
             // Loads growths 
@@ -665,7 +674,7 @@ namespace ActualIdle {
                     g.Load(growthElement);
             }
 
-            // Loads trophies
+            // Loads trophies 
             XElement trophiesElement = XMLUtils.GetElement(element, "Trophies");
             foreach (Trophy t in Trophies.Values) {
                 XElement trophyElement = XMLUtils.GetElement(trophiesElement, t.Name);
@@ -673,7 +682,7 @@ namespace ActualIdle {
                     t.Load(trophyElement);
             }
 
-            // Loads doables
+            // Loads doables 
             XElement doablesElement = XMLUtils.GetElement(element, "Doables");
             foreach (Doable d in Doables.Values) {
                 XElement doableElement = XMLUtils.GetElement(doablesElement, d.Name);

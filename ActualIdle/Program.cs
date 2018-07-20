@@ -14,7 +14,7 @@ namespace ActualIdle {
     /// </summary>
     class Statics {
         public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing" };
-        public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Alchemy", "Transformation", "Restoration" };
+        public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Soothing", "Alchemy", "Transformation", "Restoration" };
         public static double xpLogBase = 1000000; // This determines what base on the organic matter the xp will be calculated from
 
         /// <summary>
@@ -174,6 +174,22 @@ namespace ActualIdle {
                 }
                 return new RuntimeValue(3, false);
             });
+
+
+            // Think 1 skill upgrades
+            forest.AddUpgrade(new Upgrade(forest, "Considered Druidcraft", "Gives 1% production bonus per druidcraft level.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Considered Druidcraft", new Dictionary<string, double>() { { "Gain", 0.01 } })));
+            forest.Upgrades["Considered Druidcraft"].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers["Considered Druidcraft"].ModifiersF["Gain"] = f.GetValue("lvlDruidcraft")*f.GetValue("DruidcraftConsideredBonus")+1;
+                return null;
+            });
+            forest.Upgrades["Considered Druidcraft"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("svThinks") > 0) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+
         }
         public static void FirstInit(Forest forest) {
 
@@ -332,11 +348,13 @@ namespace ActualIdle {
             forest.Values["wandlevel"] = 0;
             forest.Values["boughtThings"] = 0;
             forest.Values["allowedGrowths"] = 2;
-            forest.Values["DruidcraftXpGain"] = 1;
-            forest.Values["Animal HandlingXpGain"] = 1;
 
+            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 } }));
+
+            //Modifier som GrowthDruids can increase når de increaser xp gain af noget
             //Druidcraft XP: Income
             //Animal Handling XP: Damage givet
+            //Soothing XP: Soothing udført
             forest.AddModifier(new Modifier("Xp Gain", new Dictionary<string, double>() { { "DruidcraftXpGain", 0.01 }, { "Animal HandlingXpGain", 0.00 } }));
 
             // BUSHES
@@ -405,8 +423,9 @@ namespace ActualIdle {
 
             // Testing doable that gives half an hour of passive generation.
             forest.Doables["Halfhour Offline"].Unlocked = true;
-            
 
+            // Think upgrades
+            forest.Values["DruidcraftConsideredBonus"] = 0.01; //How much production boost in % each level of druidcraft gives.
 
 
 
@@ -671,8 +690,13 @@ namespace ActualIdle {
                         if (int.TryParse(l.Split(' ')[1], out res)) {
                             if (res > 0)
                                 debugCountTime = res;
+                            debug = true;
                         }
                     }
+                    if (debug)
+                        Console.WriteLine("Now debugging...");
+                    else
+                        Console.WriteLine("Not debugging anymore.");
                 } else if (l.StartsWith("time")) {
                     Console.WriteLine(forest.Count / 5 + "s, offline " + forest.OfflineTicks / 5 + "s");
                 } else if (l.StartsWith("save")) {
