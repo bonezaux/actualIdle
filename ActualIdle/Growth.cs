@@ -70,7 +70,7 @@ namespace ActualIdle  {
                 gci(forest, this, null);
             for (int loop = 0; loop < AddedGrowths.Length; loop++) {
                 if (AddedGrowths[loop] != null) {
-                    forest.Growths[AddedGrowths[loop]].Amount += AddedFormulas[loop].Calculate(Amount, forest);
+                    forest.Growths[AddedGrowths[loop]].Amount += Modifier.Modify(forest.Modifiers.Values, "Gain", AddedFormulas[loop].Calculate(Amount, forest));
                 }
             }
         }

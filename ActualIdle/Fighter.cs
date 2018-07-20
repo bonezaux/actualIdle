@@ -35,14 +35,17 @@ namespace ActualIdle {
             AddedGrowths = addedGrowths;
         }
 
+        public virtual void takeDamage(double damage, Fighter attacker) {
+            Hp -= (damage - Defense);
+        }
+
         public void FightLoop(Fighter fighter) {
-            fighter.Hp -= (this.Attack - fighter.Defense);
+            fighter.takeDamage(this.Attack, this);
             if (fighter.Hp <= 0)
                 fighter.Lose();
         }
 
         public virtual void Lose() {
-            Console.WriteLine("You defeated " + Name + "!");
         }
 
         public Fighter Clone() {

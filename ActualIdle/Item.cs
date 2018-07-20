@@ -43,7 +43,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="forest"></param>
         public virtual void Lose(Forest forest) {
-            forest.RemoveModifier(Modifier);
+            forest.RemoveModifier(Modifier.Name);
         }
 
         public void Echo(Forest forest) {

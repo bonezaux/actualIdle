@@ -27,5 +27,18 @@ En liste over values, der resettes ved næste boss. - DET HER SKAL VIRKE VED TRI
 Trigger system
  Ting skal kalde triggere
  Triggerene skal kunne registreres til injects på forskellige ting somehow.
+ Alle spells skal have deres cooldowns reset når en boss ownes, også somehow dem der er aktive.
 
+Thinking system, soft reset, skal designes.
+ 
 TROPHIES
+
+B10 skal give anden spell (efter rejuvenate)
+
+Paths:
+Big Birches (B3)
+|
+Soothing Rejuvenation (B6, 80 flowers)
+|
+Free Healthcare (B9)
+

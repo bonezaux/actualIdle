@@ -17,11 +17,18 @@ namespace ActualIdle {
         public Dictionary<string, Doable> Doables { get; private set; }
         public Dictionary<string, Trophy> Trophies { get; private set; }
         public Dictionary<string, Upgrade> Upgrades { get; private set; }
+        /// <summary>
+        /// No Values can start with 'sv', then they are known as soft values.
+        /// </summary>
         public Dictionary<string, double> Values { get; private set; }
+        /// <summary>
+        /// Values that are kept over a soft reset; Standard values are just discarded. Must all be prefixed with 'sv';
+        /// </summary>
+        public Dictionary<string, double> SoftValues { get; private set; }
         /// <summary>
         /// The Druids xp in all skills specified in the Statics statlist. Levels are at specific intervals, which will probably be changed at some point.
         /// </summary>
-        public Dictionary<string, double> Xp { get; private set; }
+        public new Dictionary<string, double> Xp { get; private set; }
         public List<Item> Items { get; private set; }
         public Dictionary<string, Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
@@ -40,6 +47,16 @@ namespace ActualIdle {
         /// </summary>
         public bool Fighting { get; set; }
         /// <summary>
+        /// How much the druid has soothed in the current battle.
+        /// </summary>
+        public double Soothe { get; set; }
+        public double Soothing { get; set; }
+        /// <summary>
+        /// The Hp in the last tick of combat. If this is lower than current health three combat ticks in a row, the fight is won.
+        /// </summary>
+        public double LastHp { get; set; }
+        public int HpIncreaseRounds { get; set; }
+        /// <summary>
         /// What calculation step we're currently at. Every 5th is a second
         /// </summary>
         public int Count { get; private set; }
@@ -47,6 +64,7 @@ namespace ActualIdle {
         /// How many offline ticks have gone by.
         /// </summary>
         public int OfflineTicks { get; private set; }
+        public double Income { get; set; }
 
         public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Growths = new Dictionary<string, Growth>();
@@ -54,6 +72,7 @@ namespace ActualIdle {
             Trophies = new Dictionary<string, Trophy>();
             Upgrades = new Dictionary<string, Upgrade>();
             Values = new Dictionary<string, double>();
+            SoftValues = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
             Items = new List<Item>();
             Modifiers = new Dictionary<string, Modifier>();
@@ -96,10 +115,18 @@ namespace ActualIdle {
             Boss.Hp = Boss.MaxHp;
             Fighting = false;
             Hp = 0;
+            Soothe = 0;
+        }
+
+        public override void takeDamage(double damage, Fighter attacker) {
+            if(Soothe > 0) {
+                damage -= (Soothe / 30);
+            }
+            base.takeDamage(damage, attacker);
         }
 
         public void loop() {
-
+            double preGold = Growths["Organic Material"].Amount;
             foreach (KeyValuePair<string, Growth> entry in Growths) {
                 entry.Value.Loop();
             }
@@ -115,15 +142,33 @@ namespace ActualIdle {
             foreach (KeyValuePair<string, Doable> entry in Doables) {
                 entry.Value.Loop();
             }
+            Income = Growths["Organic Material"].Amount - preGold;
+            if (Program.debug)
+                Console.WriteLine(Income);
 
             if (Fighting && Count % 5 == 0) {
                 Boss.FightLoop(this);
-                if(Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
+                if (LastHp < Hp && LastHp > -1) {
+                    HpIncreaseRounds++;
+                    if(HpIncreaseRounds >= 3) {
+                        WinBattle();
+                    }
+                } else {
+                    HpIncreaseRounds = 0;
+                }
+                if (Fighting) { // Only damage the boss if the boss didn't kill the Druid first.
                     Boss.Hp -= (Attack - Boss.Defense);
+                    if(GetValue("UpgradeBecome SootherBought") > 0) {
+                        Soothe += Soothing;
+                    }
+                    else {
+                        Soothe += Soothing / 100;
+                    }
                     if (Boss.Hp <= 0) {
                         WinBattle();
                     }
                 }
+                LastHp = Hp;
             }
 
             Dictionary<string, double> stats = GetStats();
@@ -131,6 +176,7 @@ namespace ActualIdle {
             Attack = stats["Attack"];
             MaxHp = stats["Health"];
             Hp += stats["HealthRegen"] / 5.0;
+            Soothing = stats["Soothing"];
             if (Hp > MaxHp) {
                 Hp = MaxHp;
             }
@@ -138,9 +184,17 @@ namespace ActualIdle {
 
         /// <summary>
         /// Called when the battle against the current boss is won. Can be used to insta-win a boss battle too, if necessary.
+        /// winType 0 = defeated
+        /// winType 1 = soothed
         /// </summary>
-        public void WinBattle() {
+        public void WinBattle(int winType = 0) {
             Boss.Lose();
+            if (winType == 0)
+                Console.WriteLine("You defeated " + Boss.Name);
+            else if(winType == 1) {
+                Console.WriteLine(Boss.Name + " realized that this is not a world for fighting, but for loving.");
+            }
+            Soothe = 0;
             Values["Defeated" + Boss.Name] = 1;
             Values["DefeatedBosses"] += 1;
             Values["allowedGrowths"] += Boss.AddedGrowths;
@@ -175,6 +229,9 @@ namespace ActualIdle {
             }
             Console.WriteLine();
             Console.WriteLine("You are now fighting " + Boss.Name + "!");
+            Soothe = 0;
+            HpIncreaseRounds = 0;
+            LastHp = -1;
             Fighting = true;
         }
 
@@ -223,8 +280,8 @@ namespace ActualIdle {
             return null;
         }
 
-        public void RemoveModifier(Modifier modifier) {
-            Modifiers.Remove(modifier.Name);
+        public void RemoveModifier(string modifier) {
+            Modifiers.Remove(modifier);
         }
 
         /// <summary>
@@ -247,7 +304,7 @@ namespace ActualIdle {
             }
             Console.WriteLine(Boss.Name);
             Console.WriteLine("Hp: " + Math.Round(Boss.Hp, 2) + ", defense: " + Math.Round(Boss.Defense, 2));
-            Console.WriteLine("Attack: " + Math.Round(Boss.Attack, 2));
+            Console.WriteLine("Attack: " + Math.Round(Boss.Attack-Soothe/75, 2));
             if (Program.debug)
                 Console.WriteLine("DEBUG VALUE (hp*(attack-f.def)): " + Boss.Hp * (Boss.Attack - Defense));
             if(Boss.Description != null)
@@ -402,6 +459,9 @@ namespace ActualIdle {
                 return float.Parse(value.Substring(2));
             } else if (value.StartsWith("!B")) {
                 return bool.Parse(value.Substring(2)) ? 1 : 0;
+            } else if (value.StartsWith("sv")) {
+                if(SoftValues.ContainsKey(value))
+                    return Modifier.Modify(Modifiers.Values, value, SoftValues[value]);
             } else if (Values.ContainsKey(value)) {
                 return Modifier.Modify(Modifiers.Values, value, Values[value]);
             }
@@ -410,8 +470,19 @@ namespace ActualIdle {
 
         }
 
+        /// <summary>
+        /// Changes a value by the given amount, or creates that value, if it doesn't exist already.
+        /// If prefixed with 'sv', the value change happens in the soft values.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="change"></param>
         public void ChangeValue(string value, double change) {
-            if (Values.ContainsKey(value))
+            if(value.StartsWith("sv")) {
+                if (SoftValues.ContainsKey(value))
+                    SoftValues[value] += change;
+                else
+                    SoftValues[value] = change;
+            } else if (Values.ContainsKey(value))
                 Values[value] += change;
             else
                 Values[value] = change;
@@ -445,6 +516,10 @@ namespace ActualIdle {
             }
         }
 
+        public bool OwnsUpgrade(string upgrade) {
+            return GetValue("Upgrade" + upgrade + "Bought") > 0;
+        }
+
         /// <summary>
         /// Runs TestRequirement for every line in the string. Returns true if they're all true, otherwise false.
         /// </summary>
@@ -475,7 +550,7 @@ namespace ActualIdle {
         /// <summary>
         /// Saves the forest to an XML file. 
         /// </summary>
-        public void Save() {
+        public void Save(string filename = null) {
             Console.WriteLine("Saving...");
             XElement element = new XElement("Forest");
 
@@ -483,6 +558,10 @@ namespace ActualIdle {
             XElement valuesElement = XMLUtils.CreateElement(element, "Values");
             foreach (KeyValuePair<string, double> entry in Values) {
                 XElement valueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
+            }
+            // Saves soft values
+            foreach (KeyValuePair<string, double> entry in SoftValues) {
+                XElement softValueElement = XMLUtils.CreateElement(valuesElement, entry.Key, entry.Value);
             }
 
             // Saves skills
@@ -530,21 +609,43 @@ namespace ActualIdle {
             XMLUtils.CreateElement(element, "OfflineTicks", OfflineTicks);
             XMLUtils.CreateElement(element, "Hp", Hp);
 
+            System.IO.Directory.CreateDirectory("saves");
             XDocument xd = new XDocument();
             xd.Add(element);
-            xd.Save("save.xml");
+            if(filename == null) {
+                if (System.IO.File.Exists("saves/save.xml")) {
+                    for (int loop = 10; loop > 2; loop--) {
+                        if (System.IO.File.Exists("saves/save" + (loop - 1) + ".xml")) {
+                            System.IO.File.Copy("saves/save" + (loop - 1) + ".xml", "saves/save" + loop + ".xml", true);
+                        }
+                    }
+                    System.IO.File.Copy("saves/save.xml", "saves/save2.xml", true);
+                }
+                xd.Save("saves/save.xml");
+            } else {
+                xd.Save("saves/"+filename + ".xml");
+            }
         }
 
-        public void Load() {
+        public void Load(string filename = null) {
             Console.WriteLine("Loading...");
-            XDocument xd = XDocument.Load(@"save.xml");
-            XElement element = xd.Element("Forest");
+            XDocument xd = null;
 
-            Console.WriteLine("HEYO: " + element.Name);
-            // Loads values 
+            if (filename == null)
+                xd = XDocument.Load(@"saves/save.xml");
+            else {
+                xd = XDocument.Load(@"saves/"+filename+".xml");
+            }
+            XElement element = xd.Element("Forest");
+            
+            // Loads values and soft values 
             XElement valuesElement = XMLUtils.GetElement(element, "Values");
             foreach (XElement valueElement in valuesElement.Elements()) {
-                Values[XMLUtils.GetName(valueElement)] = double.Parse(valueElement.Value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                string name = XMLUtils.GetName(valueElement);
+                if(name.StartsWith("sv")) //Soft value
+                    SoftValues[name] = double.Parse(valueElement.Value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                else
+                    Values[XMLUtils.GetName(valueElement)] = double.Parse(valueElement.Value, System.Globalization.NumberFormatInfo.InvariantInfo);
             }
 
             // Loads skills

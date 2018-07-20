@@ -18,11 +18,11 @@ namespace ActualIdle {
         /// <summary>
         /// Text shown before you buy the upgrade.
         /// </summary>
-        public string PreDescriptionText { get; private set; }
+        public string PreDescriptionText { get; set; }
         /// <summary>
         /// Description of an upgrade after you buy it.
         /// </summary>
-        public string PostDescriptionText { get; private set; }
+        public string PostDescriptionText { get; set; }
         /// <summary>
         /// Name of upgrade.
         /// </summary>
@@ -55,6 +55,8 @@ namespace ActualIdle {
                     if (!c(forest, this, null).GetBool())
                         result = false;
                 }
+                if (Requirements != null && !forest.TestRequirements(Requirements))
+                    result = false;
                 return result;
             }
 
@@ -63,7 +65,7 @@ namespace ActualIdle {
             }
         }
         public bool Owned { get; set; }
-        public string Requirements { get; private set; }
+        public string Requirements { get; set; }
 
         /// <summary>
         /// CodeInjects can be added afterwards.
