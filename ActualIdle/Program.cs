@@ -176,8 +176,10 @@ namespace ActualIdle {
             });
 
 
-            // Think 1 skill upgrades
-            forest.AddUpgrade(new Upgrade(forest, "Considered Druidcraft", "Gives 1% production bonus per druidcraft level.", null,
+            // Thinking skill upgrades
+
+            //Druidcraft
+            forest.AddUpgrade(new Upgrade(forest, "Considered Druidcraft", "Gives 1% production bonus per Druidcraft level.", null,
                 new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Considered Druidcraft", new Dictionary<string, double>() { { "Gain", 0.01 } })));
             forest.Upgrades["Considered Druidcraft"].Injects["ownedLoop"].Add((f, g, arguments) => {
                 f.Modifiers["Considered Druidcraft"].ModifiersF["Gain"] = f.GetValue("lvlDruidcraft")*f.GetValue("DruidcraftConsideredBonus")+1;
@@ -190,6 +192,33 @@ namespace ActualIdle {
                 return new RuntimeValue(3, false);
             });
 
+            //Animal Handling
+            forest.AddUpgrade(new Upgrade(forest, "Handled You Before", "Gives 1% attack bonus per Animal Handling level.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Handled You Before", new Dictionary<string, double>() { { "Attack", 0.01 } })));
+            forest.Upgrades["Handled You Before"].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers["Handled You Before"].ModifiersF["Attack"] = f.GetValue("lvlAnimal Handling") * f.GetValue("Handled You BeforeBonus") + 1;
+                return null;
+            });
+            forest.Upgrades["Handled You Before"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("svThinks") > 0) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
+
+            //Soothing
+            forest.AddUpgrade(new Upgrade(forest, "Soothing Thoughts", "Gives 1% Health regen per Soothing level.", null,
+                new Resources(new Dictionary<string, double>() { { "Organic Material", Statics.GetNumber(1, 1) } }), new Modifier("Soothing Thoughts", new Dictionary<string, double>() { { "HealthRegen", 0.01 } })));
+            forest.Upgrades["Soothing Thoughts"].Injects["ownedLoop"].Add((f, g, arguments) => {
+                f.Modifiers["Soothing Thoughts"].ModifiersF["HealthRegen"] = f.GetValue("lvlSoothing") * f.GetValue("Soothing ThoughtsBonus") + 1;
+                return null;
+            });
+            forest.Upgrades["Soothing Thoughts"].Injects["unlocked"].Add((f, g, arguments) => {
+                if (f.GetValue("svThinks") > 0 && f.GetValue("lvlSoothing") > 0) {
+                    return new RuntimeValue(3, true);
+                }
+                return new RuntimeValue(3, false);
+            });
         }
         public static void FirstInit(Forest forest) {
 
@@ -426,6 +455,9 @@ namespace ActualIdle {
 
             // Think upgrades
             forest.Values["DruidcraftConsideredBonus"] = 0.01; //How much production boost in % each level of druidcraft gives.
+            forest.Values["Handled You BeforeBonus"] = 0.01; //How much attack boost in % each level of Animal Handling gives.
+            forest.Values["Soothing ThoughtsBonus"] = 0.01; //How much attack boost in % each level of Animal Handling gives.
+
 
 
 

@@ -1,37 +1,76 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Forest>
   <Values>
+    <DruidcraftXpGain>1</DruidcraftXpGain>
+    <Animal_HandlingXpGain>1</Animal_HandlingXpGain>
+    <SoothingXpGain>1</SoothingXpGain>
+    <AlchemyXpGain>1</AlchemyXpGain>
+    <TransformationXpGain>1</TransformationXpGain>
+    <RestorationXpGain>1</RestorationXpGain>
+    <DefeatedBosses>0</DefeatedBosses>
+    <Organic_MaterialHealth>0</Organic_MaterialHealth>
+    <Organic_MaterialAttack>0</Organic_MaterialAttack>
+    <Organic_MaterialHealthRegen>0</Organic_MaterialHealthRegen>
+    <Organic_MaterialDefense>0</Organic_MaterialDefense>
+    <Organic_MaterialSoothing>0</Organic_MaterialSoothing>
+    <BushesHealth>0.2</BushesHealth>
+    <BushesAttack>0.2</BushesAttack>
+    <BushesHealthRegen>0</BushesHealthRegen>
+    <BushesDefense>0</BushesDefense>
+    <BushesSoothing>0</BushesSoothing>
+    <OaksHealth>1</OaksHealth>
+    <OaksAttack>0</OaksAttack>
+    <OaksHealthRegen>0</OaksHealthRegen>
+    <OaksDefense>0</OaksDefense>
+    <OaksSoothing>0</OaksSoothing>
+    <AntsHealth>0</AntsHealth>
+    <AntsAttack>0.8</AntsAttack>
+    <AntsHealthRegen>0</AntsHealthRegen>
+    <AntsDefense>0</AntsDefense>
+    <AntsSoothing>0</AntsSoothing>
+    <BirchesHealth>0</BirchesHealth>
+    <BirchesAttack>0</BirchesAttack>
+    <BirchesHealthRegen>0</BirchesHealthRegen>
+    <BirchesDefense>0.25</BirchesDefense>
+    <BirchesSoothing>0</BirchesSoothing>
+    <YewsHealth>4</YewsHealth>
+    <YewsAttack>0</YewsAttack>
+    <YewsHealthRegen>0</YewsHealthRegen>
+    <YewsDefense>0</YewsDefense>
+    <YewsSoothing>0</YewsSoothing>
+    <FlowersHealth>0</FlowersHealth>
+    <FlowersAttack>0</FlowersAttack>
+    <FlowersHealthRegen>0.2</FlowersHealthRegen>
+    <FlowersDefense>0</FlowersDefense>
+    <FlowersSoothing>2</FlowersSoothing>
+    <SpidersHealth>0</SpidersHealth>
+    <SpidersAttack>1</SpidersAttack>
+    <SpidersHealthRegen>0</SpidersHealthRegen>
+    <SpidersDefense>0</SpidersDefense>
+    <SpidersSoothing>0</SpidersSoothing>
     <wandlevel>0</wandlevel>
     <boughtThings>0</boughtThings>
     <allowedGrowths>2</allowedGrowths>
     <BushesGain>0.6</BushesGain>
-    <BushesAttack>0.2</BushesAttack>
-    <BushesHealth>0.2</BushesHealth>
     <BushesInc>1.1</BushesInc>
     <OaksGain>2</OaksGain>
-    <OaksHealth>1</OaksHealth>
     <OaksInc>1.1</OaksInc>
     <AntsGain>3.6</AntsGain>
-    <AntsAttack>0.8</AntsAttack>
     <AntsInc>1.1</AntsInc>
     <BirchesGain>7</BirchesGain>
-    <BirchesDefense>0.25</BirchesDefense>
     <BirchesInc>3</BirchesInc>
     <YewsGain>23</YewsGain>
-    <YewsHealth>4</YewsHealth>
-    <YewsAttack>0</YewsAttack>
     <YewsInc>1.1</YewsInc>
     <FlowersGain>0</FlowersGain>
-    <FlowersHealthRegen>0.2</FlowersHealthRegen>
-    <FlowersSoothing>2</FlowersSoothing>
     <FlowersInc>1.1</FlowersInc>
     <SpidersGain>85</SpidersGain>
-    <SpidersAttack>1</SpidersAttack>
     <SpidersInc>1.1</SpidersInc>
     <DruidHeal>5</DruidHeal>
     <RejuvenateCooldownMod>1</RejuvenateCooldownMod>
     <HarmonyDuration>75</HarmonyDuration>
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
+    <DruidcraftConsideredBonus>0.01</DruidcraftConsideredBonus>
+    <UpgradeConsidered_DruidcraftBought>1</UpgradeConsidered_DruidcraftBought>
     <svThinks>1</svThinks>
   </Values>
   <skills>
@@ -44,11 +83,11 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>9.6</Amount>
+      <Amount>35.556</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>1</Amount>
+      <Amount>6</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
@@ -95,15 +134,25 @@
   <Modifiers>
     <Xp_Gain>
       <ModifiersF>
-        <DruidcraftXpGain>0.01</DruidcraftXpGain>
+        <DruidcraftXpGain>0.060000000000000005</DruidcraftXpGain>
         <Animal_HandlingXpGain>0</Animal_HandlingXpGain>
       </ModifiersF>
     </Xp_Gain>
+    <Base_Stats>
+      <ModifiersA>
+        <HealthRegen>0.2</HealthRegen>
+      </ModifiersA>
+    </Base_Stats>
     <SpiderAttackMod>
       <ModifiersF>
         <SpidersAttack>1.3</SpidersAttack>
       </ModifiersF>
     </SpiderAttackMod>
+    <Considered_Druidcraft>
+      <ModifiersF>
+        <Gain>0.27</Gain>
+      </ModifiersF>
+    </Considered_Druidcraft>
   </Modifiers>
   <Upgrades>
     <Bush_Growth_1>false</Bush_Growth_1>
@@ -136,10 +185,11 @@
     <Free_Healthcare>false</Free_Healthcare>
     <Unlock_Harmony>false</Unlock_Harmony>
     <Dense_Forest>false</Dense_Forest>
+    <Considered_Druidcraft>true</Considered_Druidcraft>
   </Upgrades>
   <Path>Forest Street</Path>
   <PathBoss>0</PathBoss>
-  <Count>34719</Count>
+  <Count>35068</Count>
   <OfflineTicks>0</OfflineTicks>
   <Hp>0.2</Hp>
 </Forest>

@@ -71,6 +71,8 @@
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
     <DruidcraftConsideredBonus>0.01</DruidcraftConsideredBonus>
     <UpgradeConsidered_DruidcraftBought>1</UpgradeConsidered_DruidcraftBought>
+    <UpgradeBush_Growth_1Bought>1</UpgradeBush_Growth_1Bought>
+    <UpgradeOak_Growth_1Bought>1</UpgradeOak_Growth_1Bought>
     <svThinks>1</svThinks>
   </Values>
   <skills>
@@ -83,15 +85,15 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>35.556</Amount>
+      <Amount>63563.796</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>6</Amount>
+      <Amount>30</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
-      <Amount>0</Amount>
+      <Amount>27</Amount>
       <Unlocked>true</Unlocked>
     </Oaks>
     <Ants>
@@ -134,7 +136,7 @@
   <Modifiers>
     <Xp_Gain>
       <ModifiersF>
-        <DruidcraftXpGain>0.060000000000000005</DruidcraftXpGain>
+        <DruidcraftXpGain>1.11</DruidcraftXpGain>
         <Animal_HandlingXpGain>0</Animal_HandlingXpGain>
       </ModifiersF>
     </Xp_Gain>
@@ -150,13 +152,23 @@
     </SpiderAttackMod>
     <Considered_Druidcraft>
       <ModifiersF>
-        <Gain>0.27</Gain>
+        <Gain>1.27</Gain>
       </ModifiersF>
     </Considered_Druidcraft>
+    <Bush_Growth_1>
+      <ModifiersF>
+        <BushesGain>3</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_1>
+    <Oak_Growth_1>
+      <ModifiersF>
+        <OaksGain>4</OaksGain>
+      </ModifiersF>
+    </Oak_Growth_1>
   </Modifiers>
   <Upgrades>
-    <Bush_Growth_1>false</Bush_Growth_1>
-    <Oak_Growth_1>false</Oak_Growth_1>
+    <Bush_Growth_1>true</Bush_Growth_1>
+    <Oak_Growth_1>true</Oak_Growth_1>
     <Growing_Birches_1>false</Growing_Birches_1>
     <Larger_Ants_1>false</Larger_Ants_1>
     <Bush_Growth_2>false</Bush_Growth_2>
@@ -189,7 +201,7 @@
   </Upgrades>
   <Path>Forest Street</Path>
   <PathBoss>0</PathBoss>
-  <Count>35068</Count>
+  <Count>35826</Count>
   <OfflineTicks>0</OfflineTicks>
-  <Hp>0.2</Hp>
+  <Hp>26.879999999999605</Hp>
 </Forest>
