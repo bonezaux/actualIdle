@@ -19,7 +19,7 @@
     <SpidersAttack>1</SpidersAttack>
     <WebsAttack>5</WebsAttack>
     <WebsDefense>50</WebsDefense>
-    <boughtThings>13</boughtThings>
+    <boughtThings>14</boughtThings>
     <allowedGrowths>17</allowedGrowths>
     <BushesGain>0.6</BushesGain>
     <BushesInc>1.1</BushesInc>
@@ -100,7 +100,7 @@
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15538.807511449631</Druidcraft>
+    <Druidcraft>15625.437637939887</Druidcraft>
     <Animal_Handling>1042.8285931333412</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
@@ -109,7 +109,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>2911509277.123</Amount>
+      <Amount>637073351.008</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -137,11 +137,11 @@
       <Unlocked>true</Unlocked>
     </Flowers>
     <Spiders>
-      <Amount>144</Amount>
+      <Amount>150</Amount>
       <Unlocked>true</Unlocked>
     </Spiders>
     <Webs>
-      <Amount>2</Amount>
+      <Amount>3</Amount>
       <Unlocked>true</Unlocked>
     </Webs>
   </Growths>
@@ -168,7 +168,7 @@
     <Xp_Gain>
       <ModifiersF>
         <DruidcraftXpGain>70.940000000000012</DruidcraftXpGain>
-        <Animal_HandlingXpGain>13.55</Animal_HandlingXpGain>
+        <Animal_HandlingXpGain>14.850000000000001</Animal_HandlingXpGain>
       </ModifiersF>
     </Xp_Gain>
     <Base_Stats>
@@ -283,7 +283,7 @@
     </Gnarly_Yews_4>
     <Web_Site>
       <ModifiersF>
-        <SpidersAttack>1.6204429941993492</SpidersAttack>
+        <SpidersAttack>1.6209524019357708</SpidersAttack>
       </ModifiersF>
     </Web_Site>
     <Bush_Growth_4>
@@ -299,7 +299,7 @@
     <Webs>
       <ModifiersA>
         <Stall>1</Stall>
-        <SpidersAttack>0.2</SpidersAttack>
+        <SpidersAttack>0.30000000000000004</SpidersAttack>
       </ModifiersA>
     </Webs>
     <Druidcraft_Considered>
@@ -351,7 +351,7 @@
   </Upgrades>
   <Path>Forest standard dudes</Path>
   <PathBoss>2</PathBoss>
-  <Count>56760</Count>
-  <OfflineTicks>9000</OfflineTicks>
+  <Count>56992</Count>
+  <OfflineTicks>18000</OfflineTicks>
   <Hp>697.2</Hp>
 </Forest>

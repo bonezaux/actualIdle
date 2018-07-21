@@ -38,6 +38,7 @@
     <RejuvenateCooldownMod>1</RejuvenateCooldownMod>
     <HarmonyTime>75</HarmonyTime>
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
+    <HarmonyMana>100</HarmonyMana>
     <RageuvenateCooldownTime>150</RageuvenateCooldownTime>
     <RageuvenateDamageTime>2</RageuvenateDamageTime>
     <RageuvenateIncomeTime>60</RageuvenateIncomeTime>
@@ -97,13 +98,12 @@
     <DefeatedBoss_13>1</DefeatedBoss_13>
     <DefeatedBoss_14>1</DefeatedBoss_14>
     <UpgradeDruidcraft_ConsideredBought>1</UpgradeDruidcraft_ConsideredBought>
-    <RageuvenateCooldown>108</RageuvenateCooldown>
     <DefeatedBoss_15>1</DefeatedBoss_15>
     <DefeatedBoss_16>1</DefeatedBoss_16>
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15636.479311647228</Druidcraft>
+    <Druidcraft>15639.252897090279</Druidcraft>
     <Animal_Handling>1089.9525992441354</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
@@ -112,7 +112,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>1328395039.492</Amount>
+      <Amount>1909345994.632</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -358,7 +358,8 @@
   </Upgrades>
   <Path>Forest standard dudes</Path>
   <PathBoss>4</PathBoss>
-  <Count>58180</Count>
+  <Count>58479</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>1271.4196000000022</Hp>
+  <Hp>1482.3999999999999</Hp>
+  <Mana>61.400000000000333</Mana>
 </Forest>

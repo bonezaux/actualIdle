@@ -100,7 +100,7 @@
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15538.006013879529</Druidcraft>
+    <Druidcraft>15538.06327193317</Druidcraft>
     <Animal_Handling>1042.8285931333412</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
@@ -109,7 +109,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>2777013320.563</Amount>
+      <Amount>2786620174.603</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -283,7 +283,7 @@
     </Gnarly_Yews_4>
     <Web_Site>
       <ModifiersF>
-        <SpidersAttack>1.6308233662949419</SpidersAttack>
+        <SpidersAttack>1.6204429941993492</SpidersAttack>
       </ModifiersF>
     </Web_Site>
     <Bush_Growth_4>
@@ -351,7 +351,7 @@
   </Upgrades>
   <Path>Forest standard dudes</Path>
   <PathBoss>2</PathBoss>
-  <Count>56676</Count>
+  <Count>56682</Count>
   <OfflineTicks>9000</OfflineTicks>
   <Hp>697.2</Hp>
 </Forest>

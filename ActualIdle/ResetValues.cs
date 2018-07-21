@@ -73,7 +73,7 @@ namespace ActualIdle {
 
             forest.Values[E.REJUVENATE+E.MOD] = 5;
             forest.Values[E.REJUVENATE+E.COOLDOWN+E.MOD] = 1; //Is a speed, making it higher will make it faster.
-            forest.Values[E.REJUVENATE + E.MANA] = 0;
+            forest.Values[E.REJUVENATE + E.MANA] = 15;
             forest.Doables[E.REJUVENATE].Unlocked = true;
             forest.Doables[E.REJUVENATE].Requirements += E.REJUVENATE+E.COOLDOWN+"_ <= _0";
 
@@ -90,7 +90,7 @@ namespace ActualIdle {
             forest.Doables[E.RAGEUVENATE].Requirements += E.RAGEUVENATE + E.COOLDOWN+"_<=_0";
             forest.Values[E.RAGEUVENATE + E.DAMAGE + E.TIME] = 2; // How many rounds of damage Rageuvenate deals
             forest.Values[E.RAGEUVENATE + E.INCOME + E.TIME] = 12 * 5; // How many ticks of income Rageuvenate gives
-            forest.Values[E.RAGEUVENATE + E.MANA] = 0;
+            forest.Values[E.RAGEUVENATE + E.MANA] = 45;
 
             // Web Site
             forest.Values[E.UPG_WEB_SITE + E.MOD] = 0.2; // How much each magnitude of income increases the floating point modifier on spider attack.

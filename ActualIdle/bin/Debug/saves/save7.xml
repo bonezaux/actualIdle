@@ -100,7 +100,7 @@
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15538.06327193317</Druidcraft>
+    <Druidcraft>15538.807511449631</Druidcraft>
     <Animal_Handling>1042.8285931333412</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
@@ -109,7 +109,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>2786620174.603</Amount>
+      <Amount>2911509277.123</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -351,7 +351,7 @@
   </Upgrades>
   <Path>Forest standard dudes</Path>
   <PathBoss>2</PathBoss>
-  <Count>56682</Count>
+  <Count>56760</Count>
   <OfflineTicks>9000</OfflineTicks>
   <Hp>697.2</Hp>
 </Forest>
