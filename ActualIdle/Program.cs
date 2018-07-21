@@ -13,9 +13,9 @@ namespace ActualIdle {
     /// Contains static values.
     /// </summary>
     class Statics {
-        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing", "Speed", "Stall" };
+        public static string[] statList = new string[] { "Health", "Attack", "HealthRegen", "Defense", "Soothing", "Speed", "Stall", E.MAXMANA, E.MANAREGEN, E.MANA };
         public static string[] skills = new string[] { "Druidcraft", "Animal Handling", "Soothing", "Alchemy", "Transformation", "Restoration" };
-        public static double xpLogBase = 1000000; // This determines what base on the organic matter the xp will be calculated from
+        public static double xpLogBase = 1000000; // This determines what base on the virtual total the xp will be calculated from
 
         /// <summary>
         /// Returns a number equal to leading*10^exponent
@@ -122,7 +122,7 @@ namespace ActualIdle {
 
 
             // Harmony spell, increases defense, regen, and gain, lasts 15s
-            forest.AddDoable(new Doable(forest, E.HARMONY, null, "", "Harmony!", "Harmony is on cooldown.", true));
+            forest.AddDoable(new Doable(forest, E.HARMONY, null, "", "Harmony!", "Harmony is on cooldown.", true, E.HARMONY+E.MANA));
             forest.Doables[E.HARMONY].Injects["perform"].Add((f, g, arguments) => {
                 f.Values[E.HARMONY+E.ACTIVE] = f.GetValue(E.HARMONY+E.TIME);
                 f.Values[E.HARMONY+E.COOLDOWN] = f.GetValue(E.HARMONY+E.COOLDOWN+E.TIME) + f.GetValue(E.HARMONY+E.TIME);
@@ -175,9 +175,9 @@ namespace ActualIdle {
                 return new RuntimeValue(3, false);
             });
 
-            forest.AddUpgrade(new Upgrade(forest, E.UPG_WEB_SITE, "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web.", null,
+            forest.AddUpgrade(new Upgrade(forest, E.UPG_WEB_SITE, "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web. Yews are also ideal for spiders, and will protect coverage. +1% to yew health per spider owned.", null,
                 new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } }), new Modifier(E.UPG_WEB_SITE,
-                new Dictionary<string, double>() { { E.SPIDERS+E.ATTACK, 1.1 } })));
+                new Dictionary<string, double>() { { E.SPIDERS+E.ATTACK, 1.1 }, { E.YEWS + E.HEALTH, 1.01 } })));
             forest.Upgrades[E.UPG_WEB_SITE].Injects["unlocked"].Add((f, g, arguments) => {
                 if (f.GetValue(E.DEFEATED_BOSSES) >= 9 && f.OwnsUpgrade(E.UPG_TRANSMOGRIFY_RAGEUVENATE) && f.GetValue("count"+E.SPIDERS) >= 100) {
                     return new RuntimeValue(3, true);
@@ -186,6 +186,7 @@ namespace ActualIdle {
             });
             forest.Upgrades[E.UPG_WEB_SITE].Injects["ownedLoop"].Add((f, g, arguments) => {
                 f.Modifiers[E.UPG_WEB_SITE].ModifiersF[E.SPIDERS+E.ATTACK] = 1 + f.GetValue(E.UPG_WEB_SITE+E.MOD) * Math.Log10(f.Income);
+                f.Modifiers[E.UPG_WEB_SITE].ModifiersF[E.YEWS + E.HEALTH] = 1 + f.GetValue(E.COUNT + E.SPIDERS) * 0.01;
                 return null;
             });
             
@@ -212,16 +213,16 @@ namespace ActualIdle {
             });
 
             // Rageuvenate spell - deals 4 seconds of damage and gives 12 seconds of current Income TODO: if something at some point gives instant money, this should probably be changed
-            forest.AddDoable(new Doable(forest, E.RAGEUVENATE, null, "", "So angry!", "Rageuvenate is on cooldown.", true));
+            forest.AddDoable(new Doable(forest, E.RAGEUVENATE, null, "", "So angry!", "Rageuvenate is on cooldown.", true, E.RAGEUVENATE+E.MANA));
             forest.Doables[E.RAGEUVENATE].Injects["perform"].Add((f, g, arguments) => {
                 f.Values[E.RAGEUVENATE+E.COOLDOWN] = f.GetValue(E.RAGEUVENATE+E.COOLDOWN+E.TIME);
                 if(f.Fighting) {
                     double damage = f.GetValue(E.RAGEUVENATE + E.DAMAGE + E.TIME);
                     if(f.OwnsUpgrade(E.UPG_WEB_DEVELOPMENT)) {
-                        damage *= (2 - (f.Hp / f.MaxHp));
+                        damage *= (2 - (f.Hp / f.Stats[E.HEALTH]));
                     }
-                    Console.WriteLine("Rageuvenate dealing " + damage * f.Attack + " damage!"); 
-                    f.DealDamage(f.Attack * damage, false);
+                    Console.WriteLine("Rageuvenate dealing " + damage * f.Stats[E.ATTACK] + " damage!"); 
+                    f.DealDamage(f.Stats[E.ATTACK] * damage, false);
                 }
                 f.Growths[E.ORGANIC_MATERIAL].Amount += f.Income * f.GetValue(E.RAGEUVENATE+E.INCOME+E.TIME);
                 return null;
@@ -276,6 +277,7 @@ namespace ActualIdle {
 
             CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 5", E.OAKS, 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
             CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 5", E.BUSHES, 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 3", E.SPIDERS, 150, 0.4E+10, 10); //x25 -  3.2E6 / 1.6 + 0.4 E10
             CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH + " 1", E.FLOWERS, 150, Statics.GetNumber(2, 10), 8, E.FLOWERS+E.GAIN+"_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
 
             CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 5", E.YEWS, 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
@@ -421,7 +423,7 @@ namespace ActualIdle {
             });
 
             // Rejuvenate, heals 5+0.5*druidcraft level
-            forest.AddDoable(new Doable(forest, "Rejuvenate", null, "", "Rejuvenate!", "Rejuvenate is on cooldown.", true));
+            forest.AddDoable(new Doable(forest, "Rejuvenate", null, "", "Rejuvenate!", "Rejuvenate is on cooldown.", true, E.REJUVENATE+E.MANA));
             forest.Doables["Rejuvenate"].Injects["perform"].Add((f, g, arguments) => {
                 double hpIncrease = forest.GetValue("DruidHeal") * (1 + forest.GetValue("lvlDruidcraft") * 0.1);
                 if (f.GetValue("UpgradeSoothing RejuvenationBought") != 0) {
@@ -450,7 +452,7 @@ namespace ActualIdle {
 
 
             // DEBUG DOABLE; HALF HOUR GENERATION
-            forest.AddDoable(new Doable(forest, "Halfhour Offline", null, "", "Halfhour Offline!", "", true));
+            forest.AddDoable(new Doable(forest, "Halfhour Offline", null, "", "Halfhour Offline!", "", true, "!I0"));
             forest.Doables["Halfhour Offline"].Injects["perform"].Add((f, g, arguments) => {
                 f.TickOffline(5 * 60 * 30);
                 return null;
@@ -709,7 +711,9 @@ namespace ActualIdle {
                 } else if (l.StartsWith("skills")) {
                     forest.ListSkills();
                 } else if (l.StartsWith("hp")) {
-                    Console.WriteLine(Math.Round(forest.Hp, 2) + " / " + Math.Round(forest.MaxHp, 2));
+                    Console.WriteLine(Math.Round(forest.Hp, 2) + " / " + Math.Round(forest.Stats[E.HEALTH], 2));
+                } else if (l.StartsWith("mana")) {
+                    Console.WriteLine(Math.Round(forest.Mana, 2) + " / " + Math.Round(forest.Stats[E.MAXMANA], 2));
                 } else if (l.StartsWith("fight")) {
                     forest.StartFighting();
                 } else if (l.StartsWith("boss")) {
@@ -720,8 +724,8 @@ namespace ActualIdle {
                             Console.WriteLine(entry.Key + ": " + entry.Value);
                     }
                     if (debug && forest.Boss != null) {
-                        Console.WriteLine("DEBUG VALUE (hp*(attack-b.def)): " + forest.Hp * (forest.Attack - forest.Boss.Defense));
-                        Console.WriteLine("DEBUG VALUE 2 ((b.attack-(def+hpReg))/soothing * 30) - seconds to survive: " + ((forest.Boss.Attack - (forest.Defense + forest.GetStats()["HealthRegen"])) / forest.Soothing) * 30 + "s");
+                        Console.WriteLine("DEBUG VALUE (hp*(attack-b.def)): " + forest.Hp * (forest.Stats[E.ATTACK] - forest.Boss.Stats[E.DEFENSE]));
+                        Console.WriteLine("DEBUG VALUE 2 ((b.attack-(def+hpReg))/soothing * 30) - seconds to survive: " + ((forest.Boss.Stats[E.ATTACK] - (forest.Stats[E.DEFENSE] + forest.Stats[E.HEALTHREGEN])) / forest.Stats[E.SOOTHING]) * 30 + "s");
                     }
                 } else if (l.StartsWith("upgrades")) {
                     forest.ListAvailableUpgrades();

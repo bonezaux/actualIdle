@@ -33,6 +33,10 @@ namespace ActualIdle {
         public const string RAGEUVENATE = "Rageuvenate";
         public const string DAMAGE = "Damage";
         public const string INCOME = "Income";
+        public const string MAXMANA = "Max Mana";
+        public const string MANAREGEN = "Mana Regen";
+        public const string MANA = "Mana";
+        public const string SPEED = "Speed";
         public const string WEBS = "Webs";
         public const string STALL = "Stall";
         public const string DRUIDCRAFT = "Druidcraft";
@@ -71,7 +75,7 @@ namespace ActualIdle {
         public const string UPG_DENSE_FOREST = "Dense Forest";
 
         /// <summary>
-        /// Amount of soft reset, soft value.
+        /// Amount of soft resets, soft value.
         /// </summary>
         public const string THINKS = "svThinks";
     }

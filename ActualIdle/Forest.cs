@@ -50,11 +50,12 @@ namespace ActualIdle {
         /// How much the druid has soothed in the current battle.
         /// </summary>
         public double Soothe { get; set; }
-        public double Soothing { get; set; }
         /// <summary>
         /// The Hp in the last tick of combat. If this is lower than current health three combat ticks in a row, the fight is won.
         /// </summary>
         public double LastHp { get; set; }
+
+
         public int HpIncreaseRounds { get; set; }
         /// <summary>
         /// What calculation step we're currently at. Every 5th is a second
@@ -65,6 +66,7 @@ namespace ActualIdle {
         /// </summary>
         public int OfflineTicks { get; private set; }
         public double Income { get; set; }
+        public double Mana;
 
         public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Growths = new Dictionary<string, Growth>();
@@ -108,18 +110,22 @@ namespace ActualIdle {
         }
 
         public override void Lose() {
-            Console.WriteLine("You were defeated!");
-            Boss.Hp = Boss.MaxHp;
+            Console.WriteLine("You were defeated! Boss hp: " + Statics.GetDisplayNumber(Boss.Hp) + "/" + Statics.GetDisplayNumber(Boss.Stats[E.HEALTH]));
+            Boss.Hp = Boss.Stats[E.HEALTH];
             Fighting = false;
             Hp = 0;
             Soothe = 0;
         }
 
-        public override void takeDamage(double damage, Fighter attacker) {
+        public void SpendMana(double mana) {
+            Mana -= mana;
+        }
+
+        public override double takeDamage(double damage, Fighter attacker, bool armor=true) {
             if(Soothe > 0) {
                 damage -= (Soothe / 30);
             }
-            base.takeDamage(damage, attacker);
+            return base.takeDamage(damage, attacker, armor);
         }
 
         public void Loop() {
@@ -145,17 +151,15 @@ namespace ActualIdle {
             if (Fighting && Count % 5 == 0) {
                 FightTick();
             }
-
-            Dictionary<string, double> stats = GetStats();
-            Defense = stats["Defense"];
-            Attack = stats["Attack"];
-            MaxHp = stats["Health"];
-            Hp += stats["HealthRegen"] / 5.0;
-            Soothing = stats["Soothing"];
-            Stall = stats["Stall"];
-            Speed = stats["Speed"];
-            if (Hp > MaxHp) {
-                Hp = MaxHp;
+            
+            Stats = GetStats();
+            Hp += Stats[E.HEALTHREGEN] / 5.0;
+            Mana += Stats[E.MANAREGEN] / 5.0;
+            if (Hp > Stats[E.HEALTH]) {
+                Hp = Stats[E.HEALTH];
+            }
+            if(Mana > Stats[E.MAXMANA]) {
+                Mana = Stats[E.MAXMANA];
             }
         }
 
@@ -204,16 +208,16 @@ namespace ActualIdle {
             }
             if (Fighting && forestAttack) { // Only damage the boss if the boss didn't kill the Druid first.
                 if(Hesitation <= 0) {
-                    double damage = (Attack - Boss.Defense);
+                    double damage = (Stats[E.ATTACK] - Boss.Stats[E.DEFENSE]);
                     if (damage > 0) {
                         Boss.Hp -= damage;
                         AddXp("Animal Handling", damage);
                     }
                     if (OwnsUpgrade("Become Soother")) {
-                        Soothe += Soothing;
-                        AddXp("Soothing", Soothing);
+                        Soothe += Stats[E.SOOTHING];
+                        AddXp("Soothing", Stats[E.SOOTHING]);
                     } else {
-                        Soothe += Soothing / 20;
+                        Soothe += Stats[E.SOOTHING] / 20;
                     }
                     if (Boss.Hp <= 0) {
                         WinBattle();
@@ -247,8 +251,8 @@ namespace ActualIdle {
             Soothe = 0;
             HpIncreaseRounds = 0;
             LastHp = -1;
-            double fSpdWin = Speed - Boss.Stall;
-            double bSpdWin = Boss.Speed - Stall;
+            double fSpdWin = Stats[E.SPEED] - Boss.Stats[E.STALL];
+            double bSpdWin = Boss.Stats[E.SPEED] - Stats[E.STALL];
             if(fSpdWin >= 1) {
                 int win = (int)fSpdWin;
                 for(int loop=0;loop<win;loop++) {
@@ -328,10 +332,8 @@ namespace ActualIdle {
         }
 
         public void DealDamage(double damage, bool armor = true) {
-            if (armor)
-                damage = damage - Boss.Defense;
+            damage = Boss.takeDamage(damage, this, armor);
             AddXp("Animal Handling", damage);
-            Boss.Hp -= damage;
         }
 
         /// <summary>
@@ -353,10 +355,16 @@ namespace ActualIdle {
                 return;
             }
             Console.WriteLine(Boss.Name);
-            Console.WriteLine("Hp: " + Math.Round(Boss.Hp, 2) + ", defense: " + Math.Round(Boss.Defense, 2));
-            Console.WriteLine("Attack: " + Math.Round(Boss.Attack-Soothe/75, 2));
+            Console.WriteLine("Hp: " + Math.Round(Boss.Hp, 2) + ", defense: " + Math.Round(Boss.Stats[E.DEFENSE], 2));
+            Console.WriteLine("Attack: " + Math.Round(Boss.Stats[E.ATTACK]-Soothe/75, 2));
+            int stall = (int)Boss.Stats[E.STALL];
+            int speed = (int)Boss.Stats[E.SPEED];
+            if(stall != 0)
+                Console.WriteLine("Stall: " + stall);
+            if (speed != 0)
+                Console.WriteLine("Speed: " + speed);
             if (Program.debug)
-                Console.WriteLine("DEBUG VALUE (hp*(attack-f.def)): " + Boss.Hp * (Boss.Attack - Defense));
+                Console.WriteLine("DEBUG VALUE (hp*(attack-f.def)): " + Boss.Hp * (Boss.Stats[E.ATTACK] - Boss.Stats[E.DEFENSE]));
             if(Boss.Description != null)
                 Console.WriteLine(Boss.Description);
         }
@@ -502,6 +510,13 @@ namespace ActualIdle {
             } else if (value.StartsWith("count")) {
                 if (Growths.ContainsKey(value.Substring(5)))
                     return Growths[value.Substring(5)].Amount;
+            } else if (value.StartsWith("stat")) {
+                if (Stats.ContainsKey(value.Substring(4)))
+                    return Stats[value.Substring(4)];
+            } else if (value.Equals("mana")) {
+                return Mana;
+            } else if (value.Equals("hp")) {
+                return Hp;
             } else if (value.StartsWith("item")) {
                 if (Items.Select(item => item.Name).ToList().Contains(value.Substring(4)))
                     return 1;
@@ -662,6 +677,7 @@ namespace ActualIdle {
             XMLUtils.CreateElement(element, "Count", Count);
             XMLUtils.CreateElement(element, "OfflineTicks", OfflineTicks);
             XMLUtils.CreateElement(element, "Hp", Hp);
+            XMLUtils.CreateElement(element, "Mana", Mana);
 
             System.IO.Directory.CreateDirectory("saves");
             XDocument xd = new XDocument();
@@ -765,6 +781,8 @@ namespace ActualIdle {
             }
             Count = (int)XMLUtils.GetDouble(element, "Count");
             Hp = XMLUtils.GetDouble(element, "Hp");
+            if(XMLUtils.HasChild(element, "Mana"))
+                Mana = XMLUtils.GetDouble(element, "Mana");
             OfflineTicks = (int)XMLUtils.GetDouble(element, "OfflineTicks");
 
         }

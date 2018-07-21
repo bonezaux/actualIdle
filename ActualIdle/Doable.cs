@@ -19,6 +19,7 @@ namespace ActualIdle {
         public string FailText { get; private set; }
         public bool Unlocked { get; set; }
         public bool RemainUnlocked { get; private set; }
+        public string ManaCost { get; set; }
         /// <summary>
         /// Doables have two injects:
         ///  - loop: called on every loop
@@ -27,7 +28,7 @@ namespace ActualIdle {
         /// </summary>
         public Dictionary<string, List<codeInject>> Injects { get; set; }
 
-        public Doable(Forest forest, string name, Resources resourceChange, string reqs, string text, string failText, bool remainUnlocked) {
+        public Doable(Forest forest, string name, Resources resourceChange, string reqs, string text, string failText, bool remainUnlocked, string manaCost) {
             this.forest = forest;
             Name = name;
             ResourceChange = resourceChange;
@@ -41,6 +42,7 @@ namespace ActualIdle {
             Injects["loop"] = new List<codeInject>();
             Injects["perform"] = new List<codeInject>();
             Injects["tooltip"] = new List<codeInject>();
+            ManaCost = manaCost;
         }
 
         /// <summary>
@@ -52,8 +54,13 @@ namespace ActualIdle {
         }
 
         public bool Perform() {
+            if(forest.Mana < forest.GetValue(ManaCost)) {
+                Console.WriteLine("Not enough mana! " + Name + " costs " + forest.GetValue(ManaCost));
+                return false;
+            }
             if ((ResourceChange == null || ResourceChange.CanAfford(forest, 1)) &&
                 TestRequirements()) {
+                forest.SpendMana(forest.GetValue(ManaCost));
                 if (ResourceChange != null) {
                     ResourceChange.Print(forest, 1);
                     ResourceChange.Apply(forest, 1);

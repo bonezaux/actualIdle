@@ -8,11 +8,6 @@ namespace ActualIdle {
 
     public class Fighter : IEntity {
         public double Hp { get; set; }
-        public double MaxHp { get; set; }
-        public double Attack { get; set; }
-        public double Defense { get; set; }
-        public double Stall { get; set; }
-        public double Speed { get; set; }
         public string Name { get; set; }
         public Resources Reward { get; set; }
         public Dictionary<string, int> Xp { get; set; }
@@ -24,12 +19,16 @@ namespace ActualIdle {
         /// </summary>
         public int AddedGrowths { get; set; }
         public int Hesitation { get; set; }
+        public Dictionary<string, double> Stats;
 
         public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
-            MaxHp = maxHp;
-            Hp = MaxHp;
-            Attack = attack;
-            Defense = defense;
+            Stats = new Dictionary<string, double>();
+            Stats[E.HEALTH] = maxHp;
+            Stats[E.ATTACK] = attack;
+            Stats[E.DEFENSE] = defense;
+            Stats[E.STALL] = 0;
+            Stats[E.SPEED] = 0;
+            Hp = maxHp;
             Name = name;
             Reward = reward;
             Xp = xp;
@@ -38,12 +37,22 @@ namespace ActualIdle {
             AddedGrowths = addedGrowths;
         }
 
-        public virtual void takeDamage(double damage, Fighter attacker) {
-            Hp -= (damage - Defense);
+        /// <summary>
+        /// Returns damage taken
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="attacker"></param>
+        /// <param name="armor"></param>
+        /// <returns></returns>
+        public virtual double takeDamage(double damage, Fighter attacker, bool armor = true) {
+            if(armor)
+                damage -= Stats[E.DEFENSE];
+            Hp -= damage;
+            return damage;
         }
 
         public void FightLoop(Fighter fighter) {
-            fighter.takeDamage(this.Attack, this);
+            fighter.takeDamage(Stats[E.ATTACK], this);
             if (fighter.Hp <= 0)
                 fighter.Lose();
         }
@@ -52,7 +61,9 @@ namespace ActualIdle {
         }
 
         public Fighter Clone() {
-            return new Fighter(MaxHp, Attack, Defense, Name, Reward, Xp, Requirements, Description);
+            Fighter result = new Fighter(Stats[E.HEALTH], Stats[E.ATTACK], Stats[E.DEFENSE], Name, Reward, Xp, Requirements, Description);
+            result.Stats = Stats;
+            return result;
         }
     }
 }

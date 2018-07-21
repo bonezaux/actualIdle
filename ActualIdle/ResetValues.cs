@@ -15,7 +15,7 @@ namespace ActualIdle {
             forest.Values[E.BOUGHT_THINGS] = 0;
             forest.Values["allowedGrowths"] = 2;
 
-            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 } }));
+            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 }, { E.MAXMANA, 120}, { E.MANAREGEN, 1 } }));
 
             //Modifier som GrowthDruids can increase når de increaser xp gain af noget
             //Druidcraft XP: Income
@@ -73,6 +73,7 @@ namespace ActualIdle {
 
             forest.Values[E.REJUVENATE+E.MOD] = 5;
             forest.Values[E.REJUVENATE+E.COOLDOWN+E.MOD] = 1; //Is a speed, making it higher will make it faster.
+            forest.Values[E.REJUVENATE + E.MANA] = 0;
             forest.Doables[E.REJUVENATE].Unlocked = true;
             forest.Doables[E.REJUVENATE].Requirements += E.REJUVENATE+E.COOLDOWN+"_ <= _0";
 
@@ -82,12 +83,14 @@ namespace ActualIdle {
             forest.Values[E.HARMONY+E.COOLDOWN+E.TIME] = 60 * 5; // Ticks harmony cooldowns
             forest.Doables[E.HARMONY].Unlocked = false;
             forest.Doables[E.HARMONY].Requirements += E.HARMONY+E.COOLDOWN+"_<=_0";
+            forest.Values[E.HARMONY + E.MANA] = 100;
 
             // Rageuvenate
             forest.Values[E.RAGEUVENATE+E.COOLDOWN+E.TIME] = 30 * 5;
             forest.Doables[E.RAGEUVENATE].Requirements += E.RAGEUVENATE + E.COOLDOWN+"_<=_0";
             forest.Values[E.RAGEUVENATE + E.DAMAGE + E.TIME] = 2; // How many rounds of damage Rageuvenate deals
             forest.Values[E.RAGEUVENATE + E.INCOME + E.TIME] = 12 * 5; // How many ticks of income Rageuvenate gives
+            forest.Values[E.RAGEUVENATE + E.MANA] = 0;
 
             // Web Site
             forest.Values[E.UPG_WEB_SITE + E.MOD] = 0.2; // How much each magnitude of income increases the floating point modifier on spider attack.
