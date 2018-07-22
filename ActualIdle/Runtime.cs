@@ -50,32 +50,29 @@ namespace ActualIdle {
             Value = value;
         }
 
-        public int GetInt() {
-            if (Type != 1 && Type != 2)
-                throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to int");
+        public static explicit operator int (RuntimeValue rv) {
+            if (rv.Type != 1 && rv.Type != 2)
+                throw new InvalidCastException("RuntimeValue of type " + rv.Type + " cannot be cast to int");
             else
-                return (int)Value;
+                return (int)rv.Value;
         }
-
-        public double GetDouble() {
-            if (Type != 1 && Type != 2)
-                throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to double");
+        public static explicit operator double(RuntimeValue rv) {
+            if (rv.Type != 1 && rv.Type != 2)
+                throw new InvalidCastException("RuntimeValue of type " + rv.Type + " cannot be cast to int");
             else
-                return (double)Value;
+                return (double)rv.Value;
         }
-
-        public bool GetBool() {
-            if (Type != 3)
-                throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to bool");
+        public static explicit operator bool(RuntimeValue rv) {
+            if (rv.Type != 3)
+                throw new InvalidCastException("RuntimeValue of type " + rv.Type + " cannot be cast to int");
             else
-                return (bool)Value;
+                return (bool)rv.Value;
         }
-
-        public string GetString() {
-            if (Type != 4)
-                throw new InvalidCastException("RuntimeValue of type " + Type + " cannot be cast to bool");
+        public static explicit operator string(RuntimeValue rv) {
+            if (rv.Type != 4)
+                throw new InvalidCastException("RuntimeValue of type " + rv.Type + " cannot be cast to int");
             else
-                return (string)Value;
+                return (string)rv.Value;
         }
     }
 }

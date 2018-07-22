@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ActualIdle</RootNamespace>
     <AssemblyName>ActualIdle</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -45,16 +46,21 @@
   <ItemGroup>
     <Compile Include="Branch.cs" />
     <Compile Include="Doable.cs" />
+    <Compile Include="Entity Extensions\EExt.cs" />
+    <Compile Include="Entity Extensions\EExtBuyable.cs" />
+    <Compile Include="Entity Extensions\EExtGenerate.cs" />
+    <Compile Include="Entity Extensions\EExtLimited.cs" />
+    <Compile Include="Entity Extensions\EExtModifier.cs" />
+    <Compile Include="Entity Extensions\EExtXpMod.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="GrowthDruid.cs" />
+    <Compile Include="EntityDruid.cs" />
     <Compile Include="Fighter.cs" />
     <Compile Include="Forest.cs" />
-    <Compile Include="Growth.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Formula.cs" />
     <Compile Include="FormulaLimitedExp.cs" />
     <Compile Include="FormulaLogistic.cs" />
     <Compile Include="IEntity.cs" />
-    <Compile Include="Item.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Program.cs" />
@@ -70,6 +76,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Stuff\Stuff\Stuff.csproj">
+      <Project>{fc7759ee-727f-429e-9e84-e0da7fa7ff32}</Project>
+      <Name>Stuff</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

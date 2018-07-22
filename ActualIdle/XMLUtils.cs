@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ActualIdle {
-    public class XMLUtils {
+    public static class XMLUtils {
 
         /// <summary>
-        /// Creates a new XElement with the specified owner, specified name and specified contents.
+        /// Creates a new XElement as this elements child, specified name and specified contents.
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="name"></param>
         /// <param name="contents"></param>
-        public static XElement CreateElement(XElement owner, string name, object contents=null) {
+        public static XElement CreateElement(this XElement owner, string name, object contents=null)
+        {
             XElement element = null;
             name = name.Replace(' ', '_');
             if (contents != null)
@@ -31,7 +32,7 @@ namespace ActualIdle {
         /// <param name="owner"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static XElement GetElement(XElement owner, string name) {
+        public static XElement GetElement(this XElement owner, string name) {
             name = name.Replace(' ', '_');
             foreach(XElement possible in owner.Elements()) {
                 if (possible.Name.LocalName.Equals(name))
@@ -46,8 +47,12 @@ namespace ActualIdle {
         /// <param name="element"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static double GetDouble(XElement element, string name) {
+        public static double GetDouble(this XElement element, string name) {
             return double.Parse(GetElement(element, name).Value);
+        }
+
+        public static int GetInt(this XElement element, string name) {
+            return int.Parse(GetElement(element, name).Value);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace ActualIdle {
         /// <param name="element"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetString(XElement element, string name) {
+        public static string GetString(this XElement element, string name) {
             return (GetElement(element, name).Value);
         }
 
@@ -66,7 +71,7 @@ namespace ActualIdle {
         /// <param name="element"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static bool GetBool(XElement element, string name) {
+        public static bool GetBool(this XElement element, string name) {
             return bool.Parse(GetElement(element, name).Value);
         }
 
@@ -75,7 +80,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public static string GetName(XElement element) {
+        public static string GetName(this XElement element) {
             return element.Name.LocalName.Trim().Replace('_', ' ');
         }
 
@@ -85,7 +90,7 @@ namespace ActualIdle {
         /// <param name="element"></param>
         /// <param name="child"></param>
         /// <returns></returns>
-        public static bool HasChild(XElement element, string child) {
+        public static bool HasChild(this XElement element, string child) {
             return GetElement(element, child) != null;
         }
     }

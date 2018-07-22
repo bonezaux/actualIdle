@@ -56,7 +56,7 @@ namespace ActualIdle {
 
         public override bool CanAfford(Forest forest, int amount, double availablePart=1) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                if (forest.Growths[entry.Key].Amount*availablePart < GetThingPrice(forest, entry.Key, amount)) {
+                if (forest.Entities[entry.Key].Amount*availablePart < GetThingPrice(forest, entry.Key, amount)) {
                     return false;
                 }
             }
@@ -65,14 +65,14 @@ namespace ActualIdle {
 
         public override void Apply(Forest forest, int amount) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                forest.Growths[entry.Key].Amount -= GetThingPrice(forest, entry.Key, amount);
+                forest.Entities[entry.Key].Amount -= GetThingPrice(forest, entry.Key, amount);
             }
         }
 
         public override string Text(Forest forest, int amount) {
             string result = "";
             foreach (KeyValuePair<string, double> entry in Table) {
-                result += Statics.GetDisplayNumber(GetThingPrice(forest, entry.Key, amount)) + " ("+Math.Round(GetThingPrice(forest, entry.Key, amount)*100 / forest.Growths["Organic Material"].Amount, 3) +"%) " + entry.Key + "\n";
+                result += Statics.GetDisplayNumber(GetThingPrice(forest, entry.Key, amount)) + " ("+Math.Round(GetThingPrice(forest, entry.Key, amount)*100 / forest.Entities["Organic Material"].Amount, 3) +"%) " + entry.Key + "\n";
             }
             return result.Substring(0, result.Length - 1);
         }

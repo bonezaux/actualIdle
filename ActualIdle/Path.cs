@@ -31,7 +31,7 @@ namespace ActualIdle {
                     return false;
                 result = forest.TestRequirements(Requirements);
                 foreach (codeInject c in Injects["unlocked"]) {
-                    if (!c(forest, this, null).GetBool())
+                    if (!(bool)c(forest, this, null))
                         result = false;
                 }
                 return result;
@@ -53,7 +53,7 @@ namespace ActualIdle {
                     return false;
                 bool result = true;
                 foreach (codeInject c in Injects["shown"]) {
-                    if (!c(forest, this, null).GetBool())
+                    if (!(bool)c(forest, this, null))
                         result = false;
                 }
                 return result;

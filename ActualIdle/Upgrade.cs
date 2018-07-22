@@ -52,7 +52,7 @@ namespace ActualIdle {
             get {
                 bool result = true;
                 foreach(codeInject c in Injects["unlocked"]) {
-                    if (!c(forest, this, null).GetBool())
+                    if (!(bool)c(forest, this, null))
                         result = false;
                 }
                 if (Requirements != null && !forest.TestRequirements(Requirements))

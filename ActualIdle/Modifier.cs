@@ -20,6 +20,7 @@ namespace ActualIdle {
         /// Absolute increments to the resulting value, added before multipliers.
         /// </summary>
         public Dictionary<string, double> ModifiersA { get; private set; }
+
         /// <summary>
         /// Absolute increments to the resulting value, added after multipliers
         /// </summary>
@@ -40,6 +41,26 @@ namespace ActualIdle {
             Debug.Assert(!(modifiersA != null && modifiersA.Count == 0)); //Can't be an empty dictionary.
             this.ModifiersAAfter = modifiersAAfter;
             Debug.Assert(!(modifiersAAfter != null && modifiersAAfter.Count == 0)); //Can't be an empty dictionary.
+        }
+
+        /// <summary>
+        /// Returns a deep copied modifier.
+        /// </summary>
+        /// <returns></returns>
+        public Modifier Copy() {
+            Dictionary<string, double> modifiersF = new Dictionary<string, double>();
+            foreach(KeyValuePair<string, double> entry in ModifiersF) {
+                modifiersF.Add(entry.Key, entry.Value);
+            }
+            Dictionary<string, double> modifiersA = new Dictionary<string, double>();
+            foreach (KeyValuePair<string, double> entry in ModifiersA) {
+                modifiersA.Add(entry.Key, entry.Value);
+            }
+            Dictionary<string, double> modifiersAAfter = new Dictionary<string, double>();
+            foreach (KeyValuePair<string, double> entry in ModifiersAAfter) {
+                modifiersAAfter.Add(entry.Key, entry.Value);
+            }
+            return new Modifier(Name, modifiersF, modifiersA, modifiersAAfter);
         }
 
         public double GetModF(string modName) {
@@ -197,6 +218,23 @@ namespace ActualIdle {
                     ModifiersAAfter.Add(XMLUtils.GetName(childElement), double.Parse(childElement.Value));
                 }
             }
+        }
+
+        /// <summary>
+        /// Increases all modifiers in this modifier by the modifiers in the given modifier, multiplied by scale.
+        ///  If the modifier doesn't have a key, it defaults to zero.
+        ///  If reduceMultipliers is true, one will be subtracted from multipliers after calculation.
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// <param name="scale"></param>
+        public void AddModifier(Modifier modifier, double scale = 1, bool reduceMultipliers = false) {
+            Console.WriteLine(modifier);
+            if(ModifiersF != null && modifier.ModifiersF != null)
+                ModifiersF = Statics.AddDictionaries(ModifiersF, modifier.ModifiersF, reduceMultipliers ? 1 : 0);
+            if (ModifiersA != null && modifier.ModifiersA != null)
+                ModifiersA = Statics.AddDictionaries(ModifiersA, modifier.ModifiersA);
+            if (ModifiersAAfter != null && modifier.ModifiersAAfter != null)
+                ModifiersAAfter = Statics.AddDictionaries(ModifiersAAfter, modifier.ModifiersAAfter);
         }
     }
 }

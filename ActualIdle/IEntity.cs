@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 namespace ActualIdle {
     public interface IEntity {
         bool Unlocked { get; set; }
+        string Name { get; }
     }
 }

@@ -35,7 +35,7 @@ namespace ActualIdle {
         /// <returns></returns>
         public virtual bool CanAfford(Forest forest, int amount, double availablePart = 1) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                if (forest.Growths[entry.Key].Amount * availablePart < amount * entry.Value)
+                if (forest.Entities[entry.Key].Amount * availablePart < amount * entry.Value)
                     return false;
             }
             return true;
@@ -48,7 +48,7 @@ namespace ActualIdle {
         /// <param name="amount"></param>
         public virtual void Apply(Forest forest, int amount) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                forest.Growths[entry.Key].Amount -= entry.Value * amount;
+                forest.Entities[entry.Key].Amount -= entry.Value * amount;
             }
         }
 
@@ -64,7 +64,7 @@ namespace ActualIdle {
         public virtual string Text(Forest forest, int amount) {
             string res = "";
             foreach (KeyValuePair<string, double> entry in Table) {
-                res += (Statics.GetDisplayNumber(entry.Value * amount) + " ( "+Math.Round((entry.Value * amount)*100/forest.Growths["Organic Material"].Amount, 3) +"%) " + entry.Key) + "\n";
+                res += (Statics.GetDisplayNumber(entry.Value * amount) + " ( "+Math.Round((entry.Value * amount)*100/forest.Entities["Organic Material"].Amount, 3) +"%) " + entry.Key) + "\n";
             }
             return res.Substring(0, res.Length - 1);
         }

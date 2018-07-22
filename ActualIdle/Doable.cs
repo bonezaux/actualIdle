@@ -96,7 +96,7 @@ namespace ActualIdle {
         public string GetTooltip() {
             string result = Name;
             if(Injects["tooltip"].Count > 0) {
-                result += " " + Injects["tooltip"][0](forest, this, null).GetString();
+                result += " " + (string)Injects["tooltip"][0](forest, this, null);
             }
             return result;
         }

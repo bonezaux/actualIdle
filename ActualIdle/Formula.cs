@@ -14,10 +14,9 @@ namespace ActualIdle {
 
         }
 
-        public virtual double Calculate(double number, Forest forest) {
-            return 0;
-        }
+        public virtual double Calculate(double number, Forest forest) => 0;
     }
+
     class FormulaLinear : Formula {
 
         public string BaseValue { get; private set; }

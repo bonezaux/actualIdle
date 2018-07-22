@@ -10,3 +10,13 @@ C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
 C:\Users\Carl\Google Drev\python\actualIdle\ActualIdle\obj\Debug\ActualIdle.csprojResolveAssemblyReference.cache
+F:\Git\actualIdle\ActualIdle\obj\Debug\ActualIdle.csprojAssemblyReference.cache
+F:\Git\actualIdle\ActualIdle\obj\Debug\ActualIdle.csproj.CoreCompileInputs.cache
+F:\Git\actualIdle\ActualIdle\obj\Debug\ActualIdle.exe
+F:\Git\actualIdle\ActualIdle\obj\Debug\ActualIdle.pdb
+F:\Git\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe.config
+F:\Git\actualIdle\ActualIdle\bin\Debug\ActualIdle.exe
+F:\Git\actualIdle\ActualIdle\bin\Debug\ActualIdle.pdb
+F:\Git\actualIdle\ActualIdle\bin\Debug\Stuff.dll
+F:\Git\actualIdle\ActualIdle\bin\Debug\Stuff.pdb
+F:\Git\actualIdle\ActualIdle\obj\Debug\ActualIdle.csproj.CopyComplete
