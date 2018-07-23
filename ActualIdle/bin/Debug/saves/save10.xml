@@ -36,11 +36,14 @@
     <SpidersInc>1.1</SpidersInc>
     <RejuvenateMod>5</RejuvenateMod>
     <RejuvenateCooldownMod>1</RejuvenateCooldownMod>
+    <RejuvenateMana>15</RejuvenateMana>
     <HarmonyTime>75</HarmonyTime>
     <HarmonyCooldownTime>300</HarmonyCooldownTime>
+    <HarmonyMana>100</HarmonyMana>
     <RageuvenateCooldownTime>150</RageuvenateCooldownTime>
     <RageuvenateDamageTime>2</RageuvenateDamageTime>
     <RageuvenateIncomeTime>60</RageuvenateIncomeTime>
+    <RageuvenateMana>45</RageuvenateMana>
     <Web_SiteMod>0.1</Web_SiteMod>
     <WebsGain>10000</WebsGain>
     <WebsInc>10</WebsInc>
@@ -97,14 +100,13 @@
     <DefeatedBoss_13>1</DefeatedBoss_13>
     <DefeatedBoss_14>1</DefeatedBoss_14>
     <UpgradeDruidcraft_ConsideredBought>1</UpgradeDruidcraft_ConsideredBought>
-    <RageuvenateCooldown>108</RageuvenateCooldown>
     <DefeatedBoss_15>1</DefeatedBoss_15>
     <DefeatedBoss_16>1</DefeatedBoss_16>
     <svThinks>1</svThinks>
   </Values>
   <skills>
-    <Druidcraft>15636.479311647228</Druidcraft>
-    <Animal_Handling>1089.9525992441354</Animal_Handling>
+    <Druidcraft>15642.292995824939</Druidcraft>
+    <Animal_Handling>1100.0134601959965</Animal_Handling>
     <Soothing>528.16942138759464</Soothing>
     <Alchemy>100</Alchemy>
     <Transformation>100</Transformation>
@@ -112,7 +114,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>1328395039.492</Amount>
+      <Amount>2537356187.632</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -288,7 +290,7 @@
     </Gnarly_Yews_4>
     <Web_Site>
       <ModifiersF>
-        <SpidersAttack>1.6210246891454481</SpidersAttack>
+        <SpidersAttack>1.6210246891454545</SpidersAttack>
         <YewsHealth>2.51</YewsHealth>
       </ModifiersF>
     </Web_Site>
@@ -358,7 +360,8 @@
   </Upgrades>
   <Path>Forest standard dudes</Path>
   <PathBoss>4</PathBoss>
-  <Count>58180</Count>
+  <Count>58807</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>1271.4196000000022</Hp>
+  <Hp>1334.7268000000015</Hp>
+  <Mana>82.0000000000012</Mana>
 </Forest>

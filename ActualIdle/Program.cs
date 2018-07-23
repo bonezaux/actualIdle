@@ -334,52 +334,79 @@ namespace ActualIdle {
             });
             forest.Doables[E.ABIL_SURF_THE_WEB].Injects["tooltip"].Add(premadeInjects[E.INJ_TOOLTIP+E.ACTIVE]);
         }
+        private static void InitGrowthUpgrades(Forest forest) {
+            // Growth upgrades in order of total expense.
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
+
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH, E.ENTITY_BIRCHES, 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
+
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 40, 2E+5, 5); //x5 -  8.8E4 / 4.4 + 2 E5
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH, E.ENTITY_BIRCHES, 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
+
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
+
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 80, 5E+7, 5); //x25 -  1.7E5 / 2 + 5 E7
+
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH, E.ENTITY_BIRCHES, 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
+
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
+
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 150, 0.4E+10, 10); //x250 -  3.2E6 / 1.6 + 0.4 E10
+            CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH, E.ENTITY_FLOWERS, 150, Statics.GetNumber(2, 10), 8, E.ENTITY_FLOWERS + E.GAIN + "_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
+
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 200, 2E+11, 8); //x3600 - 1.3E5 / 4.2 + 2.0 E11    
+
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH, E.ENTITY_BIRCHES, 21, Statics.GetNumber(5, 11), 4,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.ENTITY_BIRCHES + E.DEFENSE, 3 } })); //x80000 - 1.2E7 / 2 + 0.5E12
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 200, 4E+12, 4); //x1000 -  1.7E7 / 1.8 + 4 E12
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 250, 2E+12, 8,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.ENTITY_BUSHES + E.HEALTH, 1.5 } })); //x17280 - 2.6E6 / 4.4+2 E12
+
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 250, 1E+13, 5); //x19200 - 1.2E7 / 2.2 + 1E13
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 200, 3E+13, 10); //x15360 -  7.1E7 / 0.8 + 3 E13
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 250, 4.2E+13, 5); //x18000 - 1.3E5 / 4.9 + 4.2 E13
+
+            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH, E.ENTITY_BIRCHES, 25, Statics.GetNumber(2, 14), 12,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.ENTITY_BIRCHES + E.DEFENSE, 4 } })); //x960000 - 1.7E8 / 1.9 + 2E14
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 300, 2E+14, 5); //x86400 - 1.6E7 / 5.2+2 E14
+
+            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 300, 0.5E+15, 5); //x18000 - 7.8E7 / 0.5 + 1 E15
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 250, 2E+15, 4); //x61440 -  7.1E7 / 0.9 + 2 E15
+            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 300, 2E+15, 9); //153600 - 9.2E7 / 2.6 + 2E15
+            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 250, 4E+15, 3); //x3000 -  7.1E7 / 3.9 + 5 E15
+
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 300, 4E+17, 6,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.GAIN, 2 } })); //x368640 -  2.5E9 / 1 + 4 E17 - Yew upgrade bliver dyrere og dyrere i forhold til yewsne selv
+
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 400, 1.5E+18, 10); //x864000 - 2.1E9 / 7.2+1.5 E18
+
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 350, 1.5E+20, 4); //x3E6 -  2.4E10 / 0.1 + 1.5 E20 - Yew upgrade bliver dyrere og dyrere i forhold til yewsne selv
+            
+            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 400, 4E+22, 4,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.GAIN, 2 } })); //x12E6 -  4.4E11 / 0.1 + 4 E22 - Yew upgrade bliver dyrere og dyrere i forhold til yewsne selv
+
+            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 500, 0.5E23, 5,
+                addModifier: new Modifier("add", new Dictionary<string, double>() { { E.ENTITY_BUSHES + E.HEALTH, 2 } })); //x4.3E10 - 1.3E10 / 1+0.5 E23
+        }
 
         private static void InitUpgrades(Forest forest) {
-
-            // Growth upgrades in order of total expense.
-            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 1", E.ENTITY_BUSHES, 20, 5000, 3); //x3 - 1.8*20  / 1.1 + 5E3 
-            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 1", E.ENTITY_OAKS, 20, 3000, 4); //x4 - 1.6E2 / 5.7 + 3E3
-
-            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 1", E.ENTITY_BIRCHES, 3, Statics.GetNumber(1, 4), 10); //x10 - 2.1E2 / 0.5 + 1E4
-            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 1", E.ENTITY_ANTS, 20, 10000, 5); //x5 - 3.6E2 / 1.2 + 1E4
-            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 2", E.ENTITY_BUSHES, 50, 20000, 5); //x15 - 4.5E2 / 2.3 + 2.5E4
-
-            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 2", E.ENTITY_OAKS, 50, 80000, 4); //x16 - 1.6E3 / 1.1 + 0.8E5
-            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 1", E.ENTITY_YEWS, 15, Statics.GetNumber(3, 5), 4); //x4 -  1.4E3 / 1.2 + 3 E5
-            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 2", E.ENTITY_ANTS, 50, Statics.GetNumber(2, 5), 5); //x25 -  4.5E3 / 2.5 + 2.1E5
-            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 1", E.ENTITY_SPIDERS, 40, 2E+5, 5); //x5 -  8.8E4 / 4.4 + 2 E5
-            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 2", E.ENTITY_BIRCHES, 7, Statics.GetNumber(2, 5), 100); //x1000 - 4.9E4 / 4.8 + 2E5
-
-            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 2", E.ENTITY_YEWS, 35, Statics.GetNumber(1, 6), 4); //x16 -  1.2E4 / 1.1 + 1 E6
-            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 3", E.ENTITY_OAKS, 80, Statics.GetNumber(2, 6), 3); //x48 - 7.68E3 / 2 + 2.1E6
-            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 3", E.ENTITY_BUSHES, 100, Statics.GetNumber(1.5, 6), 4); //x60 - 3.6E3 / 2.7 + 1.5 E6
-
-            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 3", E.ENTITY_ANTS, 80, Statics.GetNumber(6, 6), 3); //x75 - 2.16E4 / 0.6 + 0.4 E7
-            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 3", E.ENTITY_YEWS, 60, Statics.GetNumber(1, 6), 4); //x64 -  8.8E4 / 1.2 + 2.1 E7
-            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 2", E.ENTITY_SPIDERS, 80, 5E+7, 5); //x25 -  1.7E5 / 2 + 5 E7
-
-            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 4", E.ENTITY_OAKS, 120, Statics.GetNumber(0.9, 8), 3); //x240 - 5.8E4 / 0.9 + .9E8
-            CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH + " 4", E.ENTITY_ANTS, 120, Statics.GetNumber(2, 8), 6); //x450 - 1.3E5 / 2.0 + 2.0 E8
-            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 4", E.ENTITY_BUSHES, 150, Statics.GetNumber(1, 9), 4); //x240 - 2.2E4 / 3.2 + 1 E8
-            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 3", E.ENTITY_BIRCHES, 13, Statics.GetNumber(4, 8), 20); //x20000 - 1.8E6 / 3.5 + 4E8
-
-            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 4", E.ENTITY_YEWS, 100, Statics.GetNumber(5, 8), 3); //x192 -  4.41E5 / 0.5 + 0.5 E9
-
-            CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH + " 5", E.ENTITY_OAKS, 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
-            CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH + " 5", E.ENTITY_BUSHES, 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
-            CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH + " 3", E.ENTITY_SPIDERS, 150, 0.4E+10, 10); //x25 -  3.2E6 / 1.6 + 0.4 E10
-            CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH + " 1", E.ENTITY_FLOWERS, 150, Statics.GetNumber(2, 10), 8, E.ENTITY_FLOWERS+E.GAIN+"_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
-
-            CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH + " 5", E.ENTITY_YEWS, 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
-
-            CreateGrowthUpgrade(forest, E.UPG_BIRCH_GROWTH + " 4", E.ENTITY_BIRCHES, 21, Statics.GetNumber(5, 11), 4); //x80000 - 1.2E7 / 2 + 0.5E12
-            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].Modifier.ModifiersF.Add(E.ENTITY_BIRCHES+E.DEFENSE, 3);
-            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].PreDescriptionText += " Also doubles birch defense bonus.";
-            forest.Upgrades[E.UPG_BIRCH_GROWTH + " 4"].PostDescriptionText += " Also doubles birch defense bonus.";
-
-            // ----------------------------------------------------------------------------- END OF GROWTH UPGRADES ----------------------------------------------------------------------------------------
-
+            InitGrowthUpgrades(forest);
             // Paths
             UpgradesBigBirches(forest);
             UpgradesSpiders(forest);
@@ -707,6 +734,8 @@ namespace ActualIdle {
 
 
         }
+
+        public static Dictionary<string, int> upgrades = new Dictionary<string, int>();
         /// <summary>
         /// Creates a new upgrade that increases the gain of a Growth.
         /// name - name of the upgrade
@@ -714,6 +743,7 @@ namespace ActualIdle {
         /// amount - how many growths are needed for it
         /// cost - price of the upgrade
         /// multiplier - what modF is added to the growth.
+        /// addModifier - modifier added to the upgrade's modifier.
         /// </summary>
         /// <param name="forest"></param>
         /// <param name="name"></param>
@@ -722,10 +752,17 @@ namespace ActualIdle {
         /// <param name="neededAmount"></param>
         /// <param name="cost"></param>
         /// <param name="multiplier"></param>
-        public static void CreateGrowthUpgrade(Forest forest, string name, string target, int amount, double cost, double multiplier, string requirements = null) {
-
+        public static void CreateGrowthUpgrade(Forest forest, string name, string target, int amount, double cost, double multiplier, string requirements = null, Modifier addModifier = null) {
+            if (!upgrades.ContainsKey(name))
+                upgrades.Add(name, 1);
+            else
+                upgrades[name] += 1;
+            name += " " + upgrades[name];
+            Modifier resModifier = new Modifier(name, new Dictionary<string, double>() { { target + "Gain", multiplier } });
+            if(addModifier != null)
+                resModifier.AddModifier(addModifier);
             forest.AddUpgrade(new Upgrade(forest, name, "improves "+target+" gain by "+(multiplier*100-100)+"%.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", cost } }), new Modifier(name, new Dictionary<string, double>() { { target+"Gain", multiplier } })));
+                new Resources(new Dictionary<string, double>() { { "Organic Material", cost } }), resModifier));
             forest.Upgrades[name].Injects["unlocked"].Add((f, g, arguments) => {
                 if (f.GetValue("count"+target) >= amount) {
                     return new RuntimeValue(3, true);
@@ -738,6 +775,21 @@ namespace ActualIdle {
                 }
                 return new RuntimeValue(3, false);
             });
+            if(addModifier != null) {
+                if(resModifier.ModifiersA != null)
+                    foreach (KeyValuePair<string, double> aKvp in resModifier.ModifiersA) {
+                        forest.Upgrades[name].PreDescriptionText += "\n+" + (aKvp.Value * 100 - 100) + " base " + aKvp.Key;
+                    }
+                if (resModifier.ModifiersF != null)
+                    foreach (KeyValuePair<string, double> fKvp in resModifier.ModifiersF) {
+                        if(fKvp.Key != target+E.GAIN)
+                            forest.Upgrades[name].PreDescriptionText += "\n+" + (fKvp.Value * 100 - 100) + "% " + fKvp.Key;
+                    }
+                if (resModifier.ModifiersAAfter != null)
+                    foreach (KeyValuePair<string, double> aKvp in resModifier.ModifiersAAfter) {
+                        forest.Upgrades[name].PreDescriptionText += "\n+" + (aKvp.Value * 100 - 100) + " " + aKvp.Key + " after modifiers.";
+                    }
+            }
             forest.Upgrades[name].Requirements = requirements;
         }
 

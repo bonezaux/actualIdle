@@ -59,7 +59,7 @@ namespace ActualIdle {
         public const string ABIL_RAGEUVENATE = "Rageuvenate";
         public const string ABIL_REJUVENATE = "Rejuvenate";
         public const string ABIL_HARMONY = "Harmony";
-        public const string ABIL_SURF_THE_WEB = "Surf The Web";
+        public const string ABIL_SURF_THE_WEB = "Surf the Web";
 
         // FOREST ENTITIES BELOW
         public const string ENTITY_BUSHES = "Bushes";

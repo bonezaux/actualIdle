@@ -2,10 +2,17 @@ Systems
  -Spells
   Rejuvenate, Harmony
  -Skills
-   Xp corresponds to a sixth of the magnitude of a virtual total (Maybe the magnitude relation should be different for each skill, or the xp system in general. Animal Handling and Soothing will have a hard time reaching the higher magnitudes)
+   Xp corresponds to a sixth (for Druidcraft) of the magnitude of a virtual total (Maybe the magnitude relation should be different for each skill, or the xp system in general. Animal Handling and Soothing will have a hard time reaching the higher magnitudes)
   Druidcraft xp ved income
   Animal handling xp ved fighting
   Soothing xp ved soothing
+ 
+ Growths
+  Yews
+   - Opgraderingen bliver dyrere og dyrere i forhold til yewsne selv
+   - Begynder at give gain upgrade pr. 100 pr. 300nde yew
+  Bushes
+   -Hver 250ende giver mere bush health.
  
 sådan noget
 Forskellige ting giver mere/mindre bonus til det

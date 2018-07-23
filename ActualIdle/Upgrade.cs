@@ -14,6 +14,7 @@ namespace ActualIdle {
     ///  - ownedLoop is run every loop when the Upgrade is owned.
     /// </summary>
     public class Upgrade : IEntity {
+        private string _postDescriptionText;
 
         /// <summary>
         /// Text shown before you buy the upgrade.
@@ -22,7 +23,7 @@ namespace ActualIdle {
         /// <summary>
         /// Description of an upgrade after you buy it.
         /// </summary>
-        public string PostDescriptionText { get; set; }
+        public string PostDescriptionText { get => _postDescriptionText != null ? _postDescriptionText : PreDescriptionText; set => _postDescriptionText = value; }
         /// <summary>
         /// Name of upgrade.
         /// </summary>
@@ -51,7 +52,7 @@ namespace ActualIdle {
         public bool Unlocked {
             get {
                 bool result = true;
-                foreach(codeInject c in Injects["unlocked"]) {
+                foreach (codeInject c in Injects["unlocked"]) {
                     if (!(bool)c(forest, this, null))
                         result = false;
                 }
@@ -92,26 +93,26 @@ namespace ActualIdle {
             Modifier = modifier;
             Requirements = requirements;
         }
- 
+
 
         public void Loop() {
-            if(Owned) { // Runs ownedLoop injects if the Upghrade is owned.
-                foreach(codeInject c in Injects["ownedLoop"]) {
+            if (Owned) { // Runs ownedLoop injects if the Upghrade is owned.
+                foreach (codeInject c in Injects["ownedLoop"]) {
                     c(forest, this, null);
                 }
             }
         }
 
         public void Buy() {
-            if(Price.CanAfford(forest, 1)) {
+            if (Price.CanAfford(forest, 1)) {
                 Console.WriteLine("You bought the upgrade " + Name + " for");
                 Price.Print(forest, 1);
                 Price.Apply(forest, 1);
-                foreach(codeInject c in Injects["bought"]) {
+                foreach (codeInject c in Injects["bought"]) {
                     c(forest, this, null);
                 }
                 Owned = true;
-                if(Modifier != null) {
+                if (Modifier != null) {
                     forest.AddModifier(Modifier);
                 }
                 forest.Values["Upgrade" + Name + "Bought"] = 1;

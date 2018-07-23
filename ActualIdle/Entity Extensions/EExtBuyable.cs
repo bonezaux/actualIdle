@@ -24,10 +24,14 @@ namespace ActualIdle.Entity_Extensions {
                 }
                 return true;
             }
+            if(Entity.HasExtension(E.EEXT_LIMITED)) {
+                if (!((EExtLimited)Entity.Extensions[E.EEXT_LIMITED]).IsAllowed(amount))
+                    return false;
+            }
             if (Price.CanAfford(Entity.forest, amount)) {
                 foreach (codeInject gci in injects)
                     gci(Entity.forest, Entity, new RuntimeValue[] { new RuntimeValue(2, amount) });
-                Console.WriteLine("You bought " + amount + " " + Name + " for ");
+                Console.WriteLine("You bought " + amount + " " + Entity.Name + " for ");
                 Price.Print(Entity.forest, amount);
                 Price.Apply(Entity.forest, amount);
                 Entity.Amount += amount;
@@ -35,7 +39,7 @@ namespace ActualIdle.Entity_Extensions {
                 return true;
             }
             else {
-                Console.WriteLine("You don't have enough to buy " + amount + " " + Name + "! You need");
+                Console.WriteLine("You don't have enough to buy " + amount + " " + Entity.Name + "! You need");
                 Price.Print(Entity.forest, amount);
             }
             return false;
