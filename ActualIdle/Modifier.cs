@@ -228,13 +228,44 @@ namespace ActualIdle {
         /// <param name="modifier"></param>
         /// <param name="scale"></param>
         public void AddModifier(Modifier modifier, double scale = 1, bool reduceMultipliers = false) {
-            Console.WriteLine(modifier);
             if(ModifiersF != null && modifier.ModifiersF != null)
                 ModifiersF = Statics.AddDictionaries(ModifiersF, modifier.ModifiersF, reduceMultipliers ? 1 : 0);
             if (ModifiersA != null && modifier.ModifiersA != null)
                 ModifiersA = Statics.AddDictionaries(ModifiersA, modifier.ModifiersA);
             if (ModifiersAAfter != null && modifier.ModifiersAAfter != null)
                 ModifiersAAfter = Statics.AddDictionaries(ModifiersAAfter, modifier.ModifiersAAfter);
+        }
+
+        /// <summary>
+        /// Modifies this modifier by the other modifier.
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// <param name="scale"></param>
+        /// <param name="reduceMultipliers"></param>
+        public void ModifyModifier(Modifier modifier, double scale = 1, bool reduceMultipliers = false) {
+            if(ModifiersF != null && modifier.ModifiersF != null)
+                ModifiersF = Statics.MultiplyDictionaries(ModifiersF, modifier.ModifiersF);
+            if (ModifiersA != null && modifier.ModifiersA != null)
+                ModifiersA = Statics.AddDictionaries(ModifiersA, modifier.ModifiersA);
+            if (ModifiersAAfter != null && modifier.ModifiersAAfter != null)
+                ModifiersAAfter = Statics.AddDictionaries(ModifiersAAfter, modifier.ModifiersAAfter);
+        }
+
+        public static Modifier GetResultModifier(IEnumerable<Modifier> modifiers) {
+            Modifier resultModifier = new Modifier("Resulting Modifiers",
+                new Dictionary<string, double>() { { "Nothing", 1 } },
+                new Dictionary<string, double>() { { "Nothing", 1 } },
+                new Dictionary<string, double>() { { "Nothing", 1 } });
+            
+            foreach (Modifier mod in modifiers) {
+                resultModifier.ModifyModifier(mod);
+            }
+
+            resultModifier.ModifiersA.Remove("Nothing");
+            resultModifier.ModifiersF.Remove("Nothing");
+            resultModifier.ModifiersAAfter.Remove("Nothing");
+
+            return resultModifier;
         }
     }
 }

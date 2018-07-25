@@ -16,11 +16,11 @@ namespace ActualIdle  {
     /// <summary>
     /// An object in the forest, like oaks or bushes. Produce other things by a formula based on how many of them there are, and give stats.
     /// </summary>
-    public class Entity : IEntity {
+    public class Entity : IPerformer {
         private bool _unlocked;
 
         public string Name { get; set; }
-        public Forest forest { get; set; }
+        public Forest Forest { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }
         /// <summary>
@@ -55,20 +55,25 @@ namespace ActualIdle  {
         /// <summary>
         /// Code injects:
         ///  loop
+        ///  ownedLoop - loop, but only run when at least one is owned.
         ///  create (called when the Growth is created, args[0] = amount)
+        ///  INJ_RESET (Called when a reset is made, args[0] = strength)
         /// </summary>
-        public Dictionary<string, List<codeInject>> injects { get; private set; }
+        public Dictionary<string, List<codeInject>> Injects { get; private set; }
 
         public Dictionary<string, EExt> Extensions { get; private set; }
 
         public Entity(Forest forest, string name, string group = E.GRP_FOREST, int strength = 0) {
             Name = name;
-            this.forest = forest;
+            this.Forest = forest;
             Unlocked = false;
-            injects = new Dictionary<string, List<codeInject>> {
+            Injects = new Dictionary<string, List<codeInject>> {
                 ["loop"] = new List<codeInject>(),
-                ["create"] = new List<codeInject>()
-            };
+                ["ownedLoop"] = new List<codeInject>(),
+                [E.INJ_CREATE] = new List<codeInject>(),
+                [E.INJ_RESET] = new List<codeInject>(),
+                [E.INJ_REQUIREMENTS] = new List<codeInject>()
+        };
             foreach (string stat in Statics.statList) {
                 if (!forest.Values.ContainsKey(name + stat)) {
                     forest.Values[name + stat] = 0;
@@ -81,6 +86,28 @@ namespace ActualIdle  {
             Strength = strength;
         }
 
+        public void Trigger(string trigger, params RuntimeValue[] arguments) {
+            if(Injects.ContainsKey(trigger)) {
+                foreach(codeInject inj in Injects[trigger]) {
+                    inj(Forest, this, arguments);
+                }
+            }
+            if(HasExtension(E.EEXT_REQUIREMENTS)) {
+                Unlocked = ((EExtRequirements)Extensions[E.EEXT_REQUIREMENTS]).Evaluate();
+            }
+        }
+
+        /// <summary>
+        /// Adds a trigger to the given trigger key
+        /// </summary>
+        /// <param name="trigger"></param>
+        /// <param name="inject"></param>
+        public void AddTrigger(string trigger, codeInject inject) {
+            if (!Injects.ContainsKey(trigger))
+                Injects[trigger] = new List<codeInject>();
+            Injects[trigger].Add(inject);
+        }
+
         public Entity Add(EExt extension) {
             extension.Entity = this;
             Extensions.Add(extension.Name, extension);
@@ -90,11 +117,11 @@ namespace ActualIdle  {
         public bool HasExtension(string extension) => Extensions.ContainsKey(extension);
 
         public virtual void Loop() {
-            foreach (codeInject gci in injects["loop"])
-                gci(forest, this, null);
-            if (Extensions.ContainsKey(E.EEXT_GENERATE)) {
-                ((EExtGenerate)Extensions[E.EEXT_GENERATE]).Loop();
-            }
+            foreach (codeInject i in Injects["loop"])
+                i(Forest, this, null);
+            if (Unlocked && Amount > 0)
+                foreach (codeInject i in Injects["ownedLoop"])
+                    i(Forest, this, null);
         }
 
         /// <summary>
@@ -122,6 +149,22 @@ namespace ActualIdle  {
         public void OnAdd(int amount) {
             foreach (EExt ext in Extensions.Values) {
                 ext.OnAdd(amount);
+            }
+            Forest.Trigger(E.TRG_ENTITY_ADDED, Name, amount);
+        }
+
+        public void OnReset(int resetStrength) {
+            if(resetStrength == 1) {
+                Forest.SoftValues[E.SV_COUNT + Name] = Amount;
+                if (Amount > Forest.SoftValues[E.SV_MAX_COUNT + Name])
+                    Forest.SoftValues[E.SV_MAX_COUNT + Name] = Amount;
+            }
+            foreach(codeInject c in Injects[E.INJ_RESET]) {
+                c(Forest, this, new RuntimeValue(2, resetStrength));
+            }
+            if (Strength < resetStrength) {
+                Unlocked = false;
+                Amount = 0;
             }
         }
 
@@ -157,17 +200,17 @@ namespace ActualIdle  {
         public Dictionary<string, double> GetStats() {
             Dictionary<string, double> result = new Dictionary<string, double>();
             foreach (string stat in Statics.statList) {
-                result[stat] = forest.GetValue(Name + stat) * Amount;
+                result[stat] = Forest.GetValue(Name + stat) * Amount;
             }
             return result;
         }
 
-        public void Save(XElement growthElement) {
+        public virtual void Save(XElement growthElement) {
             XMLUtils.CreateElement(growthElement, "Amount", Math.Round(Amount, 3));
             XMLUtils.CreateElement(growthElement, "Unlocked", Unlocked);
         }
 
-        public void Load(XElement growthElement) {
+        public virtual void Load(XElement growthElement) {
             Amount = XMLUtils.GetDouble(growthElement, "Amount");
             Unlocked = XMLUtils.GetBool(growthElement, "Unlocked");
         }

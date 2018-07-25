@@ -45,11 +45,28 @@ namespace ActualIdle {
         public int Type { get; private set; }
         public Object Value { get; private set; }
 
+        /// <summary>
+        /// 1 == double
+        /// 2 == int
+        /// 3 == bool
+        /// 4 == string
+        /// </summary>
         public RuntimeValue(int type, Object value) {
             Type = type;
             Value = value;
         }
-
+        public static implicit operator RuntimeValue(double d) {
+            return new RuntimeValue(1, d);
+        }
+        public static implicit operator RuntimeValue (int i) {
+            return new RuntimeValue(2, i);
+        }
+        public static implicit operator RuntimeValue(bool b) {
+            return new RuntimeValue(3, b);
+        }
+        public static implicit operator RuntimeValue(string s) {
+            return new RuntimeValue(4, s);
+        }
         public static explicit operator int (RuntimeValue rv) {
             if (rv.Type != 1 && rv.Type != 2)
                 throw new InvalidCastException("RuntimeValue of type " + rv.Type + " cannot be cast to int");

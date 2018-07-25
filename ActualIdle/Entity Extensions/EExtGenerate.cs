@@ -14,10 +14,10 @@ namespace ActualIdle.Entity_Extensions {
         public override string ShortDescription { get {
                 string result = "";
                 for (int loop = 0; loop < AddedGrowths.Length; loop++) {
-                    double add = AddedGrowths[loop].Item2.Calculate(Entity.Amount, Entity.forest);
-                    add = Modifier.Modify(Entity.forest.Modifiers.Values, E.GAIN, add);
+                    double add = AddedGrowths[loop].Item2.Calculate(Entity.Amount, Entity.Forest);
+                    add = Modifier.Modify(Entity.Forest.Modifiers.Values, E.GAIN, add);
                     if (add > 0)
-                        result += ", " +Statics.GetDisplayNumber(add) + " " + AddedGrowths[loop].Item1 + "/t" + " (" + Math.Round(add * 100 / Entity.forest.Income, 3) + "%)";
+                        result += ", " +Statics.GetDisplayNumber(add) + " " + AddedGrowths[loop].Item1 + "/t" + " (" + Math.Round(add * 100 / Entity.Forest.Income, 3) + "%)";
                 }
                 return result;
             } }
@@ -27,7 +27,7 @@ namespace ActualIdle.Entity_Extensions {
 
         public void Loop()
         {
-            Forest forest = Entity.forest;
+            Forest forest = Entity.Forest;
             for (int loop = 0; loop < AddedGrowths.Length; loop++)
             {
                 forest.Entities[AddedGrowths[loop].Item1].Amount += Modifier.Modify(forest.Modifiers.Values, E.GAIN, AddedGrowths[loop].Item2.Calculate(Entity.Amount, forest));

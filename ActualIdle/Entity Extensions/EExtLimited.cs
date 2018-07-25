@@ -16,8 +16,8 @@ namespace ActualIdle.Entity_Extensions {
         /// <param name="amount"></param>
         /// <returns></returns>
         public bool IsAllowed(int amount) {
-            if (Entity.forest.Values[E.BOUGHT_THINGS] + amount > Entity.forest.GetValue(E.ALLOWED_GROWTHS)) {
-                Console.WriteLine("You cannot have more than " + Entity.forest.GetValue(E.ALLOWED_GROWTHS) + " growths!");
+            if (Entity.Forest.Values[E.BOUGHT_THINGS] + amount > Entity.Forest.GetValue(E.ALLOWED_GROWTHS)) {
+                Console.WriteLine("You cannot have more than " + Entity.Forest.GetValue(E.ALLOWED_GROWTHS) + " growths!");
                 return false;
             }
             return true;
@@ -28,7 +28,7 @@ namespace ActualIdle.Entity_Extensions {
         /// </summary>
         /// <param name="amount"></param>
         public override void OnAdd(double amount) {
-            Entity.forest.Values[E.BOUGHT_THINGS] += amount;
+            Entity.Forest.Values[E.BOUGHT_THINGS] += amount;
         }
     }
 }

@@ -15,8 +15,6 @@ namespace ActualIdle {
         /// </summary>
         public Dictionary<string, Entity> Entities { get; private set; }
         public Dictionary<string, Doable> Doables { get; private set; }
-        public Dictionary<string, Trophy> Trophies { get; private set; }
-        public Dictionary<string, Upgrade> Upgrades { get; private set; }
 
 
         /// <summary>
@@ -33,7 +31,7 @@ namespace ActualIdle {
         public new Dictionary<string, double> Xp { get; private set; }
         public Dictionary<string, Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
-        public bool Running { get; private set; }
+        public bool Running { get; set; }
         /// <summary>
         /// The Forest's current path.
         /// </summary>
@@ -67,27 +65,29 @@ namespace ActualIdle {
         /// </summary>
         public int OfflineTicks { get; private set; }
         public double Income { get; set; }
+        /// <summary>
+        /// Which style of fighting is used
+        /// E.FIGHT - attack your enemies until they die
+        /// E.SOOTHE - soothe your enemies until you regenerate faster than them.
+        /// </summary>
+        public string FightingStyle { get; set; }
+
         public double Mana;
+        
 
         public Forest() : base(0, 0, 0, "Druid", null, null, "!Btrue") {
             Entities = new Dictionary<string, Entity>();
             Doables = new Dictionary<string, Doable>();
-            Trophies = new Dictionary<string, Trophy>();
-            Upgrades = new Dictionary<string, Upgrade>();
             Values = new Dictionary<string, double>();
             SoftValues = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
             Modifiers = new Dictionary<string, Modifier>();
-            Modifiers.Add(E.XP+E.GAIN, new Modifier(E.XP+E.GAIN, modifiersF: new Dictionary<string, double>() { { E.XP + E.GAIN, 1 } }));
             foreach (string skill in Statics.skills) {
                 Xp[skill] = 100;
-                Values[skill+E.XP+E.GAIN] = 1;
-                Modifiers[E.XP+E.GAIN].ModifiersF[skill+ E.XP + E.GAIN] = 0;
             }
 
             Running = true;
             Fighting = false;
-            Values[E.DEFEATED_BOSSES] = 0;
         }
 
         /// <summary>
@@ -110,7 +110,8 @@ namespace ActualIdle {
         }
 
         public override void Lose() {
-            Console.WriteLine("You were defeated! Boss hp: " + Statics.GetDisplayNumber(Boss.Hp) + "/" + Statics.GetDisplayNumber(Boss.Stats[E.HEALTH]));
+            Console.WriteLine("You were defeated! Remaining boss stats:");
+            EchoBoss();
             Boss.Hp = Boss.Stats[E.HEALTH];
             Fighting = false;
             Hp = 0;
@@ -123,22 +124,16 @@ namespace ActualIdle {
 
         public bool HasModifier(Modifier modifier) => Modifiers.ContainsKey(modifier.Name);
 
-        public override double takeDamage(double damage, Fighter attacker, bool armor=true) {
+        public override double TakeDamage(double damage, Fighter attacker, bool armor=true) {
             if(Soothe > 0) {
                 damage -= (Soothe / 30);
             }
-            return base.takeDamage(damage, attacker, armor);
+            return base.TakeDamage(damage, attacker, armor);
         }
 
         public void Loop() {
             double preGold = Entities["Organic Material"].Amount;
             foreach (KeyValuePair<string, Entity> entry in Entities) {
-                entry.Value.Loop();
-            }
-            foreach (KeyValuePair<string, Trophy> entry in Trophies) {
-                entry.Value.Loop();
-            }
-            foreach (KeyValuePair<string, Upgrade> entry in Upgrades) {
                 entry.Value.Loop();
             }
             foreach (KeyValuePair<string, Doable> entry in Doables) {
@@ -180,13 +175,27 @@ namespace ActualIdle {
             Values["allowedGrowths"] += Boss.AddedGrowths;
             Boss = null;
             Fighting = false;
+
+            Trigger(E.TRG_DEFEATED_BOSS);
             CurBoss++;
-            Console.WriteLine("CB:" + CurBoss);
             if (CurBoss >= CurPath.Length()) {
                 Console.WriteLine("You're through this path now..");
             } else {
                 Boss = CurPath.Bosses[CurBoss].Clone();
                 Console.WriteLine("Changing boss:" + Boss);
+            }
+        }
+
+        /// <summary>
+        /// Passes the given trigger to all IPerformers.
+        /// </summary>
+        /// <param name="trigger"></param>
+        public new void Trigger(string trigger, params RuntimeValue[] arguments) {
+            foreach(Entity entity in Entities.Values) {
+                entity.Trigger(trigger, arguments);
+            }
+            foreach (Doable doable in Doables.Values) {
+                doable.Trigger(trigger, arguments);
             }
         }
 
@@ -208,13 +217,14 @@ namespace ActualIdle {
             if (Fighting && forestAttack) { // Only damage the boss if the boss didn't kill the Druid first.
                 if(Hesitation <= 0) {
                     double damage = (Stats[E.ATTACK]);
-                    if (damage > 0) {
-                        damage = Boss.takeDamage(damage, this);
-                        AddXp(E.ANIMAL_HANDLING, damage);
+                    if (damage > 0 && FightingStyle == E.STYLE_FIGHT) {
+                        DealDamage(damage);
+                        //damage = Boss.TakeDamage(damage, this);
+                        //AddXp(E.ANIMAL_HANDLING, damage);
                     }
-                    if (OwnsUpgrade("Become Soother")) {
+                    if (FightingStyle == E.STYLE_SOOTHE) {
                         Soothe += Stats[E.SOOTHING];
-                        AddXp("Soothing", Stats[E.SOOTHING]);
+                        AddXp(E.SOOTHING, Stats[E.SOOTHING]);
                     } else {
                         Soothe += Stats[E.SOOTHING] / 20;
                     }
@@ -283,11 +293,11 @@ namespace ActualIdle {
         }
 
         public void AddTrophy(Trophy trophy) {
-            Trophies.Add(trophy.Name, trophy);
+            Entities.Add(trophy.Name, trophy);
         }
 
         public void AddUpgrade(Upgrade upgrade) {
-            Upgrades.Add(upgrade.Name, upgrade);
+            Entities.Add(upgrade.Name, upgrade);
         }
 
         /// <summary>
@@ -299,11 +309,11 @@ namespace ActualIdle {
         public void AddXp(string skillName, double change) {
             double xp = Statics.XpGain(Xp[skillName], change, skillName) * GetValue(skillName+"XpGain");
             if (Statics.skills.Contains(skillName)) {
-                int preLevel = (int)GetValue("lvl" + skillName);
+                int preLevel = (int)GetValue("clvl" + skillName);
                 Xp[skillName] += xp;
-                int postLevel = (int)GetValue("lvl" + skillName);
+                int postLevel = (int)GetValue("clvl" + skillName);
                 if(postLevel > preLevel) {
-                    Console.WriteLine("Level up! " + skillName + " " + preLevel + "->" + postLevel);
+                    Console.WriteLine("Level up (on rethink)! " + skillName + " " + preLevel + "->" + postLevel);
                 }
             }
         }
@@ -325,9 +335,14 @@ namespace ActualIdle {
             Modifiers.Remove(modifier);
         }
 
+        /// <summary>
+        /// Modifiers the damage param by E.DAMAGE modifiers, then deals damage, and then adds XP to animal handling equal to the armor reduced damage.
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="armor"></param>
         public void DealDamage(double damage, bool armor = true) {
-            damage = Boss.takeDamage(damage, this, armor);
-            AddXp("Animal Handling", damage);
+            damage = Boss.TakeDamage(Modifier.Modify(Modifiers.Values, E.DAMAGE, damage), this, armor);
+            AddXp(E.ANIMAL_HANDLING, damage);
         }
 
         /// <summary>
@@ -384,15 +399,18 @@ namespace ActualIdle {
             }
         }
 
-        public void ListPrices() {
+        public void ListPrices(string group=E.GRP_FOREST) {
+            Entities[E.ORGANIC_MATERIAL].Echo();
+            Console.WriteLine();
             foreach (KeyValuePair<string, Entity> entry in Entities) {
-                if (Entities[entry.Key].Unlocked) {
+                if (Entities[entry.Key].Unlocked && Entities[entry.Key].Group == group) {
                     Entities[entry.Key].EchoPrice();
                 }
             }
         }
 
         public void ListDoables() {
+            Console.WriteLine("Mana: " + Math.Round(Mana, 2) + " / " + Math.Round(Stats[E.MAXMANA], 2)+"mp");
             Console.WriteLine("You can: ");
             foreach (KeyValuePair<string, Doable> entry in Doables) {
                 if (entry.Value.Unlocked)
@@ -404,21 +422,21 @@ namespace ActualIdle {
             foreach (string skill in Statics.skills) {
                 if (Xp[skill] < 101)
                     continue;
-                int lvl = (int)GetValue("lvl" + skill);
-                double nextXp = Math.Pow(1.2, lvl + 1) * 100;
-                Console.WriteLine(skill + "\tlvl " + GetValue("lvl" + skill) + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp");
+                int lvl = (int)GetValue(E.SV_LEVEL + skill);
+                double nextXp = Math.Pow(1.2, GetValue("clvl" + skill) + 1) * 100;
+                Console.WriteLine(skill + "\tlvl " + lvl + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp ("+GetValue("clvl" + skill)+ " at reset)");
             }
         }
 
         public void ListAvailableUpgrades() {
             string owned = "";
             string unowned = "";
-            foreach (KeyValuePair<string, Upgrade> entry in Upgrades) {
-                if(entry.Value.Unlocked) {
-                    if (entry.Value.Owned)
-                        owned += ", " + entry.Key;
+            foreach (Upgrade entry in GetEntities(E.GRP_UPGRADES)) {
+                if(entry.Unlocked) {
+                    if (entry.Owned)
+                        owned += ", " + entry.Name;
                     else
-                        unowned += ", " + entry.Key;
+                        unowned += ", " + entry.Name;
                 }
             }
             
@@ -433,6 +451,18 @@ namespace ActualIdle {
                 Console.WriteLine(owned.Substring(2));
             } else {
                 Console.WriteLine("N/A");
+            }
+        }
+
+        /// <summary>
+        /// Returns all Entities from a given group
+        /// </summary>
+        /// <param name="group"></param>
+        public IEnumerable<Entity> GetEntities(string group) {
+            var result = new List<Entity>();
+            foreach(KeyValuePair<string, Entity> entity in Entities) {
+                if (entity.Value.Group == group)
+                    yield return entity.Value;
             }
         }
 
@@ -474,6 +504,8 @@ namespace ActualIdle {
             foreach(Modifier modifier in Modifiers.Values) {
                 modifier.Echo();
             }
+            Console.WriteLine();
+            Modifier.GetResultModifier(Modifiers.Values).Echo();
         }
 
         /// <summary>
@@ -483,12 +515,12 @@ namespace ActualIdle {
         /// <param name="value"></param>
         /// <returns></returns>
         public double GetValue(string value) {
-            if (value.StartsWith("lvl")) {
-                if (Statics.skills.Contains(value.Substring(3)))
-                    return (int)Math.Log(Xp[value.Substring(3)] / 100, 1.2);
-            } else if (value.StartsWith("count")) {
-                if (Entities.ContainsKey(value.Substring(5)))
-                    return Entities[value.Substring(5)].Amount;
+            if (value.StartsWith(E.CUR_LEVEL)) {
+                if (Statics.skills.Contains(value.Substring(E.CUR_LEVEL.Length)))
+                    return (int)Math.Log(Xp[value.Substring(E.CUR_LEVEL.Length)] / 100, 1.2);
+            } else if (value.StartsWith(E.COUNT)) {
+                if (Entities.ContainsKey(value.Substring(E.COUNT.Length)))
+                    return Entities[value.Substring(E.COUNT.Length)].Amount;
             } else if (value.StartsWith("stat")) {
                 if (Stats.ContainsKey(value.Substring(4)))
                     return Stats[value.Substring(4)];
@@ -502,11 +534,17 @@ namespace ActualIdle {
                 return float.Parse(value.Substring(2));
             } else if (value.StartsWith("!B")) {
                 return bool.Parse(value.Substring(2)) ? 1 : 0;
+            } else if (value == E.STYLE_FIGHT) {
+                return FightingStyle == E.STYLE_FIGHT ? 1 : 0;
+            } else if (value == E.STYLE_SOOTHE) {
+                return FightingStyle == E.STYLE_SOOTHE ? 1 : 0;
             } else if (value.StartsWith("sv")) {
-                if(SoftValues.ContainsKey(value))
+                if (SoftValues.ContainsKey(value))
                     return Modifier.Modify(Modifiers.Values, value, SoftValues[value]);
             } else if (Values.ContainsKey(value)) {
                 return Modifier.Modify(Modifiers.Values, value, Values[value]);
+            } else {
+                return Modifier.Modify(Modifiers.Values, value, 0);
             }
 
             return 0;
@@ -569,7 +607,7 @@ namespace ActualIdle {
         /// <param name="requirements"></param>
         /// <returns></returns>
         public bool TestRequirements(string requirements) {
-            if (requirements == "")
+            if (requirements == "" || requirements == null)
                 return true;
             string[] requirementList = requirements.Split('\n');
             foreach(string requirement in requirementList) {
@@ -622,13 +660,6 @@ namespace ActualIdle {
                 g.Save(growthElement);
             }
 
-            // Saves trophies
-            XElement trophiesElement = XMLUtils.CreateElement(element, "Trophies");
-            foreach(Trophy t in Trophies.Values) {
-                XElement trophyElement = XMLUtils.CreateElement(trophiesElement, t.Name);
-                t.Save(trophyElement);
-            }
-
             // Saves doables
             XElement doablesElement = XMLUtils.CreateElement(element, "Doables");
             foreach (Doable d in Doables.Values) {
@@ -641,18 +672,14 @@ namespace ActualIdle {
                 XElement modifierElement = XMLUtils.CreateElement(modifiersElement, m.Name);
                 m.Save(modifierElement);
             }
-
-            XElement upgradeElement = XMLUtils.CreateElement(element, "Upgrades");
-            foreach(Upgrade u in Upgrades.Values) {
-                XMLUtils.CreateElement(upgradeElement, u.Name, u.Owned);
-            }
             
             XMLUtils.CreateElement(element, "Path", CurPath.Name);
             XMLUtils.CreateElement(element, "PathBoss", CurBoss);
             XMLUtils.CreateElement(element, "Count", Count);
             XMLUtils.CreateElement(element, "OfflineTicks", OfflineTicks);
-            XMLUtils.CreateElement(element, "Hp", Hp);
-            XMLUtils.CreateElement(element, "Mana", Mana);
+            element.CreateElement("Hp", Hp);
+            element.CreateElement("Mana", Mana);
+            element.CreateElement("FightingStyle", FightingStyle);
 
             System.IO.Directory.CreateDirectory("saves");
             XDocument xd = new XDocument();
@@ -708,14 +735,6 @@ namespace ActualIdle {
                     g.Load(growthElement);
             }
 
-            // Loads trophies 
-            XElement trophiesElement = XMLUtils.GetElement(element, "Trophies");
-            foreach (Trophy t in Trophies.Values) {
-                XElement trophyElement = XMLUtils.GetElement(trophiesElement, t.Name);
-                if(trophyElement != null)
-                    t.Load(trophyElement);
-            }
-
             // Loads doables 
             XElement doablesElement = XMLUtils.GetElement(element, "Doables");
             foreach (Doable d in Doables.Values) {
@@ -733,18 +752,6 @@ namespace ActualIdle {
                 Modifiers[m.Name] = m;
             }
 
-            // Loads upgrades
-            XElement upgradesElement = XMLUtils.GetElement(element, "Upgrades");
-            foreach (Upgrade u in Upgrades.Values) {
-                XElement upgradeElement = XMLUtils.GetElement(upgradesElement, u.Name);
-                if(upgradeElement != null) {
-                    u.Owned = bool.Parse(upgradeElement.Value);
-                    if(u.Modifier != null && u.Owned) {
-                        AddModifier(u.Modifier);
-                    }
-                }
-            }
-
             string path = element.GetString("Path");
             CurBoss = element.GetInt("PathBoss");
             foreach(Path p in Path.paths) {
@@ -760,6 +767,8 @@ namespace ActualIdle {
             if(element.HasChild("Mana"))
                 Mana = element.GetDouble("Mana");
             OfflineTicks = element.GetInt("OfflineTicks");
+            if (element.HasChild("FightingStyle"))
+                FightingStyle = element.GetString("FightingStyle");
 
         }
 

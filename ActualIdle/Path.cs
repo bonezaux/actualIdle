@@ -8,9 +8,9 @@ namespace ActualIdle {
     /// <summary>
     /// One Path of bosses to follow. Will end of in a branch where you can pick new paths.
     /// There'll also be some kind of optional bosses.
-    /// Has one inject, unlocked, for determining whether it is unlocked.
+    /// Has one inject, unlocked, for determining whether it is unlocked. TODO: UNIENTITYIFY SOMEHOW
     /// </summary>
-    public class Path : IEntity{
+    public class Path : IPerformer{
         public static List<Path> paths = new List<Path>();
 
         public List<Fighter> Bosses { get; private set; }
@@ -18,7 +18,7 @@ namespace ActualIdle {
         public string DescText { get; private set; }
 
         public Branch EndBranch { get; set; }
-        public Forest forest { get; private set; }
+        public Forest Forest { get; private set; }
         public Dictionary<string, List<codeInject>> Injects { get; private set; }
         public string Requirements { get; set; }
         /// <summary>
@@ -29,9 +29,9 @@ namespace ActualIdle {
                 bool result = true;
                 if (!Show)
                     return false;
-                result = forest.TestRequirements(Requirements);
+                result = Forest.TestRequirements(Requirements);
                 foreach (codeInject c in Injects["unlocked"]) {
-                    if (!(bool)c(forest, this, null))
+                    if (!(bool)c(Forest, this, null))
                         result = false;
                 }
                 return result;
@@ -49,11 +49,11 @@ namespace ActualIdle {
         /// </summary>
         public bool Show {
             get {
-                if (!forest.TestRequirements(ShowRequirements))
+                if (!Forest.TestRequirements(ShowRequirements))
                     return false;
                 bool result = true;
                 foreach (codeInject c in Injects["shown"]) {
-                    if (!(bool)c(forest, this, null))
+                    if (!(bool)c(Forest, this, null))
                         result = false;
                 }
                 return result;
@@ -74,7 +74,7 @@ namespace ActualIdle {
         /// <param name="showRequirements">Requirements for having the Path even shown in picking. The "shown" injects do the same.</param>
         public Path(Forest forest, string name, string descText, string requirements = "", string showRequirements = "") {
             paths.Add(this);
-            this.forest = forest;
+            this.Forest = forest;
             Bosses = new List<Fighter>();
             Name = name;
             DescText = descText;
@@ -96,6 +96,10 @@ namespace ActualIdle {
 
         public int Length() {
             return Bosses.Count;
+        }
+        
+        public void Trigger(string trigger, params RuntimeValue[] arguments) {
+            return;
         }
     }
 }

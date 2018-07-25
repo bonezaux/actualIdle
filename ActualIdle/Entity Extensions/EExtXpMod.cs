@@ -17,12 +17,13 @@ namespace ActualIdle.Entity_Extensions {
         /// <param name="xp"></param>
         /// <param name="skill"></param>
         public EExtXpMod(double xp, string skill=E.DRUIDCRAFT) {
-            Xp = Xp;
+            Xp = xp;
             Skill = skill;
         }
 
         public override void OnAdd(double amount) {
-            Entity.forest.Modifiers[E.XP + E.GAIN].ModifiersF[Skill + E.XP + E.GAIN] += Xp * amount * 0.01;
+            //Console.WriteLine("Being called..." + (Skill + E.XP + E.GAIN) + "+" + Xp * amount * 0.01 + " f a " + amount);
+            Entity.Forest.Modifiers[E.XP + E.GAIN].ModifiersF[Skill + E.XP + E.GAIN] += Xp * amount * 0.01;
         }
     }
 }

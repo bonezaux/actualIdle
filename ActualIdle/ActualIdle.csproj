@@ -51,8 +51,9 @@
     <Compile Include="Entity Extensions\EExtGenerate.cs" />
     <Compile Include="Entity Extensions\EExtLimited.cs" />
     <Compile Include="Entity Extensions\EExtModifier.cs" />
+    <Compile Include="Entity Extensions\EExtRequirements.cs" />
     <Compile Include="Entity Extensions\EExtXpMod.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="E.cs" />
     <Compile Include="EntityDruid.cs" />
     <Compile Include="Fighter.cs" />
     <Compile Include="Forest.cs" />
@@ -60,7 +61,8 @@
     <Compile Include="Formula.cs" />
     <Compile Include="FormulaLimitedExp.cs" />
     <Compile Include="FormulaLogistic.cs" />
-    <Compile Include="IEntity.cs" />
+    <Compile Include="IPerformer.cs" />
+    <Compile Include="Initializer.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Program.cs" />
@@ -69,6 +71,8 @@
     <Compile Include="ResourcesFactoryScale.cs" />
     <Compile Include="ResourcesIncrement.cs" />
     <Compile Include="Runtime.cs" />
+    <Compile Include="Statics.cs" />
+    <Compile Include="Talent.cs" />
     <Compile Include="Trophy.cs" />
     <Compile Include="Upgrade.cs" />
     <Compile Include="ResetValues.cs" />

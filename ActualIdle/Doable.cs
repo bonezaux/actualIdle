@@ -10,8 +10,8 @@ namespace ActualIdle {
     /// <summary>
     /// Something you can do at some point. Something like creating an oak or picking an ally or something like that.
     /// </summary>
-    public class Doable : IEntity {
-        public Forest forest { get; private set; }
+    public class Doable : IPerformer {
+        public Forest Forest { get; private set; }
         public string Name { get; private set; }
         public Resources ResourceChange { get; private set; }
         public string Requirements { get; set; }
@@ -29,7 +29,7 @@ namespace ActualIdle {
         public Dictionary<string, List<codeInject>> Injects { get; set; }
 
         public Doable(Forest forest, string name, Resources resourceChange, string reqs, string text, string failText, bool remainUnlocked, string manaCost) {
-            this.forest = forest;
+            this.Forest = forest;
             Name = name;
             ResourceChange = resourceChange;
             Requirements = reqs;
@@ -38,10 +38,11 @@ namespace ActualIdle {
             RemainUnlocked = remainUnlocked;
             
             Unlocked = false;
-            Injects = new Dictionary<string, List<codeInject>>();
-            Injects["loop"] = new List<codeInject>();
-            Injects["perform"] = new List<codeInject>();
-            Injects["tooltip"] = new List<codeInject>();
+            Injects = new Dictionary<string, List<codeInject>> {
+                ["loop"] = new List<codeInject>(),
+                ["perform"] = new List<codeInject>(),
+                ["tooltip"] = new List<codeInject>()
+            };
             ManaCost = manaCost;
         }
 
@@ -50,23 +51,23 @@ namespace ActualIdle {
         /// </summary>
         /// <returns></returns>
         public bool TestRequirements() {
-            return forest.TestRequirements(Requirements);
+            return Forest.TestRequirements(Requirements);
         }
 
         public bool Perform() {
-            if(forest.Mana < forest.GetValue(ManaCost)) {
-                Console.WriteLine("Not enough mana! " + Name + " costs " + forest.GetValue(ManaCost));
+            if(Forest.Mana < Forest.GetValue(ManaCost)) {
+                Console.WriteLine("Not enough mana! " + Name + " costs " + Forest.GetValue(ManaCost));
                 return false;
             }
-            if ((ResourceChange == null || ResourceChange.CanAfford(forest, 1)) &&
+            if ((ResourceChange == null || ResourceChange.CanAfford(Forest, 1)) &&
                 TestRequirements()) {
-                forest.SpendMana(forest.GetValue(ManaCost));
+                Forest.SpendMana(Forest.GetValue(ManaCost));
                 if (ResourceChange != null) {
-                    ResourceChange.Print(forest, 1);
-                    ResourceChange.Apply(forest, 1);
+                    ResourceChange.Print(Forest, 1);
+                    ResourceChange.Apply(Forest, 1);
                 }
                 foreach (codeInject c in Injects["perform"]) {
-                    c(forest, this, null);
+                    c(Forest, this, null);
                 }
                 Console.WriteLine(Text);
                 Unlocked = RemainUnlocked;
@@ -81,7 +82,7 @@ namespace ActualIdle {
 
         public void Loop() {
             foreach(codeInject c in Injects["loop"]) {
-                c(forest, this, null);
+                c(Forest, this, null);
             }
         }
 
@@ -95,10 +96,21 @@ namespace ActualIdle {
 
         public string GetTooltip() {
             string result = Name;
+            if(ManaCost != null && Forest.GetValue(ManaCost) > 0) {
+                result += " (" + Forest.GetValue(ManaCost) + "mp)";
+            }
             if(Injects["tooltip"].Count > 0) {
-                result += " " + (string)Injects["tooltip"][0](forest, this, null);
+                result += " " + (string)Injects["tooltip"][0](Forest, this, null);
             }
             return result;
+        }
+
+        public void Trigger(string trigger, params RuntimeValue[] arguments) {
+            if (Injects.ContainsKey(trigger)) {
+                foreach (codeInject inj in Injects[trigger]) {
+                    inj(Forest, this, arguments);
+                }
+            }
         }
     }
 }

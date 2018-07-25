@@ -10,13 +10,20 @@ namespace ActualIdle {
         public static void InitValues(Forest forest) {
 
             forest.Entities[E.ORGANIC_MATERIAL].Unlocked = true;
+            forest.FightingStyle = E.STYLE_FIGHT;
 
+            forest.Values[E.DEFEATED_BOSSES] = 0;
             forest.Values["wandlevel"] = 0;
             forest.Values[E.BOUGHT_THINGS] = 0;
             forest.Values["allowedGrowths"] = 2;
 
             forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 }, { E.MAXMANA, 120}, { E.MANAREGEN, 1 } }));
 
+            forest.AddModifier(new Modifier(E.XP + E.GAIN, modifiersF: new Dictionary<string, double>() { { E.XP + E.GAIN, 1 } }));
+            foreach (string skill in Statics.skills) {
+                forest.Values[skill + E.XP + E.GAIN] = 1;
+                forest.Modifiers[E.XP + E.GAIN].ModifiersF[skill + E.XP + E.GAIN] = 0;
+            }
             //Modifier som GrowthDruids can increase når de increaser xp gain af noget
             //Druidcraft XP: Income
             //Animal Handling XP: Damage givet
@@ -75,7 +82,6 @@ namespace ActualIdle {
             forest.Values[E.ABIL_REJUVENATE + E.COOLDOWN+E.MOD] = 1; //Is a speed, making it higher will make it faster.
             forest.Values[E.ABIL_REJUVENATE + E.MANA] = 15;
             forest.Doables[E.ABIL_REJUVENATE].Unlocked = true;
-            forest.Doables[E.ABIL_REJUVENATE].Requirements += E.ABIL_REJUVENATE + E.COOLDOWN+"_ <= _0";
 
 
             // Harmony 
@@ -114,9 +120,9 @@ namespace ActualIdle {
             forest.Doables["Halfhour Offline"].Unlocked = true;
 
             // Think upgrades
-            forest.Values[E.UPG_DRUIDCRAFT_CONSIDERED + E.MOD] = 0.01; //How much production boost in % each level of druidcraft gives.
-            forest.Values[E.UPG_HANDLED_YOU_BEFORE + E.MOD] = 0.01; //How much attack boost in % each level of Animal Handling gives.
-            forest.Values[E.UPG_SOOTHING_THOUGHTS + E.MOD] = 0.01; //How much attack boost in % each level of Soothing gives.
+            forest.Values[E.UPG_DRUIDCRAFT_CONSIDERED + E.MOD] = 0.03; //How much production boost in % each level of druidcraft gives.
+            forest.Values[E.UPG_HANDLED_YOU_BEFORE + E.MOD] = 0.03; //How much attack boost in % each level of Animal Handling gives.
+            forest.Values[E.UPG_SOOTHING_THOUGHTS + E.MOD] = 0.03; //How much attack boost in % each level of Soothing gives.
 
         }
     }

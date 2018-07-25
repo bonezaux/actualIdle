@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ActualIdle {
 
-    public class Fighter : IEntity {
+    public class Fighter : IPerformer {
         public double Hp { get; set; }
         public string Name { get; set; }
         public Resources Reward { get; set; }
@@ -22,12 +22,13 @@ namespace ActualIdle {
         public Dictionary<string, double> Stats;
 
         public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
-            Stats = new Dictionary<string, double>();
-            Stats[E.HEALTH] = maxHp;
-            Stats[E.ATTACK] = attack;
-            Stats[E.DEFENSE] = defense;
-            Stats[E.STALL] = 0;
-            Stats[E.SPEED] = 0;
+            Stats = new Dictionary<string, double> {
+                [E.HEALTH] = maxHp,
+                [E.ATTACK] = attack,
+                [E.DEFENSE] = defense,
+                [E.STALL] = 0,
+                [E.SPEED] = 0
+            };
             Hp = maxHp;
             Name = name;
             Reward = reward;
@@ -35,6 +36,10 @@ namespace ActualIdle {
             Requirements = requirements;
             Description = description;
             AddedGrowths = addedGrowths;
+        }
+        
+        public void Trigger(string trigger, params RuntimeValue[] arguments) {
+            return; //TODO: ADD TRIGGER SYSTEM
         }
 
         /// <summary>
@@ -44,7 +49,7 @@ namespace ActualIdle {
         /// <param name="attacker"></param>
         /// <param name="armor"></param>
         /// <returns></returns>
-        public virtual double takeDamage(double damage, Fighter attacker, bool armor = true) {
+        public virtual double TakeDamage(double damage, Fighter attacker, bool armor = true) {
             if(armor)
                 damage -= Stats[E.DEFENSE];
             Hp -= damage;
@@ -52,8 +57,8 @@ namespace ActualIdle {
         }
 
         public void FightLoop(Fighter fighter) {
-            fighter.takeDamage(Stats[E.ATTACK], this);
-            if (fighter.Hp <= 0)
+            fighter.TakeDamage(Stats[E.ATTACK], this);
+            if (fighter.Hp <= 0 && Hp > 0)
                 fighter.Lose();
         }
 
@@ -61,8 +66,9 @@ namespace ActualIdle {
         }
 
         public Fighter Clone() {
-            Fighter result = new Fighter(Stats[E.HEALTH], Stats[E.ATTACK], Stats[E.DEFENSE], Name, Reward, Xp, Requirements, Description);
-            result.Stats = Stats;
+            Fighter result = new Fighter(Stats[E.HEALTH], Stats[E.ATTACK], Stats[E.DEFENSE], Name, Reward, Xp, Requirements, Description) {
+                Stats = Stats
+            };
             return result;
         }
     }

@@ -20,10 +20,10 @@ namespace ActualIdle.Entity_Extensions {
         }
 
         public override void OnAdd(double amount) {
-            if (Entity.forest.HasModifier(Modifier)) {
+            if (Entity.Forest.HasModifier(Modifier)) {
                 System.Diagnostics.Debug.Assert(Modifier != null);
                 if (Scale)
-                    Entity.forest.GetModifier(Modifier.Name).AddModifier(Modifier, amount, ReduceMultipliers);
+                    Entity.Forest.GetModifier(Modifier.Name).AddModifier(Modifier, amount, ReduceMultipliers);
             }
         }
 
@@ -31,13 +31,13 @@ namespace ActualIdle.Entity_Extensions {
         /// Activates  the modifier
         /// </summary>
         public override void OnEnable() {
-            Entity.forest.AddModifier(Modifier);
+            Entity.Forest.AddModifier(Modifier);
         }
         /// <summary>
         /// Deactivates the modifier
         /// </summary>
         public override void OnDisable() {
-            Entity.forest.RemoveModifier(Modifier.Name);
+            Entity.Forest.RemoveModifier(Modifier.Name);
         }
     }
 }

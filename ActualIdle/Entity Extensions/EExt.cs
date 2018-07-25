@@ -21,5 +21,6 @@ namespace ActualIdle.Entity_Extensions {
         public virtual void OnAdd(double amount) { }
         public virtual void OnEnable() { }
         public virtual void OnDisable() { }
+        public virtual void Echo() { }
     }
 }
