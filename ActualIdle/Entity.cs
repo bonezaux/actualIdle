@@ -50,6 +50,10 @@ namespace ActualIdle  {
         /// How many of the growth are currently owned.
         /// </summary>
         public double Amount { get; set; }
+        /// <summary>
+        /// Used mostly by things you can only have 0 or 1 of, like upgrades and talents.
+        /// </summary>
+        public bool Owned { get => Amount > 0; set => throw new NotImplementedException(); }
 
 
         /// <summary>
@@ -147,7 +151,7 @@ namespace ActualIdle  {
         /// Calls all extensions' onAdd function
         /// </summary>
         /// <param name="amount"></param>
-        public void OnAdd(int amount) {
+        public virtual void OnAdd(int amount) {
             foreach (EExt ext in Extensions.Values) {
                 ext.OnAdd(amount);
             }

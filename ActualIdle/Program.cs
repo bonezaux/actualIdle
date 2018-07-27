@@ -23,6 +23,7 @@ namespace ActualIdle {
             forest.ChangeValue(E.SV_THINKS, 1);
             foreach (string skill in Statics.skills) {
                 forest.Xp[skill] = 100;
+                forest.TalentPoints[skill] = 0;
             }
             foreach (Entity e in forest.Entities.Values) {
                 forest.SoftValues[E.SV_COUNT + e.Name] = e.Amount;
@@ -74,8 +75,7 @@ namespace ActualIdle {
                         string growth = l.Substring(6).Trim();
                         if (!forest.Entities.ContainsKey(growth))
                             Console.WriteLine("No Growth by name " + growth);
-                        else
-                        {
+                        else {
                             forest.Entities[growth].Echo(true);
                         }
                     }
@@ -131,14 +131,13 @@ namespace ActualIdle {
                         forest.ListAvailableUpgrades();
                     else {
                         string upgrade = l.Substring(8);
-                        if(upgrade == "all") {
-                            foreach(Upgrade u in forest.GetEntities(E.GRP_UPGRADES)) {
-                                if(u.Unlocked && !u.Owned) {
+                        if (upgrade == "all") {
+                            foreach (Upgrade u in forest.GetEntities(E.GRP_UPGRADES)) {
+                                if (u.Unlocked && !u.Owned) {
                                     u.Create(1);
                                 }
                             }
-                        }
-                        else if (!forest.Entities.ContainsKey(upgrade) || !forest.Entities[upgrade].Unlocked || forest.Entities[upgrade].Group != E.GRP_UPGRADES)
+                        } else if (!forest.Entities.ContainsKey(upgrade) || !forest.Entities[upgrade].Unlocked || forest.Entities[upgrade].Group != E.GRP_UPGRADES)
                             Console.WriteLine("No upgrade by name " + upgrade);
                         else {
                             forest.Entities[upgrade].Echo();
@@ -153,20 +152,46 @@ namespace ActualIdle {
                             }
                         }
                     }
+                } else if (l.StartsWith("talents")) {
+                    if (l.Split(' ').Length == 1)
+                        PrintHelp();
+                    else {
+                        forest.ListAvailableTalents(l.Substring(8));
+                    }
+                } else if (l.StartsWith("talent")) { // Get data on a specific Talent and maybe buy it
+                    if (l.Split(' ').Length == 1)
+                        PrintHelp();
+                    else {
+                        string talent = l.Substring(7);
+                        if (!forest.Entities.ContainsKey(talent) || !forest.Entities[talent].Unlocked)
+                            Console.WriteLine("No talent by name " + talent);
+                        else {
+                            forest.Entities[talent].Echo();
+                            if (!((Talent)forest.Entities[talent]).Owned) { //Let you buy the talent
+                                Console.WriteLine("Do you want to buy it? [Y/N]");
+                                string answer = Console.ReadLine();
+                                if (answer.Trim().ToLower().Equals("y")) {
+                                    forest.Entities[talent].Create(1);
+                                } else {
+                                    Console.WriteLine("Okay :)");
+                                }
+                            }
+                        }
+                    }
                 } else if (l.StartsWith("modifiers")) {
                     forest.ListModifiers();
                 } else if (l.StartsWith("branch")) {
                     forest.PickPath();
                 } else if (l.StartsWith("path")) {
                     forest.EchoPath();
-                }  else if (l.StartsWith("path")) {
+                } else if (l.StartsWith("path")) {
                     forest.EchoPath();
                 } else if (l.StartsWith("style")) {
                     if (forest.GetValue(E.CHANGED_STYLE) > 0) {
                         Console.WriteLine("You have already picked your style. You need time and contemplation if you want to repick.");
                     } else if (l.Length == 5) {
                         Console.WriteLine(E.STYLE_FIGHT + ": Lock in to the path of fighting for your right.");
-                        if(forest.Stats[E.SOOTHING] > 0)
+                        if (forest.Stats[E.SOOTHING] > 0)
                             Console.WriteLine(E.STYLE_SOOTHE + ": Soothe your enemies, but don't deal them damage");
                     } else {
                         string style = l.Substring(6);
@@ -214,10 +239,7 @@ namespace ActualIdle {
                     else
                         forest.Load();
                 } else if (l.StartsWith("think")) {
-                    if (forest.Entities[E.TROPHY_SOOTHED_20TH_BOSS].Unlocked)
-                        forest.Think();
-                    else
-                        PrintHelp();
+                    forest.Think();;
                 } else {
                     PrintHelp();
                 }

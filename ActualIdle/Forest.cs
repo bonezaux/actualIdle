@@ -25,10 +25,16 @@ namespace ActualIdle {
         /// Values that are kept over a soft reset; Standard values are just discarded. Must all be prefixed with 'sv';
         /// </summary>
         public Dictionary<string, double> SoftValues { get; private set; }
+        
         /// <summary>
         /// The Druids xp in all skills specified in the Statics statlist. Levels are at specific intervals, which will probably be changed at some point.
         /// </summary>
         public new Dictionary<string, double> Xp { get; private set; }
+        /// <summary>
+        /// How many free talent points the Druid currently has, keyed by skill.
+        /// </summary>
+        public Dictionary<string, int> TalentPoints { get; private set; }
+
         public Dictionary<string, Modifier> Modifiers { get; private set; }
         public Fighter Boss { get; private set; }
         public bool Running { get; set; }
@@ -82,9 +88,11 @@ namespace ActualIdle {
             Values = new Dictionary<string, double>();
             SoftValues = new Dictionary<string, double>();
             Xp = new Dictionary<string, double>();
+            TalentPoints = new Dictionary<string, int>();
             Modifiers = new Dictionary<string, Modifier>();
             foreach (string skill in Statics.skills) {
                 Xp[skill] = 100;
+                TalentPoints[skill] = 0;
             }
 
             Running = true;
@@ -303,12 +311,19 @@ namespace ActualIdle {
                 Xp[skill] += xp;
                 int postLevel = (int)GetValue(E.LEVEL + skill);
                 if(postLevel > preLevel) {
-                    Console.WriteLine("Level up! " + skill + " " + preLevel + "->" + postLevel);
-
-                    if (GetValue(E.LEVEL + skill) > SoftValues[E.SV_LEVEL + skill])
-                        SoftValues[E.SV_LEVEL + skill] = GetValue(E.LEVEL + skill);
+                    LevelUp(skill, preLevel, postLevel);
                 }
             }
+        }
+        private void LevelUp(string skill, int preLevel, int postLevel) {
+            Console.WriteLine("Level up! " + skill + " " + preLevel + "->" + postLevel);
+            if(postLevel / 10 > preLevel / 10) {
+                TalentPoints[skill] += postLevel / 10 - preLevel / 10;
+            }
+
+            if (postLevel > SoftValues[E.SV_LEVEL + skill])
+                SoftValues[E.SV_LEVEL + skill] = postLevel;
+            Trigger(E.TRG_LEVEL_UP, skill, preLevel, postLevel);
         }
 
         public void AddModifier(Modifier modifier) {
@@ -437,6 +452,32 @@ namespace ActualIdle {
                 Console.WriteLine("N/A");
             }
                 Console.WriteLine(" ----- Owned Upgrades ----- ");
+            if (owned.Length > 0) {
+                Console.WriteLine(owned.Substring(2));
+            } else {
+                Console.WriteLine("N/A");
+            }
+        }
+
+        public void ListAvailableTalents(string skill) {
+            string owned = "";
+            string unowned = "";
+            foreach (Talent entry in GetEntities(E.GRP_TALENTS+skill)) {
+                if (entry.Unlocked) {
+                    if (entry.Owned)
+                        owned += ", " + entry.Name;
+                    else
+                        unowned += ", " + entry.Name;
+                }
+            }
+
+            Console.WriteLine(" --- Available " + skill + " Talents --- ");
+            if (unowned.Length > 0) {
+                Console.WriteLine(unowned.Substring(2));
+            } else {
+                Console.WriteLine("N/A");
+            }
+            Console.WriteLine(" ----- Owned " + skill + " Talents ----- ");
             if (owned.Length > 0) {
                 Console.WriteLine(owned.Substring(2));
             } else {
@@ -648,8 +689,8 @@ namespace ActualIdle {
 
             // Saves skills
             XElement skillsElement = XMLUtils.CreateElement(element, "skills");
-            foreach(string skill in Statics.skills) {
-                XMLUtils.CreateElement(skillsElement, skill, Xp[skill]);
+            foreach (string skill in Statics.skills) {
+                XMLUtils.CreateElement(skillsElement, skill, Xp[skill] + ":" + TalentPoints[skill]);
             }
 
             // Saves growths 
@@ -722,8 +763,15 @@ namespace ActualIdle {
             // Loads skills 
             XElement skillsElement = XMLUtils.GetElement(element, "skills");
             foreach (string skill in Statics.skills) {
-                if (XMLUtils.HasChild(skillsElement, skill))
-                    Xp[skill] = XMLUtils.GetDouble(skillsElement, skill);
+                if (XMLUtils.HasChild(skillsElement, skill)) {
+                    string skillValue = skillsElement.GetString(skill);
+                    if(skillValue.Contains(":")) {
+                        Xp[skill] = double.Parse(skillValue.Split(':')[0]);
+                        TalentPoints[skill] = int.Parse(skillValue.Split(':')[1]);
+                    } else {
+                        Xp[skill] = double.Parse(skillValue);
+                    }
+                }
             }
 
             // Loads growths 

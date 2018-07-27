@@ -101,6 +101,10 @@ namespace ActualIdle {
         /// Key called when OnAdd of an Entity is called. args[0] = name, args[1] = amount added.
         /// </summary>
         public const string TRG_ENTITY_ADDED = "Entity Added";
+        /// <summary>
+        /// Key called when the druid levels up. args[0] = skill, args[1] = level before level up, args[2] = level after level up.
+        /// </summary>
+        public const string TRG_LEVEL_UP = "Level Up";
 
         // ENTITY EXTENSIONS BELOW
         public const string EEXT_BUYABLE = "Buyable";
@@ -197,5 +201,7 @@ namespace ActualIdle {
         /// Item found on the avg hp path, final boss. Used by Soothers later to create a Sapling of Life.
         /// </summary>
         public const string ITEM_CORRUPT_LIFE_SEED = "Corrupt Seed of Life";
+
+        public const string TALENT_DC_CLEAR_SKIES = "Clear Skies";
     }
 }

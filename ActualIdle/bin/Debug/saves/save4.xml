@@ -12,7 +12,9 @@
     <SpidersAttack>1</SpidersAttack>
     <WebsAttack>5</WebsAttack>
     <WebsDefense>50</WebsDefense>
-    <allowedGrowths>2</allowedGrowths>
+    <DefeatedBosses>2</DefeatedBosses>
+    <boughtThings>1</boughtThings>
+    <allowedGrowths>4</allowedGrowths>
     <DruidcraftXpGain>1</DruidcraftXpGain>
     <Animal_HandlingXpGain>1</Animal_HandlingXpGain>
     <SoothingXpGain>1</SoothingXpGain>
@@ -52,6 +54,8 @@
     <Druidcraft_ConsideredMod>0.03</Druidcraft_ConsideredMod>
     <Handled_You_BeforeMod>0.03</Handled_You_BeforeMod>
     <Soothing_ThoughtsMod>0.03</Soothing_ThoughtsMod>
+    <DefeatedBoss_1>1</DefeatedBoss_1>
+    <DefeatedBoss_2>1</DefeatedBoss_2>
     <svlvlDruidcraft>30</svlvlDruidcraft>
     <svlvlAnimal_Handling>22</svlvlAnimal_Handling>
     <svlvlSoothing>18</svlvlSoothing>
@@ -125,8 +129,8 @@
     <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>490.09160526856147</Druidcraft>
-    <Animal_Handling>100</Animal_Handling>
+    <Druidcraft>752.02071140589692</Druidcraft>
+    <Animal_Handling>426.87352893040782</Animal_Handling>
     <Soothing>100</Soothing>
     <Alchemy>100</Alchemy>
     <Transformation>100</Transformation>
@@ -134,27 +138,27 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>5812.453</Amount>
+      <Amount>287204.583</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>50</Amount>
+      <Amount>65</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
-      <Amount>33</Amount>
+      <Amount>56</Amount>
       <Unlocked>true</Unlocked>
     </Oaks>
     <Ants>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>56</Amount>
+      <Unlocked>true</Unlocked>
     </Ants>
     <Birches>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Birches>
     <Yews>
-      <Amount>2</Amount>
+      <Amount>13</Amount>
       <Unlocked>true</Unlocked>
     </Yews>
     <Flowers>
@@ -181,17 +185,21 @@
       <Amount>0</Amount>
       <Unlocked>false</Unlocked>
     </Corrupt_Seed_of_Life>
+    <Clear_Skies>
+      <Amount>0</Amount>
+      <Unlocked>true</Unlocked>
+    </Clear_Skies>
     <wand>
       <Amount>0</Amount>
       <Unlocked>false</Unlocked>
     </wand>
     <Bush_Growth_1>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Bush_Growth_1>
     <Oak_Growth_1>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Oak_Growth_1>
     <Growing_Birches_1>
       <Amount>0</Amount>
@@ -199,15 +207,15 @@
     </Growing_Birches_1>
     <Larger_Ants_1>
       <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Unlocked>true</Unlocked>
     </Larger_Ants_1>
     <Bush_Growth_2>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Bush_Growth_2>
     <Oak_Growth_2>
       <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Unlocked>true</Unlocked>
     </Oak_Growth_2>
     <Gnarly_Yews_1>
       <Amount>0</Amount>
@@ -215,7 +223,7 @@
     </Gnarly_Yews_1>
     <Larger_Ants_2>
       <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Unlocked>true</Unlocked>
     </Larger_Ants_2>
     <Spiderbefriending_1>
       <Amount>0</Amount>
@@ -471,12 +479,12 @@
     </Webs>
     <Druidcraft_Considered>
       <ModifiersF>
-        <Gain>1.24</Gain>
+        <Gain>1.33</Gain>
       </ModifiersF>
     </Druidcraft_Considered>
     <Handled_You_Before>
       <ModifiersF>
-        <Attack>1</Attack>
+        <Attack>1.21</Attack>
       </ModifiersF>
     </Handled_You_Before>
     <Soothing_Thoughts>
@@ -484,13 +492,28 @@
         <HealthRegen>1</HealthRegen>
       </ModifiersF>
     </Soothing_Thoughts>
+    <Bush_Growth_1>
+      <ModifiersF>
+        <BushesGain>3</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_1>
+    <Oak_Growth_1>
+      <ModifiersF>
+        <OaksGain>4</OaksGain>
+      </ModifiersF>
+    </Oak_Growth_1>
+    <Bush_Growth_2>
+      <ModifiersF>
+        <BushesGain>5</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_2>
   </Modifiers>
   <Path>Forest Street</Path>
-  <PathBoss>0</PathBoss>
-  <Count>1551</Count>
+  <PathBoss>2</PathBoss>
+  <Count>2408</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>31.586399999999497</Hp>
+  <Hp>69.159830330040322</Hp>
   <Mana>120</Mana>
   <FightingStyle>Fight</FightingStyle>
-  <LifeCount>1087</LifeCount>
+  <LifeCount>1944</LifeCount>
 </Forest>

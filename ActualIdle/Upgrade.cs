@@ -26,7 +26,6 @@ namespace ActualIdle {
         /// </summary>
         public string PostDescriptionText { get => _postDescriptionText ?? PreDescriptionText; set => _postDescriptionText = value; }
         
-        public bool Owned { get => Amount>0; set => throw new NotImplementedException(); }
 
         private Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier)
             : base(forest, name, E.GRP_UPGRADES, 0) {

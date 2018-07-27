@@ -469,6 +469,7 @@ namespace ActualIdle {
 
             InitTrophies(forest);
             InitLoot(forest);
+            InitTalents(forest);
 
             forest.AddEntity(new Entity(forest, "wand", E.GRP_ITEMS)
                 .Add(new EExtXpMod(1)));
@@ -511,8 +512,11 @@ namespace ActualIdle {
             // AMOUNT TROPHIES
             forest.AddEntity(new Trophy(forest, E.TROPHY_250_BUSHES, "You have acquired 250 bushes.",
                 E.COUNT + E.ENTITY_BUSHES + "_>=_!I250", E.TRG_ENTITY_ADDED));
+        }
 
-
+        public static void InitTalents(Forest forest) {
+            forest.AddEntity(new Talent(forest, E.TALENT_DC_CLEAR_SKIES, "Clear skies", E.DRUIDCRAFT)
+                .AddRequirements(()=>forest.GetValue(E.LEVEL+E.DRUIDCRAFT)>=10, E.TRG_LEVEL_UP));
         }
 
         public static void InitLoot(Forest forest) {
