@@ -16,16 +16,71 @@ namespace ActualIdle {
     public class Trophy : Entity {
         public string Text { get; set; }
 
-        public Trophy(Forest forest, string name, string requirements, string text, Modifier modifier=null)
+        private Trophy(Forest forest, string name, string text)
             : base(forest, name, E.GRP_TROPHIES, 3) {
             Name = name;
             Text = text;
             Unlocked = false;
             this.Forest = forest;
             Injects[E.INJ_ACQUIRE] = new List<codeInject>();
-            if (modifier != null)
-                Add(new EExtModifier(modifier));
-            Add(new EExtRequirements(requirements));
+        }
+
+        /// <summary>
+        /// Requirements is the requirements string, triggers which triggers trigger it to be reevaluated.
+        /// There are three overloads, because there can be a modifier and not be a modifier, and requirements can be either a string or a func.
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="text"></param>
+        /// <param name="requirements"></param>
+        /// <param name="triggers"></param>
+        public Trophy(Forest forest, string name, string text, string requirements, params string[] triggers)
+            : this(forest, name, text) {
+            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach(string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
+        }
+        /// <summary>
+        /// Overload for using func requirements
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="text"></param>
+        /// <param name="requirements"></param>
+        /// <param name="triggers"></param>
+        public Trophy(Forest forest, string name, string text, Func<bool> requirements, params string[] triggers)
+            : this(forest, name, text) {
+            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach (string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
+        }
+        /// <summary>
+        /// Overload for adding a modifier with string reqs
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="text"></param>
+        /// <param name="requirements"></param>
+        /// <param name="modifier"></param>
+        /// <param name="triggers"></param>
+        public Trophy(Forest forest, string name, string text, Modifier modifier, string requirements, params string[] triggers)
+            : this(forest, name, text, requirements, triggers) {
+            Add(new EExtModifier(modifier));
+        }
+        /// <summary>
+        /// Overload for adding a modifier with bool reqs
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name"></param>
+        /// <param name="text"></param>
+        /// <param name="modifier"></param>
+        /// <param name="requirements"></param>
+        /// <param name="triggers"></param>
+        public Trophy(Forest forest, string name, string text, Modifier modifier, Func<bool> requirements, params string[] triggers)
+            : this(forest, name, text, requirements, triggers) {
+            Add(new EExtModifier(modifier));
         }
 
         public override void Loop() {

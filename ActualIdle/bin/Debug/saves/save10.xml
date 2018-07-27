@@ -14,7 +14,7 @@
     <WebsDefense>50</WebsDefense>
     <DefeatedBosses>23</DefeatedBosses>
     <boughtThings>12</boughtThings>
-    <allowedGrowths>25</allowedGrowths>
+    <allowedGrowths>28</allowedGrowths>
     <DruidcraftXpGain>1</DruidcraftXpGain>
     <Animal_HandlingXpGain>1</Animal_HandlingXpGain>
     <SoothingXpGain>1</SoothingXpGain>
@@ -112,8 +112,8 @@
     <UpgradeBush_Growth_6Bought>1</UpgradeBush_Growth_6Bought>
     <DefeatedBoss_21>1</DefeatedBoss_21>
     <DefeatedBoss_22>1</DefeatedBoss_22>
-    <RageuvenateCooldown>71</RageuvenateCooldown>
     <DefeatedBoss_23>1</DefeatedBoss_23>
+    <RageuvenateCooldown>77</RageuvenateCooldown>
     <svlvlDruidcraft>30</svlvlDruidcraft>
     <svlvlAnimal_Handling>19</svlvlAnimal_Handling>
     <svlvlSoothing>18</svlvlSoothing>
@@ -138,10 +138,11 @@
     <svTrophyAcquired_250_Bushes>1</svTrophyAcquired_250_Bushes>
     <svTrophySoothed_20th_Boss>1</svTrophySoothed_20th_Boss>
     <svThinks>5</svThinks>
+    <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>27831.006513787077</Druidcraft>
-    <Animal_Handling>5290.6977770871417</Animal_Handling>
+    <Druidcraft>27836.7591665</Druidcraft>
+    <Animal_Handling>5959.2080881387865</Animal_Handling>
     <Soothing>2800.1109523248529</Soothing>
     <Alchemy>100</Alchemy>
     <Transformation>100</Transformation>
@@ -149,7 +150,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>51180841440456.266</Amount>
+      <Amount>52962884586765.531</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -181,8 +182,8 @@
       <Unlocked>true</Unlocked>
     </Spiders>
     <Soothed_20th_Boss>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Soothed_20th_Boss>
     <Webbed_20th_Boss>
       <Amount>1</Amount>
@@ -412,6 +413,10 @@
       <Amount>1</Amount>
       <Unlocked>true</Unlocked>
     </Unlock_Surf_the_Web>
+    <Spider_Prestige>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
+    </Spider_Prestige>
     <Dense_Forest>
       <Amount>1</Amount>
       <Unlocked>true</Unlocked>
@@ -657,12 +662,18 @@
         <OaksGain>5</OaksGain>
       </ModifiersF>
     </Oak_Growth_6>
+    <Spider_Prestige>
+      <ModifiersF>
+        <Attack>1.06</Attack>
+      </ModifiersF>
+    </Spider_Prestige>
   </Modifiers>
   <Path>Forest standard dudes</Path>
-  <PathBoss>8</PathBoss>
-  <Count>132135</Count>
+  <PathBoss>11</PathBoss>
+  <Count>133962</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>1537.713835458944</Hp>
-  <Mana>90.800000000000225</Mana>
+  <Hp>984.79920000000118</Hp>
+  <Mana>89.600000000000207</Mana>
   <FightingStyle>Fight</FightingStyle>
+  <LifeCount>10000</LifeCount>
 </Forest>

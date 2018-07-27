@@ -95,12 +95,6 @@ namespace ActualIdle  {
                     ext.Trigger(trigger, arguments);
                 }
             }
-            if(HasExtension(E.EEXT_REQUIREMENTS)) {
-                Unlocked = ((EExtRequirements)Extensions[E.EEXT_REQUIREMENTS]).Evaluate();
-            }
-            if(trigger == E.TRG_THINK_COMPLETED && HasExtension(E.EEXT_MODIFIER) && Amount>0) {
-                ((EExtModifier)Extensions[E.EEXT_MODIFIER]).OnAdd(Amount);
-            }
         }
 
         /// <summary>

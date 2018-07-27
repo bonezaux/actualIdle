@@ -31,12 +31,19 @@ namespace ActualIdle.Entity_Extensions {
         }
         
         public override void OnEnable() {
+
         }
         /// <summary>
         /// Deactivates the modifier
         /// </summary>
         public override void OnDisable() {
             Entity.Forest.RemoveModifier(Modifier.Name);
+        }
+
+        public override void Trigger(string trigger, params RuntimeValue[] arguments) {
+            if(trigger == E.TRG_THINK_COMPLETED && Entity.HasExtension(E.EEXT_MODIFIER) && Entity.Amount>0) {
+                OnAdd(Entity.Amount);
+            }
         }
     }
 }

@@ -110,24 +110,8 @@ namespace ActualIdle {
             return result;
         }
 
-        public override void Lose() {
-            Console.WriteLine("You were defeated! Remaining boss stats:");
-            EchoBoss();
-            Boss.Hp = Boss.Stats[E.HEALTH];
-            Fighting = false;
-            Hp = 0;
-            Soothe = 0;
-        }
-
         public void SpendMana(double mana) {
             Mana -= mana;
-        }
-        public bool HasModifier(Modifier modifier) => Modifiers.ContainsKey(modifier.Name);
-        public override double TakeDamage(double damage, Fighter attacker, bool armor=true) {
-            if(Soothe > 0) {
-                damage -= (Soothe / 30);
-            }
-            return base.TakeDamage(damage, attacker, armor);
         }
 
         public void Loop() {
@@ -157,35 +141,6 @@ namespace ActualIdle {
         }
 
         /// <summary>
-        /// Called when the battle against the current boss is won. Can be used to insta-win a boss battle too, if necessary.
-        /// winType 0 = defeated
-        /// winType 1 = soothed
-        /// </summary>
-        public void WinBattle(int winType = 0) {
-            Boss.Lose();
-            if (winType == 0)
-                Console.WriteLine("You defeated " + Boss.Name);
-            else if(winType == 1) {
-                Console.WriteLine(Boss.Name + " realized that this is not a world for fighting, but for loving.");
-            }
-            Soothe = 0;
-            Values["Defeated" + Boss.Name] = 1;
-            Values["DefeatedBosses"] += 1;
-            Values["allowedGrowths"] += Boss.AddedGrowths;
-            Trigger(E.TRG_DEFEATED_BOSS, Boss.Name);
-            Boss = null;
-            Fighting = false;
-
-            CurBoss++;
-            if (CurBoss >= CurPath.Length()) {
-                Console.WriteLine("You're through this path now..");
-            } else {
-                Boss = CurPath.Bosses[CurBoss].Clone();
-                Console.WriteLine("Changing boss:" + Boss);
-            }
-        }
-
-        /// <summary>
         /// Passes the given trigger to all IPerformers.
         /// </summary>
         /// <param name="trigger"></param>
@@ -196,55 +151,6 @@ namespace ActualIdle {
             foreach (Doable doable in Doables.Values) {
                 doable.Trigger(trigger, arguments);
             }
-        }
-
-        public void FightTick(bool forestAttack=true, bool bossAttack=true) {
-            if(bossAttack) {
-                if (Boss.Hesitation <= 0)
-                    Boss.FightLoop(this);
-                else
-                    Boss.Hesitation--;
-            }
-            if (LastHp < Hp && LastHp > -1) {
-                HpIncreaseRounds++;
-                if (HpIncreaseRounds >= 3) {
-                    WinBattle(1);
-                }
-            } else {
-                HpIncreaseRounds = 0;
-            }
-            if (Fighting && forestAttack) { // Only damage the boss if the boss didn't kill the Druid first.
-                if(Hesitation <= 0) {
-                    double damage = (Stats[E.ATTACK]);
-                    if (damage > 0 && FightingStyle == E.STYLE_FIGHT) {
-                        DealDamage(damage);
-                        //damage = Boss.TakeDamage(damage, this);
-                        //AddXp(E.ANIMAL_HANDLING, damage);
-                    }
-                    if (FightingStyle == E.STYLE_SOOTHE) {
-                        Soothe += Stats[E.SOOTHING];
-                        AddXp(E.SOOTHING, Stats[E.SOOTHING]);
-                    } else {
-                        Soothe += Stats[E.SOOTHING] / 20;
-                    }
-                    if (Boss.Hp <= 0) {
-                        WinBattle();
-                    }
-                } else {
-                    Hesitation--;
-                }
-            }
-            LastHp = Hp;
-        }
-
-        /// <summary>
-        /// Sets the currently traveled path.
-        /// </summary>
-        /// <param name="path"></param>
-        public void SetPath(Path path) {
-            CurPath = path;
-            CurBoss = 0;
-            Boss = CurPath.Bosses[CurBoss].Clone();
         }
 
         public void StartFighting() {
@@ -282,7 +188,97 @@ namespace ActualIdle {
 
             Fighting = true;
         }
+        /// <summary>
+        /// Called when the battle against the current boss is won. Can be used to insta-win a boss battle too, if necessary.
+        /// winType 0 = defeated
+        /// winType 1 = soothed
+        /// </summary>
+        public void WinBattle(int winType = 0) {
+            Boss.Lose();
+            if (winType == 0)
+                Console.WriteLine("You defeated " + Boss.Name);
+            else if (winType == 1) {
+                Console.WriteLine(Boss.Name + " realized that this is not a world for fighting, but for loving.");
+            }
+            Soothe = 0;
+            Values["Defeated" + Boss.Name] = 1;
+            Values["DefeatedBosses"] += 1;
+            Values["allowedGrowths"] += Boss.AddedGrowths;
+            Trigger(E.TRG_DEFEATED_BOSS, Boss.Name);
+            Boss = null;
+            Fighting = false;
 
+            CurBoss++;
+            if (CurBoss >= CurPath.Length()) {
+                Console.WriteLine("You're through this path now..");
+            } else {
+                Boss = CurPath.Bosses[CurBoss].Clone();
+                Console.WriteLine("Changing boss:" + Boss);
+            }
+        }
+        public override void Lose() {
+            Console.WriteLine("You were defeated! Remaining boss stats:");
+            EchoBoss();
+            Boss.Hp = Boss.Stats[E.HEALTH];
+            Fighting = false;
+            Hp = 0;
+            Soothe = 0;
+        }
+
+        public void FightTick(bool forestAttack = true, bool bossAttack = true) {
+            if (bossAttack) {
+                if (Boss.Hesitation <= 0)
+                    Boss.FightLoop(this);
+                else
+                    Boss.Hesitation--;
+            }
+            if (LastHp < Hp && LastHp > -1) {
+                HpIncreaseRounds++;
+                if (HpIncreaseRounds >= 3) {
+                    WinBattle(1);
+                }
+            } else {
+                HpIncreaseRounds = 0;
+            }
+            if (Fighting && forestAttack) { // Only damage the boss if the boss didn't kill the Druid first.
+                if (Hesitation <= 0) {
+                    double damage = (Stats[E.ATTACK]);
+                    if (damage > 0 && FightingStyle == E.STYLE_FIGHT) {
+                        DealDamage(damage);
+                        //damage = Boss.TakeDamage(damage, this);
+                        //AddXp(E.ANIMAL_HANDLING, damage);
+                    }
+                    if (FightingStyle == E.STYLE_SOOTHE) {
+                        Soothe += Stats[E.SOOTHING];
+                        AddXp(E.SOOTHING, Stats[E.SOOTHING]);
+                    } else {
+                        Soothe += Stats[E.SOOTHING] / 20;
+                    }
+                    if (Boss.Hp <= 0) {
+                        WinBattle();
+                    }
+                } else {
+                    Hesitation--;
+                }
+            }
+            LastHp = Hp;
+        }
+        /// <summary>
+        /// Modifiers the damage param by E.DAMAGE modifiers, then deals damage, and then adds XP to animal handling equal to the armor reduced damage.
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="armor"></param>
+        public void DealDamage(double damage, bool armor = true) {
+            damage = Boss.TakeDamage(Modifier.Modify(Modifiers.Values, E.DAMAGE, damage), this, armor);
+            AddXp(E.ANIMAL_HANDLING, damage);
+        }
+        public override double TakeDamage(double damage, Fighter attacker, bool armor = true) {
+            if (Soothe > 0) {
+                damage -= (Soothe / 30);
+            }
+            return base.TakeDamage(damage, attacker, armor);
+        }
+        
         /// <summary>
         /// Adds an entity to the forest.
         /// </summary>
@@ -290,7 +286,6 @@ namespace ActualIdle {
         public void AddEntity(Entity e) {
             Entities.Add(e.Name, e);
         }
-
         public void AddDoable(Doable doable) {
             Doables.Add(doable.Name, doable);
         }
@@ -322,26 +317,16 @@ namespace ActualIdle {
             else
                 Modifiers.Add(modifier.Name, modifier);
         }
-
         public Modifier GetModifier(string name) {
             if (Modifiers.ContainsKey(name))
                 return Modifiers[name];
             return null;
         }
-
         public void RemoveModifier(string modifier) {
-            Modifiers.Remove(modifier);
+            if(Modifiers.ContainsKey(modifier))
+                Modifiers.Remove(modifier);
         }
-
-        /// <summary>
-        /// Modifiers the damage param by E.DAMAGE modifiers, then deals damage, and then adds XP to animal handling equal to the armor reduced damage.
-        /// </summary>
-        /// <param name="damage"></param>
-        /// <param name="armor"></param>
-        public void DealDamage(double damage, bool armor = true) {
-            damage = Boss.TakeDamage(Modifier.Modify(Modifiers.Values, E.DAMAGE, damage), this, armor);
-            AddXp(E.ANIMAL_HANDLING, damage);
-        }
+        public bool HasModifier(Modifier modifier) => Modifiers.ContainsKey(modifier.Name);
 
         /// <summary>
         /// Buys a number of ForestObjects. 
@@ -350,6 +335,17 @@ namespace ActualIdle {
         /// <param name="amount"></param>
         public void BuyObject(string obj, int amount, bool percentage=false) {
             Entities[obj].Create(amount, percentage);
+        }
+        /// <summary>
+        /// Adds an amount of an entity to the Forest, and unlocks it if it's not unlocked (You could just add zero if you just want to unlock).
+        /// </summary>
+        /// <param name="name">name of entity</param>
+        /// <param name="amount">How many to add</param>
+        public void AddItem(string name, int amount) {
+            Entities[name].OnAdd(amount);
+            Entities[name].Amount += amount;
+            if (!Entities[name].Unlocked)
+                Entities[name].Unlocked = true;
         }
 
         /// <summary>
@@ -483,6 +479,15 @@ namespace ActualIdle {
                 SetPath(nextPath);
             }
         }
+        /// <summary>
+        /// Sets the currently traveled path.
+        /// </summary>
+        /// <param name="path"></param>
+        public void SetPath(Path path) {
+            CurPath = path;
+            CurBoss = 0;
+            Boss = CurPath.Bosses[CurBoss].Clone();
+        }
 
         public void EchoPath() {
             if(CurPath != null) {
@@ -543,7 +548,6 @@ namespace ActualIdle {
             return 0;
 
         }
-
         /// <summary>
         /// Changes a value by the given amount, or creates that value, if it doesn't exist already.
         /// If prefixed with 'sv', the value change happens in the soft values.
@@ -561,7 +565,9 @@ namespace ActualIdle {
             else
                 Values[value] = change;
         }
-
+        public bool OwnsUpgrade(string upgrade) {
+            return GetValue("Upgrade" + upgrade + "Bought") > 0;
+        }
         /// <summary>
         /// Tests whether a giiven string requirement holds true. Used when Lambda expressions are overkill.
         /// Returns the answer.
@@ -589,11 +595,6 @@ namespace ActualIdle {
                 return false;
             }
         }
-
-        public bool OwnsUpgrade(string upgrade) {
-            return GetValue("Upgrade" + upgrade + "Bought") > 0;
-        }
-
         /// <summary>
         /// Runs TestRequirement for every line in the string. Returns true if they're all true, otherwise false.
         /// </summary>
@@ -697,7 +698,6 @@ namespace ActualIdle {
                 xd.Save("saves/"+filename + ".xml");
             }
         }
-
         public void Load(string filename = null) {
             Console.WriteLine("Loading...");
             XDocument xd = null;
@@ -773,17 +773,6 @@ namespace ActualIdle {
 
         }
 
-        /// <summary>
-        /// Adds an amount of an entity to the Forest, and unlocks it if it's not unlocked (You could just add zero if you just want to unlock).
-        /// </summary>
-        /// <param name="name">name of entity</param>
-        /// <param name="amount">How many to add</param>
-        public void AddItem(string name, int amount) {
-            Entities[name].OnAdd(amount);
-            Entities[name].Amount += amount;
-            if (!Entities[name].Unlocked)
-                Entities[name].Unlocked = true;
-        }
 
         /// <summary>
         /// Makes the Forest start its calculation thread.

@@ -28,6 +28,16 @@ namespace ActualIdle {
         
         public bool Owned { get => Amount>0; set => throw new NotImplementedException(); }
 
+        private Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier)
+            : base(forest, name, E.GRP_UPGRADES, 0) {
+            PreDescriptionText = preDescriptionText;
+            PostDescriptionText = postDescriptionText;
+            if (postDescriptionText == null)
+                PostDescriptionText = preDescriptionText;
+            Add(new EExtBuyable(price, false));
+            if (modifier != null)
+                Add(new EExtModifier(modifier));
+        }
         /// <summary>
         /// CodeInjects can be added afterwards.
         /// </summary>
@@ -37,19 +47,29 @@ namespace ActualIdle {
         /// <param name="postDescriptionText">Text shown after you buy the upgrade. If set to null, will be equal to preDescriptionText.</param>
         /// <param name="price">Price of the upgrade</param>
         /// <param name="modifiers">Modifiers added when the upgrade is bought.</param>
-        /// <param name="requirements">Requirements for having the Upgrade unlocked. For when Lambda is overdoing it..</param>
-        public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier = null, string requirements = null)
-            : base(forest, name, E.GRP_UPGRADES, 0){
-            this.Forest = forest;
-            Name = name;
-            PreDescriptionText = preDescriptionText;
-            PostDescriptionText = postDescriptionText;
-            if (postDescriptionText == null)
-                PostDescriptionText = preDescriptionText;
-            Add(new EExtBuyable(price, false));
-            if(modifier != null)
-                Add(new EExtModifier(modifier));
-            Add(new EExtRequirements(requirements));
+        public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier, Func<bool> requirements, params string[] triggers)
+            : this(forest, name, preDescriptionText, postDescriptionText, price, modifier) {
+            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach (string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
+        }
+        /// <summary>
+        /// 
+        /// CodeInjects can be added afterwards.
+        /// </summary>
+        /// <param name="forest"></param>
+        /// <param name="name">Name of upgrade</param>
+        /// <param name="preDescriptionText">Text shown before you buy the upgrade.</param>
+        /// <param name="postDescriptionText">Text shown after you buy the upgrade. If set to null, will be equal to preDescriptionText.</param>
+        /// <param name="price">Price of the upgrade</param>
+        /// <param name="modifiers">Modifiers added when the upgrade is bought.</param>
+        public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier, string requirements, params string[] triggers)
+            : this(forest, name, preDescriptionText, postDescriptionText, price, modifier) {
+            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach (string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
         }
 
         public override void Loop() {

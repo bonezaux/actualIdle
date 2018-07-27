@@ -51,7 +51,6 @@
     <Compile Include="Entity Extensions\EExtGenerate.cs" />
     <Compile Include="Entity Extensions\EExtLimited.cs" />
     <Compile Include="Entity Extensions\EExtModifier.cs" />
-    <Compile Include="Entity Extensions\EExtRequirements.cs" />
     <Compile Include="Entity Extensions\EExtXpMod.cs" />
     <Compile Include="E.cs" />
     <Compile Include="EntityDruid.cs" />

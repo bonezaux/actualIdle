@@ -22,7 +22,7 @@ namespace ActualIdle {
             forest.AddModifier(new Modifier(E.XP + E.GAIN, modifiersF: new Dictionary<string, double>() { { E.XP + E.GAIN, 1 } }));
             foreach (string skill in Statics.skills) {
                 forest.Values[skill + E.XP + E.GAIN] = 1;
-                forest.Modifiers[E.XP + E.GAIN].ModifiersF[skill + E.XP + E.GAIN] = 0;
+                forest.Modifiers[E.XP + E.GAIN].ModifiersF[skill + E.XP + E.GAIN] = 1;
             }
             //Modifier som GrowthDruids can increase når de increaser xp gain af noget
             //Druidcraft XP: Income

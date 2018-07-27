@@ -23,7 +23,7 @@ namespace ActualIdle.Entity_Extensions {
 
         public override void OnAdd(double amount) {
             //Console.WriteLine("Being called..." + (Skill + E.XP + E.GAIN) + "+" + Xp * amount * 0.01 + " f a " + amount);
-            Entity.Forest.Modifiers[E.XP + E.GAIN].ModifiersF[Skill + E.XP + E.GAIN] += Xp * amount * 0.01;
+            //Entity.Forest.Modifiers[E.XP + E.GAIN].ModifiersF[Skill + E.XP + E.GAIN] += Xp * amount * 0.01;
         }
     }
 }

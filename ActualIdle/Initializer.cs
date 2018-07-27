@@ -26,35 +26,25 @@ namespace ActualIdle {
 
             // Birches give more defense
             forest.AddEntity(new Upgrade(forest, E.UPG_BIG_BIRCHES, "improves Birches defense by 700%.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 15000 } }), new Modifier(E.UPG_BIG_BIRCHES, new Dictionary<string, double>() { { E.ENTITY_BIRCHES + E.DEFENSE, 8 } })));
-            forest.Entities[E.UPG_BIG_BIRCHES].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue("count" + E.ENTITY_BIRCHES) >= 4 && !f.OwnsUpgrade(E.UPG_SPIDERFRIENDS)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 15000 } }), new Modifier(E.UPG_BIG_BIRCHES, new Dictionary<string, double>() { { E.ENTITY_BIRCHES + E.DEFENSE, 8 } }),
+                ()=> forest.GetValue("count" + E.ENTITY_BIRCHES) >= 4 && !forest.OwnsUpgrade(E.UPG_SPIDERFRIENDS), E.TRG_ENTITY_ADDED));
+            forest.Entities[E.UPG_BIG_BIRCHES].AddTrigger(E.INJ_CREATE, (f, g, args) => {
+                forest.Entities[E.UPG_SPIDERFRIENDS].Unlocked = false;
+                return null;
             });
 
             // Soothing upgrades Rejuvenate
             forest.AddEntity(new Upgrade(forest, E.UPG_SOOTHING_REJUVENATION, "Rejuvenation scales on Soothing, adding Soothing+2%*DC level to the health restoration.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 7) } }), null));
-            forest.Entities[E.UPG_SOOTHING_REJUVENATION].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue("count" + E.ENTITY_FLOWERS) >= 80 && f.OwnsUpgrade(E.UPG_BIG_BIRCHES)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 7) } }), null,
+                ()=> forest.GetValue("count" + E.ENTITY_FLOWERS) >= 80 && forest.OwnsUpgrade(E.UPG_BIG_BIRCHES), E.TRG_ENTITY_ADDED));
 
             // Increases hp, soothing and health regen. Makes the flower generate 20 and increase by 4% per flower multiplicatively
             forest.AddEntity(new Upgrade(forest, E.UPG_FREE_HEALTHCARE, "Increases Hp by 60%, Soothing by 30% and flower Health Regen by 200%. Flowers generate 20 organic matter per second, increased multiplicatively by 4% per flower.", null,
                 new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 9) } }), new Modifier(E.UPG_FREE_HEALTHCARE,
                 new Dictionary<string, double>() { { E.HEALTH, 1.6 }, { E.SOOTHING, 1.3 }, { E.ENTITY_FLOWERS + E.HEALTHREGEN, 3 }, { E.ENTITY_FLOWERS + E.GAIN, 1.04 } }, // Multiplicative modifiers
-                new Dictionary<string, double>() { { E.ENTITY_FLOWERS + E.GAIN, 20 } }))); // Absolute modifiers
-            forest.Entities[E.UPG_FREE_HEALTHCARE].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 9 && f.GetValue("count" + E.ENTITY_FLOWERS) >= 100 && f.OwnsUpgrade(E.UPG_SOOTHING_REJUVENATION)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Dictionary<string, double>() { { E.ENTITY_FLOWERS + E.GAIN, 20 } }), // Absolute modifiers
+                () => forest.GetValue(E.DEFEATED_BOSSES) >= 9 && forest.GetValue("count" + E.ENTITY_FLOWERS) >= 100 && forest.OwnsUpgrade(E.UPG_SOOTHING_REJUVENATION),
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
             forest.Entities[E.UPG_FREE_HEALTHCARE].Injects["ownedLoop"].Add((f, g, arguments) => {
                 f.Modifiers[E.UPG_FREE_HEALTHCARE].ModifiersF[E.ENTITY_FLOWERS + E.GAIN] = Math.Pow(1.04, f.GetValue("count" + E.ENTITY_FLOWERS));
                 return null;
@@ -62,14 +52,8 @@ namespace ActualIdle {
 
             // Unlocks spell Harmony
             forest.AddEntity(new Upgrade(forest, E.UPG_UNLOCK_HARMONY, "Unlocks the spell Harmony.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 9) } }), null));
-            forest.Entities[E.UPG_UNLOCK_HARMONY].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 15 && f.OwnsUpgrade(E.UPG_FREE_HEALTHCARE)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
-
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(3, 9) } }), null,
+                ()=> forest.GetValue(E.DEFEATED_BOSSES) >= 15 && forest.OwnsUpgrade(E.UPG_FREE_HEALTHCARE), E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
 
             // Harmony spell, increases defense, regen, and gain, lasts 15s
             forest.AddDoable(new Doable(forest, E.ABIL_HARMONY, null, "", "Harmony!", "Harmony is on cooldown.", true, E.ABIL_HARMONY + E.MANA));
@@ -108,36 +92,26 @@ namespace ActualIdle {
         private static void UpgradesSpiders(Forest forest) {
 
             forest.AddEntity(new Upgrade(forest, E.UPG_SPIDERFRIENDS, "Unlocks Spiders.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+4 } })));
-            forest.Entities[E.UPG_SPIDERFRIENDS].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 3 && f.GetValue(E.SV_THINKS) > 0 && !f.OwnsUpgrade(E.UPG_BIG_BIRCHES)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+4 } }), null,
+                ()=> (forest.GetValue(E.DEFEATED_BOSSES) >= 3 && forest.GetValue(E.SV_THINKS) > 0 && !forest.OwnsUpgrade(E.UPG_BIG_BIRCHES)),
+                E.TRG_DEFEATED_BOSS));
             forest.Entities[E.UPG_SPIDERFRIENDS].Injects[E.INJ_CREATE].Add((f, g, arguments) => {
                 f.Entities[E.ENTITY_SPIDERS].Unlocked = true;
+                f.Entities[E.UPG_BIG_BIRCHES].Unlocked = false;
                 return null;
             });
 
             forest.AddEntity(new Upgrade(forest, E.UPG_TRANSMOGRIFY_RAGEUVENATE, "Changes Rejuvenate into a new cool spell!.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 5E+7 } })));
-            forest.Entities[E.UPG_TRANSMOGRIFY_RAGEUVENATE].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 6 && f.OwnsUpgrade(E.UPG_SPIDERFRIENDS) && f.GetValue("count" + E.ENTITY_SPIDERS) >= 100) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 5E+7 } }), null, 
+                ()=> forest.GetValue(E.DEFEATED_BOSSES) >= 6 && forest.OwnsUpgrade(E.UPG_SPIDERFRIENDS) && forest.GetValue("count" + E.ENTITY_SPIDERS) >= 100,
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
 
             forest.AddEntity(new Upgrade(forest, E.UPG_WEB_SITE, "Choose a site to start your spiders' web. This will make every magnitude of income add 20% attack to spiders, and start the construction of a Web. Yews are also ideal for spiders, and will protect coverage. +1% to yew health per spider owned.", null,
                 new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } }), new Modifier(E.UPG_WEB_SITE,
-                new Dictionary<string, double>() { { E.ENTITY_SPIDERS + E.ATTACK, 1.1 }, { E.ENTITY_YEWS + E.HEALTH, 1.01 } })));
-            forest.Entities[E.UPG_WEB_SITE].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 9 && f.OwnsUpgrade(E.UPG_TRANSMOGRIFY_RAGEUVENATE) && f.GetValue("count" + E.ENTITY_SPIDERS) >= 100) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Dictionary<string, double>() { { E.ENTITY_SPIDERS + E.ATTACK, 1.1 }, { E.ENTITY_YEWS + E.HEALTH, 1.01 } }),
+                () => forest.GetValue(E.DEFEATED_BOSSES) >= 9 && forest.OwnsUpgrade(E.UPG_TRANSMOGRIFY_RAGEUVENATE),
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED
+                ));
             forest.Entities[E.UPG_WEB_SITE].Injects["ownedLoop"].Add((f, g, arguments) => {
                 f.Modifiers[E.UPG_WEB_SITE].ModifiersF[E.ENTITY_SPIDERS + E.ATTACK] = 1 + f.GetValue(E.UPG_WEB_SITE + E.MOD) * Math.Log10(f.Income);
                 f.Modifiers[E.UPG_WEB_SITE].ModifiersF[E.ENTITY_YEWS + E.HEALTH] = 1 + f.GetValue(E.COUNT + E.ENTITY_SPIDERS) * 0.01;
@@ -162,23 +136,15 @@ namespace ActualIdle {
 
             // Web development upgrade
             forest.AddEntity(new Upgrade(forest, E.UPG_WEB_DEVELOPMENT, "Start developing your web! Unlocks growing Webs, which stall your enemies. Increases Rageuvenate damage based on missing health, up to 100% at 0.01 hp.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } })));
-            forest.Entities[E.UPG_WEB_DEVELOPMENT].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 12 && f.OwnsUpgrade(E.UPG_WEB_SITE)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 2E+8 } }), null,
+                ()=>forest.GetValue(E.DEFEATED_BOSSES) >= 12 && forest.OwnsUpgrade(E.UPG_WEB_SITE),
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
 
             // Unlocks the Surf the Web ability
             forest.AddEntity(new Upgrade(forest, E.UPG_UNLOCK_SURF_THE_WEB, "Unlocks the ability Surf the Web.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 1E+9 } })));
-            forest.Entities[E.UPG_UNLOCK_SURF_THE_WEB].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.DEFEATED_BOSSES) >= 15 && f.OwnsUpgrade(E.UPG_WEB_DEVELOPMENT)) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 1E+9 } }), null,
+                ()=> forest.GetValue(E.DEFEATED_BOSSES) >= 15 && forest.OwnsUpgrade(E.UPG_WEB_DEVELOPMENT),
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
             forest.Entities[E.UPG_UNLOCK_SURF_THE_WEB].Injects[E.INJ_CREATE].Add((f, g, arguments) => {
                 f.Doables[E.ABIL_SURF_THE_WEB].Unlocked = true;
                 return null;
@@ -250,14 +216,10 @@ namespace ActualIdle {
             // Spider prestige upgrade
             forest.AddEntity(new Upgrade(forest, E.UPG_SPIDER_PRESTIGE, "Makes every boss killed as the Spider faction after the 20th add 2% attack.", null,
                 new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, 1E+11 } }),
-                new Modifier(E.UPG_SPIDER_PRESTIGE, new Dictionary<string, double>() { { E.ATTACK, 1.00 } })));
+                new Modifier(E.UPG_SPIDER_PRESTIGE, new Dictionary<string, double>() { { E.ATTACK, 1.00 } }),
+                ()=> forest.GetValue(E.DEFEATED_BOSSES) >= 20 && forest.OwnsUpgrade(E.UPG_SPIDERFRIENDS),
+                E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
             forest.Entities[E.UPG_SPIDER_PRESTIGE].Strength = 1;
-            forest.Entities[E.UPG_SPIDER_PRESTIGE].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if(((Entity)g).Amount > 0 || f.GetValue(E.DEFEATED_BOSSES) >= 20 && f.OwnsUpgrade(E.UPG_SPIDERFRIENDS)) {
-                    return true;
-                }
-                return false;
-            });
             forest.Entities[E.UPG_SPIDER_PRESTIGE].AddTrigger(E.TRG_DEFEATED_BOSS, (f, g, arguments) => {
                 if (f.GetValue(E.DEFEATED_BOSSES) > 20+f.GetValue(E.SV+E.UPG_SPIDER_PRESTIGE+E.KILLS) && g.Unlocked) {
                     f.ChangeValue(E.SV+E.UPG_SPIDER_PRESTIGE + E.KILLS, 1);
@@ -299,7 +261,7 @@ namespace ActualIdle {
             CreateGrowthUpgrade(forest, E.UPG_OAK_GROWTH, E.ENTITY_OAKS, 170, Statics.GetNumber(1, 10), 20); //x4800 - 1.6E6 / 1 + 1E10
             CreateGrowthUpgrade(forest, E.UPG_BUSH_GROWTH, E.ENTITY_BUSHES, 200, Statics.GetNumber(1, 10), 9); //x2160 - 2.6E5 / 3.7 + 1 E10
             CreateGrowthUpgrade(forest, E.UPG_SPIDER_GROWTH, E.ENTITY_SPIDERS, 150, 0.4E+10, 10); //x250 -  3.2E6 / 1.6 + 0.4 E10
-            CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH, E.ENTITY_FLOWERS, 150, Statics.GetNumber(2, 10), 8, E.ENTITY_FLOWERS + E.GAIN + "_>_0"); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
+            CreateGrowthUpgrade(forest, E.UPG_FLOWER_GROWTH, E.ENTITY_FLOWERS, 150, Statics.GetNumber(2, 10), 8, () => forest.OwnsUpgrade(E.UPG_FREE_HEALTHCARE)); //x8 - 5.3E6 / 3.2 + 2.0 E10 (R Free Healthcare)
 
             CreateGrowthUpgrade(forest, E.UPG_YEW_GROWTH, E.ENTITY_YEWS, 150, Statics.GetNumber(4, 10), 8); //x1536 -  5.3E6 / 0.6 + 0.4 E11
             CreateGrowthUpgrade(forest, E.UPG_ANT_GROWTH, E.ENTITY_ANTS, 200, 2E+11, 8); //x3600 - 1.3E5 / 4.2 + 2.0 E11    
@@ -346,7 +308,9 @@ namespace ActualIdle {
             // Other Upgrades
             // Dense forest bonus (500 DC growths)
             forest.AddEntity(new Upgrade(forest, E.UPG_DENSE_FOREST, "Gives 300% production bonus to everything.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 10) } }), new Modifier(E.UPG_DENSE_FOREST, new Dictionary<string, double>() { { E.GAIN, 4 } })));
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 10) } }), new Modifier(E.UPG_DENSE_FOREST, new Dictionary<string, double>() { { E.GAIN, 4 } }),
+                () => forest.GetValue(E.COUNT + E.ENTITY_OAKS) + forest.GetValue(E.COUNT + E.ENTITY_YEWS) +
+                forest.GetValue(E.COUNT + E.ENTITY_BIRCHES) + forest.GetValue(E.COUNT + E.ENTITY_BUSHES) >= 500));
             forest.Entities[E.UPG_DENSE_FOREST].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
                 if (f.GetValue(E.COUNT + E.ENTITY_OAKS) + f.GetValue(E.COUNT + E.ENTITY_YEWS) + f.GetValue(E.COUNT + E.ENTITY_BIRCHES) + f.GetValue(E.COUNT + E.ENTITY_BUSHES) >= 500) {
                     return new RuntimeValue(3, true);
@@ -360,44 +324,29 @@ namespace ActualIdle {
 
             //Druidcraft
             forest.AddEntity(new Upgrade(forest, E.UPG_DRUIDCRAFT_CONSIDERED, "Gives 3% production bonus per Druidcraft level.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_DRUIDCRAFT_CONSIDERED, new Dictionary<string, double>() { { E.GAIN, 1.00 } })));
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_DRUIDCRAFT_CONSIDERED, new Dictionary<string, double>() { { E.GAIN, 1.00 } }),
+                "", E.TRG_THINK_COMPLETED));
             forest.Entities[E.UPG_DRUIDCRAFT_CONSIDERED].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers[E.UPG_DRUIDCRAFT_CONSIDERED].ModifiersF[E.GAIN] = f.GetValue(E.SV_LEVEL + E.DRUIDCRAFT) * f.GetValue(E.UPG_DRUIDCRAFT_CONSIDERED + E.MOD) + 1;
+                f.Modifiers[E.UPG_DRUIDCRAFT_CONSIDERED].ModifiersF[E.GAIN] = f.GetValue(E.LEVEL + E.DRUIDCRAFT) * f.GetValue(E.UPG_DRUIDCRAFT_CONSIDERED + E.MOD) + 1;
                 return null;
-            });
-            forest.Entities[E.UPG_DRUIDCRAFT_CONSIDERED].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.SV_THINKS) > 0) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
             });
 
             //Animal Handling
             forest.AddEntity(new Upgrade(forest, E.UPG_HANDLED_YOU_BEFORE, "Gives 1% attack bonus per Animal Handling level.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier("Handled You Before", new Dictionary<string, double>() { { "Attack", 1.00 } })));
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier("Handled You Before", new Dictionary<string, double>() { { "Attack", 1.00 } }),
+                "", E.TRG_THINK_COMPLETED));
             forest.Entities[E.UPG_HANDLED_YOU_BEFORE].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers[E.UPG_HANDLED_YOU_BEFORE].ModifiersF[E.ATTACK] = f.GetValue(E.SV_LEVEL + E.ANIMAL_HANDLING) * f.GetValue(E.UPG_HANDLED_YOU_BEFORE + E.MOD) + 1;
+                f.Modifiers[E.UPG_HANDLED_YOU_BEFORE].ModifiersF[E.ATTACK] = f.GetValue(E.LEVEL + E.ANIMAL_HANDLING) * f.GetValue(E.UPG_HANDLED_YOU_BEFORE + E.MOD) + 1;
                 return null;
-            });
-            forest.Entities[E.UPG_HANDLED_YOU_BEFORE].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.SV_THINKS) > 0) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
             });
 
             //Soothing
             forest.AddEntity(new Upgrade(forest, E.UPG_SOOTHING_THOUGHTS, "Gives 1% Health regen per Soothing level.", null,
-                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_SOOTHING_THOUGHTS, new Dictionary<string, double>() { { E.HEALTHREGEN, 1 } })));
+                new Resources(new Dictionary<string, double>() { { E.ORGANIC_MATERIAL, Statics.GetNumber(1, 1) } }), new Modifier(E.UPG_SOOTHING_THOUGHTS, new Dictionary<string, double>() { { E.HEALTHREGEN, 1 } }),
+                E.SV_THINKS + "_>_1", E.TRG_THINK_COMPLETED));
             forest.Entities[E.UPG_SOOTHING_THOUGHTS].Injects["ownedLoop"].Add((f, g, arguments) => {
-                f.Modifiers[E.UPG_SOOTHING_THOUGHTS].ModifiersF[E.HEALTHREGEN] = f.GetValue(E.SV_LEVEL + E.SOOTHING) * f.GetValue(E.UPG_SOOTHING_THOUGHTS + E.MOD) + 1;
+                f.Modifiers[E.UPG_SOOTHING_THOUGHTS].ModifiersF[E.HEALTHREGEN] = f.GetValue(E.LEVEL + E.SOOTHING) * f.GetValue(E.UPG_SOOTHING_THOUGHTS + E.MOD) + 1;
                 return null;
-            });
-            forest.Entities[E.UPG_SOOTHING_THOUGHTS].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.SV_THINKS) > 0 && f.GetValue(E.SV_LEVEL + E.SOOTHING) > 0) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
             });
         }
 
@@ -535,16 +484,34 @@ namespace ActualIdle {
 
         }
 
+        public static codeInject CreateRequirementInject(string requirements) {
+            return (f, g, arguments) => {
+                if (f.TestRequirements(requirements)) {
+                    g.Unlocked = true;
+                }
+                return null;
+            };
+        }
+        public static codeInject CreateRequirementInject(Func<bool> requirements) {
+            return (f, g, arguments) => {
+                if (requirements()) {
+                    g.Unlocked = true;
+                }
+                return null;
+            };
+        }
+
         public static void InitTrophies(Forest forest) {
             //TROPHIES
-            forest.AddEntity(new Trophy(forest, E.TROPHY_SOOTHED_20TH_BOSS, E.DEFEATED_BOSSES + "_>=_!I20\n" + E.STYLE_SOOTHE + "_>_0", "After encountering your twentieth adversary, You feel like you have learned a lot from the path you have taken. You consider returning to your deep woods and rethinking your strategy, having eternity at your disposal. (Think unlocked)",
-                new Modifier(E.TROPHY_SOOTHED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.SOOTHING, 1.1} })));
-            forest.AddEntity(new Trophy(forest, E.TROPHY_WEBBED_20TH_BOSS, E.DEFEATED_BOSSES + "_>=_!I20\n" + E.UPGRADE+E.UPG_SPIDERFRIENDS+E.BOUGHT + "_>_0", "You webbed the 20th boss! Very nice.",
-                new Modifier(E.TROPHY_WEBBED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.DAMAGE, 1.1 } })));
+            forest.AddEntity(new Trophy(forest, E.TROPHY_SOOTHED_20TH_BOSS, "After encountering your twentieth adversary, You feel like you have learned a lot from the path you have taken. You consider returning to your deep woods and rethinking your strategy, having eternity at your disposal. (Think unlocked)",
+                new Modifier(E.TROPHY_SOOTHED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.SOOTHING, 1.1} }), E.DEFEATED_BOSSES + "_>=_!I20\n" + E.STYLE_SOOTHE + "_>_0", E.TRG_DEFEATED_BOSS));
+            forest.AddEntity(new Trophy(forest, E.TROPHY_WEBBED_20TH_BOSS, "You webbed the 20th boss! Very nice.",
+                new Modifier(E.TROPHY_WEBBED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.DAMAGE, 1.1 } }), E.DEFEATED_BOSSES + "_>=_!I20\n" + E.UPGRADE + E.UPG_SPIDERFRIENDS + E.BOUGHT + "_>_0", E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
 
             // AMOUNT TROPHIES
-            forest.AddEntity(new Trophy(forest, E.TROPHY_250_BUSHES, E.COUNT+E.ENTITY_BUSHES + "_>=_!I250", "You have acquired 250 bushes.",
-                new Modifier(E.TROPHY_250_BUSHES, modifiersF: new Dictionary<string, double>() { { E.GAIN, 1.05 } })));
+            forest.AddEntity(new Trophy(forest, E.TROPHY_250_BUSHES, "You have acquired 250 bushes.",
+                new Modifier(E.TROPHY_250_BUSHES, modifiersF: new Dictionary<string, double>() { { E.GAIN, 1.05 } }), E.COUNT + E.ENTITY_BUSHES + "_>=_!I250", E.TRG_ENTITY_ADDED));
+
 
         }
 
@@ -692,7 +659,7 @@ namespace ActualIdle {
         /// <param name="neededAmount"></param>
         /// <param name="cost"></param>
         /// <param name="multiplier"></param>
-        public static void CreateGrowthUpgrade(Forest forest, string name, string target, int amount, double cost, double multiplier, string requirements = null, Modifier addModifier = null) {
+        public static void CreateGrowthUpgrade(Forest forest, string name, string target, int amount, double cost, double multiplier, Func<bool> requirements = null, Modifier addModifier = null) {
             if (!upgrades.ContainsKey(name))
                 upgrades.Add(name, 1);
             else
@@ -702,19 +669,7 @@ namespace ActualIdle {
             if (addModifier != null)
                 resModifier.AddModifier(addModifier);
             forest.AddEntity(new Upgrade(forest, name, "improves " + target + " gain by " + (multiplier * 100 - 100) + "%.", null,
-                new Resources(new Dictionary<string, double>() { { "Organic Material", cost } }), resModifier, requirements));
-            forest.Entities[name].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue(E.COUNT + target) >= amount) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
-            forest.Entities[name].Injects[E.INJ_REQUIREMENTS].Add((f, g, arguments) => {
-                if (f.GetValue("count" + target) >= amount) {
-                    return new RuntimeValue(3, true);
-                }
-                return new RuntimeValue(3, false);
-            });
+                new Resources(new Dictionary<string, double>() { { "Organic Material", cost } }), resModifier, ()=> forest.GetValue(E.COUNT + target) >= amount && (requirements != null ? requirements() : true), E.TRG_ENTITY_ADDED));
             if (addModifier != null) {
                 if (resModifier.ModifiersA != null)
                     foreach (KeyValuePair<string, double> aKvp in resModifier.ModifiersA) {

@@ -23,8 +23,8 @@ namespace ActualIdle {
             forest.Modifiers.Clear();
             forest.Values.Clear();
             forest.ChangeValue(E.SV_THINKS, 1);
-            foreach(string skill in Statics.skills) {
-
+            foreach (string skill in Statics.skills) {
+                forest.Xp[skill] = 100;
             }
             foreach (Entity e in forest.Entities.Values) {
                 forest.SoftValues[E.SV_COUNT + e.Name] = e.Amount;
