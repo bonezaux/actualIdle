@@ -23,5 +23,6 @@ namespace ActualIdle.Entity_Extensions {
         public virtual void OnDisable() { }
         public virtual void Echo() { }
         public virtual void Loop() { }
+        public virtual void Trigger(string trigger, params RuntimeValue[] arguments) { }
     }
 }

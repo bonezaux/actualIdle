@@ -9,7 +9,6 @@ namespace ActualIdle {
         //ILLEGAL CHARACTERS:
         // Starting with numbers
         // Parentheses
-        public const string CUR_LEVEL = "clvl";
         public const string ORGANIC_MATERIAL = "Organic Material";
         /// <summary>
         /// Key for how many of the limited growths are owned.
@@ -59,6 +58,10 @@ namespace ActualIdle {
         public const string SOOTHER = "Soother";
         public const string XP = "Xp";
         public const string KILLS = "Kills";
+        /// <summary>
+        /// Prefix for getting level in a skill in GetValue. LEVEL + [skill name]
+        /// </summary>
+        public const string LEVEL = "lvl";
 
         // ABILITIES BELOW
         public const string ABIL_RAGEUVENATE = "Rageuvenate";
@@ -158,7 +161,7 @@ namespace ActualIdle {
         /// </summary>
         public const string SV_THINKS = "svThinks";
         /// <summary>
-        /// The prefix for the value that gives the level of a skill at last think.
+        /// The prefix for the value that gives the highest level that a skill has been
         /// </summary>
         public const string SV_LEVEL = "svlvl";
         /// <summary>

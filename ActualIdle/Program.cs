@@ -23,8 +23,9 @@ namespace ActualIdle {
             forest.Modifiers.Clear();
             forest.Values.Clear();
             forest.ChangeValue(E.SV_THINKS, 1);
-            foreach (string skill in Statics.skills)
-                forest.SoftValues[E.SV_LEVEL + skill] = forest.GetValue("clvl" + skill);
+            foreach(string skill in Statics.skills) {
+
+            }
             foreach (Entity e in forest.Entities.Values) {
                 forest.SoftValues[E.SV_COUNT + e.Name] = e.Amount;
                 if (!forest.SoftValues.ContainsKey(E.SV_MAX_COUNT + e.Name)) {
@@ -33,16 +34,12 @@ namespace ActualIdle {
                 if (e.Amount > forest.SoftValues[E.SV_MAX_COUNT+e.Name])
                     forest.SoftValues[E.SV_MAX_COUNT + e.Name] = e.Amount;
             }
+
             foreach (Entity g in forest.Entities.Values) {
                 g.OnReset(1);
             }
-
             Initializer.Init(forest);
-            foreach (Entity g in forest.Entities.Values) {
-                if (g.Strength > 0) {
-                    g.ReApply();
-                }
-            }
+
             forest.Trigger(E.TRG_THINK_COMPLETED);
             foreach(Trophy g in forest.GetEntities(E.GRP_TROPHIES)) {
                 g.Reapply();

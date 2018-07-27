@@ -21,10 +21,10 @@ namespace ActualIdle {
         /// Description of the branch.
         /// </summary>
         public string DescText { get; private set; }
-        public Forest forest { get; private set; }
+        public Forest Forest { get; private set; }
 
         public Branch(Forest forest, string name, string descText) {
-            this.forest = forest;
+            this.Forest = forest;
             Paths = new List<Path>();
             Name = name;
             DescText = descText;

@@ -122,9 +122,7 @@ namespace ActualIdle {
         public void SpendMana(double mana) {
             Mana -= mana;
         }
-
         public bool HasModifier(Modifier modifier) => Modifiers.ContainsKey(modifier.Name);
-
         public override double TakeDamage(double damage, Fighter attacker, bool armor=true) {
             if(Soothe > 0) {
                 damage -= (Soothe / 30);
@@ -301,16 +299,19 @@ namespace ActualIdle {
         /// Adds xp based on a change in the value that the skill uses for xp.
         /// change is this change (The change in the virtual total that the xp is equal to a sixth of the magnitude times 100 to.)
         /// </summary>
-        /// <param name="skillName"></param>
+        /// <param name="skill"></param>
         /// <param name="change"></param>
-        public void AddXp(string skillName, double change) {
-            double xp = Statics.XpGain(Xp[skillName], change, skillName) * GetValue(skillName+"XpGain");
-            if (Statics.skills.Contains(skillName)) {
-                int preLevel = (int)GetValue("clvl" + skillName);
-                Xp[skillName] += xp;
-                int postLevel = (int)GetValue("clvl" + skillName);
+        public void AddXp(string skill, double change) {
+            double xp = Statics.XpGain(Xp[skill], change, skill) * GetValue(skill+"XpGain");
+            if (Statics.skills.Contains(skill)) {
+                int preLevel = (int)GetValue(E.LEVEL + skill);
+                Xp[skill] += xp;
+                int postLevel = (int)GetValue(E.LEVEL + skill);
                 if(postLevel > preLevel) {
-                    Console.WriteLine("Level up (on rethink)! " + skillName + " " + preLevel + "->" + postLevel);
+                    Console.WriteLine("Level up! " + skill + " " + preLevel + "->" + postLevel);
+
+                    if (GetValue(E.LEVEL + skill) > SoftValues[E.SV_LEVEL + skill])
+                        SoftValues[E.SV_LEVEL + skill] = GetValue(E.LEVEL + skill);
                 }
             }
         }
@@ -395,7 +396,6 @@ namespace ActualIdle {
                 }
             }
         }
-
         public void ListPrices(string group=E.GRP_FOREST) {
             Entities[E.ORGANIC_MATERIAL].Echo();
             Console.WriteLine();
@@ -405,7 +405,6 @@ namespace ActualIdle {
                 }
             }
         }
-
         public void ListDoables() {
             Console.WriteLine("Mana: " + Math.Round(Mana, 2) + " / " + Math.Round(Stats[E.MAXMANA], 2)+"mp");
             Console.WriteLine("You can: ");
@@ -414,17 +413,15 @@ namespace ActualIdle {
                     Console.WriteLine("\t" + entry.Value.GetTooltip());
             }
         }
-
         public void ListSkills() {
             foreach (string skill in Statics.skills) {
                 if (Xp[skill] < 101)
                     continue;
-                int lvl = (int)GetValue(E.SV_LEVEL + skill);
-                double nextXp = Math.Pow(1.2, GetValue("clvl" + skill) + 1) * 100;
-                Console.WriteLine(skill + "\tlvl " + lvl + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp ("+GetValue("clvl" + skill)+ " at reset)");
+                int lvl = (int)GetValue(E.LEVEL + skill);
+                double nextXp = Math.Pow(1.2, GetValue(E.LEVEL + skill) + 1) * 100;
+                Console.WriteLine(skill + "\tlvl " + lvl + "\t" + Math.Round(Xp[skill], 2) + "/ " + nextXp + " xp ("+GetValue(E.SV_LEVEL + skill)+ " max)");
             }
         }
-
         public void ListAvailableUpgrades() {
             string owned = "";
             string unowned = "";
@@ -450,7 +447,6 @@ namespace ActualIdle {
                 Console.WriteLine("N/A");
             }
         }
-
         /// <summary>
         /// Returns all Entities from a given group
         /// </summary>
@@ -512,9 +508,9 @@ namespace ActualIdle {
         /// <param name="value"></param>
         /// <returns></returns>
         public double GetValue(string value) {
-            if (value.StartsWith(E.CUR_LEVEL)) {
-                if (Statics.skills.Contains(value.Substring(E.CUR_LEVEL.Length)))
-                    return (int)Math.Log(Xp[value.Substring(E.CUR_LEVEL.Length)] / 100, 1.2);
+            if (value.StartsWith(E.LEVEL)) {
+                if (Statics.skills.Contains(value.Substring(E.LEVEL.Length)))
+                    return (int)Math.Log(Xp[value.Substring(E.LEVEL.Length)] / 100, 1.2);
             } else if (value.StartsWith(E.COUNT)) {
                 if (Entities.ContainsKey(value.Substring(E.COUNT.Length)))
                     return Entities[value.Substring(E.COUNT.Length)].Amount;

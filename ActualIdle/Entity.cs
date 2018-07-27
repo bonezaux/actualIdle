@@ -91,9 +91,15 @@ namespace ActualIdle  {
                 foreach(codeInject inj in Injects[trigger]) {
                     inj(Forest, this, arguments);
                 }
+                foreach(EExt ext in Extensions.Values) {
+                    ext.Trigger(trigger, arguments);
+                }
             }
             if(HasExtension(E.EEXT_REQUIREMENTS)) {
                 Unlocked = ((EExtRequirements)Extensions[E.EEXT_REQUIREMENTS]).Evaluate();
+            }
+            if(trigger == E.TRG_THINK_COMPLETED && HasExtension(E.EEXT_MODIFIER) && Amount>0) {
+                ((EExtModifier)Extensions[E.EEXT_MODIFIER]).OnAdd(Amount);
             }
         }
 
@@ -113,7 +119,6 @@ namespace ActualIdle  {
             Extensions.Add(extension.Name, extension);
             return this;
         }
-
         public bool HasExtension(string extension) => Extensions.ContainsKey(extension);
 
         public virtual void Loop() {
@@ -127,7 +132,6 @@ namespace ActualIdle  {
                     i(Forest, this, null);
             }
         }
-
         /// <summary>
         /// If percentage is used, amount is the percentage of total resources to use.
         /// </summary>
@@ -144,7 +148,6 @@ namespace ActualIdle  {
                 return false;
             }
         }
-
         /// <summary>
         /// Called when a number of these are added to the forest; could even be zero. 
         /// Calls all extensions' onAdd function
@@ -156,7 +159,10 @@ namespace ActualIdle  {
             }
             Forest.Trigger(E.TRG_ENTITY_ADDED, Name, amount);
         }
-
+        /// <summary>
+        /// Called before thinking resets are done for strength 1 or above.
+        /// </summary>
+        /// <param name="resetStrength"></param>
         public void OnReset(int resetStrength) {
             if(resetStrength == 1) {
                 Forest.SoftValues[E.SV_COUNT + Name] = Amount;
@@ -171,13 +177,11 @@ namespace ActualIdle  {
                 Amount = 0;
             }
         }
-
         public void OnEnable() {
             foreach (EExt ext in Extensions.Values) {
                 ext.OnEnable();
             }
         }
-
         public void OnDisable() {
             foreach (EExt ext in Extensions.Values) {
                 ext.OnDisable();
@@ -193,7 +197,6 @@ namespace ActualIdle  {
             if (writeDescription)
                 Console.WriteLine(Description);
         }
-
         public void EchoPrice() {
             if (!Extensions.ContainsKey(E.EEXT_BUYABLE))
                 return;
@@ -213,19 +216,10 @@ namespace ActualIdle  {
             XMLUtils.CreateElement(growthElement, "Amount", Math.Round(Amount, 3));
             XMLUtils.CreateElement(growthElement, "Unlocked", Unlocked);
         }
-
         public virtual void Load(XElement growthElement) {
             Amount = XMLUtils.GetDouble(growthElement, "Amount");
             Unlocked = XMLUtils.GetBool(growthElement, "Unlocked");
         }
 
-        /// <summary>
-        /// Called when thinking happens for strength 1 or above entities to reapply their bonuses.
-        /// </summary>
-        public void ReApply() {
-            if (Extensions.ContainsKey(E.EEXT_MODIFIER)) {
-                ((EExtModifier)Extensions[E.EEXT_MODIFIER]).OnAdd(Amount);
-            }
-        }
     }
 }
