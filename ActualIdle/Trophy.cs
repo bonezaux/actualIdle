@@ -22,7 +22,7 @@ namespace ActualIdle {
             Text = text;
             Unlocked = false;
             this.Forest = forest;
-            Injects[E.INJ_ACQUIRE] = new List<codeInject>();
+            Injects[E.INJ_ACQUIRE] = new List<CodeInject>();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace ActualIdle {
         /// <param name="triggers"></param>
         public Trophy(Forest forest, string name, string text, string requirements, params string[] triggers)
             : this(forest, name, text) {
-            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
             foreach(string trigger in triggers) {
                 AddTrigger(trigger, reqInject);
             }
@@ -51,7 +51,7 @@ namespace ActualIdle {
         /// <param name="triggers"></param>
         public Trophy(Forest forest, string name, string text, Func<bool> requirements, params string[] triggers)
             : this(forest, name, text) {
-            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
             foreach (string trigger in triggers) {
                 AddTrigger(trigger, reqInject);
             }
@@ -101,7 +101,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="reset"></param>
         public void Reapply(bool reset = true) {
-            foreach(codeInject c in Injects[E.INJ_ACQUIRE]) {
+            foreach(CodeInject c in Injects[E.INJ_ACQUIRE]) {
                 c(Forest, this, new RuntimeValue(3, reset));
             }
             if (HasExtension(E.EEXT_MODIFIER))

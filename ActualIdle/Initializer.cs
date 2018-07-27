@@ -15,7 +15,7 @@ namespace ActualIdle {
         ///  E.INJ_TOOLTIP + E.COOLDOWN: Displays a cooldown, if any
         ///  E.INJ_TOOLTIP + E.ACTIVE: Displays active and cooldown, if any
         /// </summary>
-        public static Dictionary<string, codeInject> premadeInjects;
+        public static Dictionary<string, CodeInject> premadeInjects;
         public static Path startPath;
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace ActualIdle {
 
         }
 
-        public static codeInject CreateRequirementInject(string requirements) {
+        public static CodeInject CreateRequirementInject(string requirements) {
             return (f, g, arguments) => {
                 if (f.TestRequirements(requirements)) {
                     g.Unlocked = true;
@@ -492,7 +492,7 @@ namespace ActualIdle {
                 return null;
             };
         }
-        public static codeInject CreateRequirementInject(Func<bool> requirements) {
+        public static CodeInject CreateRequirementInject(Func<bool> requirements) {
             return (f, g, arguments) => {
                 if (requirements()) {
                     g.Unlocked = true;
@@ -562,7 +562,7 @@ namespace ActualIdle {
 
         public static void Init(Forest forest) {
 
-            premadeInjects = new Dictionary<string, codeInject>() {
+            premadeInjects = new Dictionary<string, CodeInject>() {
                 { E.INJ_TOOLTIP + E.COOLDOWN, (f,g,arguments) => {
                     if (forest.GetValue(g.Name+E.COOLDOWN) > 0) {
                         return new RuntimeValue(4, "[" + /*Conversion to seconds*/(forest.GetValue(g.Name+E.COOLDOWN) / 5) + "s CD]");

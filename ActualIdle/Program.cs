@@ -5,10 +5,8 @@ using System.Linq;
 using System.Threading;
 
 namespace ActualIdle {
-    public delegate RuntimeValue codeInject(Forest f, IPerformer e, params RuntimeValue[] arguments); 
-
+    public delegate RuntimeValue CodeInject(Forest f, IPerformer e, params RuntimeValue[] arguments); 
     
-
     public static class Program {
 
         public static bool debug = false;

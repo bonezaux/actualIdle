@@ -26,7 +26,7 @@ namespace ActualIdle {
         ///  - perform: Called when successfully performed.
         ///  - tooltip: Only one allowed, will be written next to the Doable when tooltip is shown.
         /// </summary>
-        public Dictionary<string, List<codeInject>> Injects { get; set; }
+        public Dictionary<string, List<CodeInject>> Injects { get; set; }
 
         public Doable(Forest forest, string name, Resources resourceChange, string reqs, string text, string failText, bool remainUnlocked, string manaCost) {
             this.Forest = forest;
@@ -38,10 +38,10 @@ namespace ActualIdle {
             RemainUnlocked = remainUnlocked;
             
             Unlocked = false;
-            Injects = new Dictionary<string, List<codeInject>> {
-                ["loop"] = new List<codeInject>(),
-                ["perform"] = new List<codeInject>(),
-                ["tooltip"] = new List<codeInject>()
+            Injects = new Dictionary<string, List<CodeInject>> {
+                ["loop"] = new List<CodeInject>(),
+                ["perform"] = new List<CodeInject>(),
+                ["tooltip"] = new List<CodeInject>()
             };
             ManaCost = manaCost;
         }
@@ -66,7 +66,7 @@ namespace ActualIdle {
                     ResourceChange.Print(Forest, 1);
                     ResourceChange.Apply(Forest, 1);
                 }
-                foreach (codeInject c in Injects["perform"]) {
+                foreach (CodeInject c in Injects["perform"]) {
                     c(Forest, this, null);
                 }
                 Console.WriteLine(Text);
@@ -81,7 +81,7 @@ namespace ActualIdle {
         }
 
         public void Loop() {
-            foreach(codeInject c in Injects["loop"]) {
+            foreach(CodeInject c in Injects["loop"]) {
                 c(Forest, this, null);
             }
         }
@@ -107,7 +107,7 @@ namespace ActualIdle {
 
         public void Trigger(string trigger, params RuntimeValue[] arguments) {
             if (Injects.ContainsKey(trigger)) {
-                foreach (codeInject inj in Injects[trigger]) {
+                foreach (CodeInject inj in Injects[trigger]) {
                     inj(Forest, this, arguments);
                 }
             }

@@ -19,7 +19,7 @@ namespace ActualIdle {
 
         public Branch EndBranch { get; set; }
         public Forest Forest { get; private set; }
-        public Dictionary<string, List<codeInject>> Injects { get; private set; }
+        public Dictionary<string, List<CodeInject>> Injects { get; private set; }
         public string Requirements { get; set; }
         /// <summary>
         /// Returns whether or not the Upgrade is Unlocked. Cannot be set.
@@ -30,7 +30,7 @@ namespace ActualIdle {
                 if (!Show)
                     return false;
                 result = Forest.TestRequirements(Requirements);
-                foreach (codeInject c in Injects["unlocked"]) {
+                foreach (CodeInject c in Injects["unlocked"]) {
                     if (!(bool)c(Forest, this, null))
                         result = false;
                 }
@@ -52,7 +52,7 @@ namespace ActualIdle {
                 if (!Forest.TestRequirements(ShowRequirements))
                     return false;
                 bool result = true;
-                foreach (codeInject c in Injects["shown"]) {
+                foreach (CodeInject c in Injects["shown"]) {
                     if (!(bool)c(Forest, this, null))
                         result = false;
                 }
@@ -79,11 +79,11 @@ namespace ActualIdle {
             Name = name;
             DescText = descText;
             EndBranch = null;
-            Injects = new Dictionary<string, List<codeInject>>();
+            Injects = new Dictionary<string, List<CodeInject>>();
             Requirements = requirements;
             ShowRequirements = showRequirements;
-            Injects["unlocked"] = new List<codeInject>();
-            Injects["shown"] = new List<codeInject>();
+            Injects["unlocked"] = new List<CodeInject>();
+            Injects["shown"] = new List<CodeInject>();
         }
 
         public void AddBoss(Fighter boss) {

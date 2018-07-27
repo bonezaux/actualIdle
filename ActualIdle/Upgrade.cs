@@ -49,7 +49,7 @@ namespace ActualIdle {
         /// <param name="modifiers">Modifiers added when the upgrade is bought.</param>
         public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier, Func<bool> requirements, params string[] triggers)
             : this(forest, name, preDescriptionText, postDescriptionText, price, modifier) {
-            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
             foreach (string trigger in triggers) {
                 AddTrigger(trigger, reqInject);
             }
@@ -66,7 +66,7 @@ namespace ActualIdle {
         /// <param name="modifiers">Modifiers added when the upgrade is bought.</param>
         public Upgrade(Forest forest, string name, string preDescriptionText, string postDescriptionText, Resources price, Modifier modifier, string requirements, params string[] triggers)
             : this(forest, name, preDescriptionText, postDescriptionText, price, modifier) {
-            codeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
             foreach (string trigger in triggers) {
                 AddTrigger(trigger, reqInject);
             }

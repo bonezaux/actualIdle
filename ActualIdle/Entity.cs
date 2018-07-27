@@ -59,7 +59,7 @@ namespace ActualIdle  {
         ///  create (called when the Growth is created, args[0] = amount)
         ///  INJ_RESET (Called when a reset is made, args[0] = strength)
         /// </summary>
-        public Dictionary<string, List<codeInject>> Injects { get; private set; }
+        public Dictionary<string, List<CodeInject>> Injects { get; private set; }
 
         public Dictionary<string, EExt> Extensions { get; private set; }
 
@@ -67,12 +67,12 @@ namespace ActualIdle  {
             Name = name;
             this.Forest = forest;
             Unlocked = false;
-            Injects = new Dictionary<string, List<codeInject>> {
-                ["loop"] = new List<codeInject>(),
-                ["ownedLoop"] = new List<codeInject>(),
-                [E.INJ_CREATE] = new List<codeInject>(),
-                [E.INJ_RESET] = new List<codeInject>(),
-                [E.INJ_REQUIREMENTS] = new List<codeInject>()
+            Injects = new Dictionary<string, List<CodeInject>> {
+                ["loop"] = new List<CodeInject>(),
+                ["ownedLoop"] = new List<CodeInject>(),
+                [E.INJ_CREATE] = new List<CodeInject>(),
+                [E.INJ_RESET] = new List<CodeInject>(),
+                [E.INJ_REQUIREMENTS] = new List<CodeInject>()
         };
             foreach (string stat in Statics.statList) {
                 if (!forest.Values.ContainsKey(name + stat)) {
@@ -88,7 +88,7 @@ namespace ActualIdle  {
 
         public void Trigger(string trigger, params RuntimeValue[] arguments) {
             if(Injects.ContainsKey(trigger)) {
-                foreach(codeInject inj in Injects[trigger]) {
+                foreach(CodeInject inj in Injects[trigger]) {
                     inj(Forest, this, arguments);
                 }
                 foreach(EExt ext in Extensions.Values) {
@@ -102,9 +102,9 @@ namespace ActualIdle  {
         /// </summary>
         /// <param name="trigger"></param>
         /// <param name="inject"></param>
-        public void AddTrigger(string trigger, codeInject inject) {
+        public void AddTrigger(string trigger, CodeInject inject) {
             if (!Injects.ContainsKey(trigger))
-                Injects[trigger] = new List<codeInject>();
+                Injects[trigger] = new List<CodeInject>();
             Injects[trigger].Add(inject);
         }
 
@@ -119,10 +119,10 @@ namespace ActualIdle  {
             foreach(EExt e in Extensions.Values) {
                 e.Loop();
             }
-            foreach (codeInject i in Injects["loop"])
+            foreach (CodeInject i in Injects["loop"])
                 i(Forest, this, null);
             if (Unlocked && Amount > 0) {
-                foreach (codeInject i in Injects["ownedLoop"])
+                foreach (CodeInject i in Injects["ownedLoop"])
                     i(Forest, this, null);
             }
         }
@@ -163,7 +163,7 @@ namespace ActualIdle  {
                 if (Amount > Forest.SoftValues[E.SV_MAX_COUNT + Name])
                     Forest.SoftValues[E.SV_MAX_COUNT + Name] = Amount;
             }
-            foreach(codeInject c in Injects[E.INJ_RESET]) {
+            foreach(CodeInject c in Injects[E.INJ_RESET]) {
                 c(Forest, this, new RuntimeValue(2, resetStrength));
             }
             if (Strength < resetStrength) {
@@ -204,6 +204,28 @@ namespace ActualIdle  {
                 result[stat] = Forest.GetValue(Name + stat) * Amount;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Adds the given requirements at the given triggers.
+        /// The requirements function is called every time one of the given triggers is passed, and if true, Unlocked is set to true.
+        /// </summary>
+        /// <param name="requirements"></param>
+        /// <param name="triggers"></param>
+        /// <returns></returns>
+        public Entity AddRequirements(Func<bool> requirements, params string[] triggers) {
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach (string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
+            return this;
+        }
+        public Entity AddRequirements(string requirements, params string[] triggers) {
+            CodeInject reqInject = Initializer.CreateRequirementInject(requirements);
+            foreach (string trigger in triggers) {
+                AddTrigger(trigger, reqInject);
+            }
+            return this;
         }
 
         public virtual void Save(XElement growthElement) {

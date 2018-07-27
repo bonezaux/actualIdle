@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ActualIdle {
     public class Runtime {
 
-        public string parse(string code) {
+        public string Parse(string code) {
             foreach( string word in code.Split(' ')) {
 
             }
@@ -16,7 +16,7 @@ namespace ActualIdle {
 
         //1 = double literal, = int literal, 3= bool literal
 
-        public RuntimeValue execute(string code) {
+        public RuntimeValue Execute(string code) {
             Stack<RuntimeValue> stack = new Stack<RuntimeValue>();
             for(int loop=0;loop<code.Length;loop++) {
                 char c = code[loop];
