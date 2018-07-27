@@ -205,7 +205,7 @@
     </Spiders>
     <Soothed_20th_Boss>
       <Amount>1</Amount>
-      <Unlocked>false</Unlocked>
+      <Unlocked>true</Unlocked>
     </Soothed_20th_Boss>
     <Webbed_20th_Boss>
       <Amount>1</Amount>

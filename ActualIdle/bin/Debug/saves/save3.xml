@@ -125,7 +125,7 @@
     <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>490.09160526856147</Druidcraft>
+    <Druidcraft>532.96011494628726</Druidcraft>
     <Animal_Handling>100</Animal_Handling>
     <Soothing>100</Soothing>
     <Alchemy>100</Alchemy>
@@ -134,11 +134,11 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>5812.453</Amount>
+      <Amount>22421.826</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>50</Amount>
+      <Amount>51</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
@@ -186,12 +186,12 @@
       <Unlocked>false</Unlocked>
     </wand>
     <Bush_Growth_1>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Bush_Growth_1>
     <Oak_Growth_1>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Oak_Growth_1>
     <Growing_Birches_1>
       <Amount>0</Amount>
@@ -202,8 +202,8 @@
       <Unlocked>false</Unlocked>
     </Larger_Ants_1>
     <Bush_Growth_2>
-      <Amount>0</Amount>
-      <Unlocked>false</Unlocked>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
     </Bush_Growth_2>
     <Oak_Growth_2>
       <Amount>0</Amount>
@@ -471,7 +471,7 @@
     </Webs>
     <Druidcraft_Considered>
       <ModifiersF>
-        <Gain>1.24</Gain>
+        <Gain>1.27</Gain>
       </ModifiersF>
     </Druidcraft_Considered>
     <Handled_You_Before>
@@ -484,13 +484,28 @@
         <HealthRegen>1</HealthRegen>
       </ModifiersF>
     </Soothing_Thoughts>
+    <Bush_Growth_1>
+      <ModifiersF>
+        <BushesGain>3</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_1>
+    <Oak_Growth_1>
+      <ModifiersF>
+        <OaksGain>4</OaksGain>
+      </ModifiersF>
+    </Oak_Growth_1>
+    <Bush_Growth_2>
+      <ModifiersF>
+        <BushesGain>5</BushesGain>
+      </ModifiersF>
+    </Bush_Growth_2>
   </Modifiers>
   <Path>Forest Street</Path>
   <PathBoss>0</PathBoss>
-  <Count>1551</Count>
+  <Count>1667</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>31.586399999999497</Hp>
+  <Hp>36.2263999999994</Hp>
   <Mana>120</Mana>
   <FightingStyle>Fight</FightingStyle>
-  <LifeCount>1087</LifeCount>
+  <LifeCount>1203</LifeCount>
 </Forest>

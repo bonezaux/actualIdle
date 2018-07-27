@@ -163,7 +163,7 @@
     <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>27836.76231323629</Druidcraft>
+    <Druidcraft>27836.762313236584</Druidcraft>
     <Animal_Handling>5959.2080881387865</Animal_Handling>
     <Soothing>2800.1109523248529</Soothing>
     <Alchemy>100</Alchemy>
@@ -172,7 +172,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>28720.878</Amount>
+      <Amount>39806.295</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -550,10 +550,10 @@
   </Modifiers>
   <Path>Forest Street</Path>
   <PathBoss>0</PathBoss>
-  <Count>433</Count>
+  <Count>460</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>11.407200000000037</Hp>
+  <Hp>13.070400000000046</Hp>
   <Mana>120</Mana>
   <FightingStyle>Fight</FightingStyle>
-  <LifeCount>433</LifeCount>
+  <LifeCount>460</LifeCount>
 </Forest>

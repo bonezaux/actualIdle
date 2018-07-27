@@ -504,13 +504,13 @@ namespace ActualIdle {
         public static void InitTrophies(Forest forest) {
             //TROPHIES
             forest.AddEntity(new Trophy(forest, E.TROPHY_SOOTHED_20TH_BOSS, "After encountering your twentieth adversary, You feel like you have learned a lot from the path you have taken. You consider returning to your deep woods and rethinking your strategy, having eternity at your disposal. (Think unlocked)",
-                new Modifier(E.TROPHY_SOOTHED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.SOOTHING, 1.1} }), E.DEFEATED_BOSSES + "_>=_!I20\n" + E.STYLE_SOOTHE + "_>_0", E.TRG_DEFEATED_BOSS));
+                E.DEFEATED_BOSSES + "_>=_!I20\n" + E.STYLE_SOOTHE + "_>_0", E.TRG_DEFEATED_BOSS));
             forest.AddEntity(new Trophy(forest, E.TROPHY_WEBBED_20TH_BOSS, "You webbed the 20th boss! Very nice.",
-                new Modifier(E.TROPHY_WEBBED_20TH_BOSS, modifiersF: new Dictionary<string, double>() { { E.DAMAGE, 1.1 } }), E.DEFEATED_BOSSES + "_>=_!I20\n" + E.UPGRADE + E.UPG_SPIDERFRIENDS + E.BOUGHT + "_>_0", E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
+                E.DEFEATED_BOSSES + "_>=_!I20\n" + E.UPGRADE + E.UPG_SPIDERFRIENDS + E.BOUGHT + "_>_0", E.TRG_DEFEATED_BOSS, E.TRG_ENTITY_ADDED));
 
             // AMOUNT TROPHIES
             forest.AddEntity(new Trophy(forest, E.TROPHY_250_BUSHES, "You have acquired 250 bushes.",
-                new Modifier(E.TROPHY_250_BUSHES, modifiersF: new Dictionary<string, double>() { { E.GAIN, 1.05 } }), E.COUNT + E.ENTITY_BUSHES + "_>=_!I250", E.TRG_ENTITY_ADDED));
+                E.COUNT + E.ENTITY_BUSHES + "_>=_!I250", E.TRG_ENTITY_ADDED));
 
 
         }

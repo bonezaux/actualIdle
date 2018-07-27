@@ -53,7 +53,6 @@
     <Druidcraft_ConsideredMod>0.03</Druidcraft_ConsideredMod>
     <Handled_You_BeforeMod>0.03</Handled_You_BeforeMod>
     <Soothing_ThoughtsMod>0.03</Soothing_ThoughtsMod>
-    <RejuvenateCooldown>3</RejuvenateCooldown>
     <DefeatedBoss_1>1</DefeatedBoss_1>
     <svlvlDruidcraft>30</svlvlDruidcraft>
     <svlvlAnimal_Handling>22</svlvlAnimal_Handling>
@@ -128,7 +127,7 @@
     <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>635.95430609465416</Druidcraft>
+    <Druidcraft>648.209205684924</Druidcraft>
     <Animal_Handling>321.73015366437733</Animal_Handling>
     <Soothing>100</Soothing>
     <Alchemy>100</Alchemy>
@@ -137,7 +136,7 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>187499.654</Amount>
+      <Amount>239360.554</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
@@ -505,10 +504,10 @@
   </Modifiers>
   <Path>Forest Street</Path>
   <PathBoss>1</PathBoss>
-  <Count>1887</Count>
+  <Count>1928</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>50.462266557450128</Hp>
-  <Mana>114.40000000000013</Mana>
+  <Hp>52.102266557450093</Hp>
+  <Mana>120</Mana>
   <FightingStyle>Fight</FightingStyle>
-  <LifeCount>1423</LifeCount>
+  <LifeCount>1464</LifeCount>
 </Forest>
