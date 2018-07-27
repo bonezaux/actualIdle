@@ -22,5 +22,6 @@ namespace ActualIdle.Entity_Extensions {
         public virtual void OnEnable() { }
         public virtual void OnDisable() { }
         public virtual void Echo() { }
+        public virtual void Loop() { }
     }
 }

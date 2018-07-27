@@ -16,6 +16,7 @@ namespace ActualIdle {
 
 
         public static void Think(this Forest forest) {
+            forest.LifeCount = 0;
             foreach (Doable d in forest.Doables.Values) {
                 d.Unlocked = false;
             }
@@ -45,6 +46,10 @@ namespace ActualIdle {
             forest.Trigger(E.TRG_THINK_COMPLETED);
             foreach(Trophy g in forest.GetEntities(E.GRP_TROPHIES)) {
                 g.Reapply();
+            }
+            if(!forest.Running) {
+                forest.Running = true;
+                forest.StartCalculation();
             }
         }
         
@@ -198,6 +203,7 @@ namespace ActualIdle {
                         Console.WriteLine("Not debugging anymore.");
                 } else if (l.StartsWith("time")) {
                     Console.WriteLine(forest.Count / 5 + "s, offline " + forest.OfflineTicks / 5 + "s");
+                    Console.WriteLine(forest.LifeCount / 5 + "s alive");
                 } else if (l.StartsWith("save")) {
                     if (l.Split(' ').Length > 1)
                         forest.Save(l.Substring(5));

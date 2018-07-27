@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ActualIdle {
     public static class E {
+        //ILLEGAL CHARACTERS:
+        // Starting with numbers
+        // Parentheses
         public const string CUR_LEVEL = "clvl";
         public const string ORGANIC_MATERIAL = "Organic Material";
         /// <summary>
@@ -55,6 +58,7 @@ namespace ActualIdle {
         public const string COUNT = "count";
         public const string SOOTHER = "Soother";
         public const string XP = "Xp";
+        public const string KILLS = "Kills";
 
         // ABILITIES BELOW
         public const string ABIL_RAGEUVENATE = "Rageuvenate";
@@ -83,7 +87,7 @@ namespace ActualIdle {
 
         // TRIGGERS BELOW
         /// <summary>
-        /// Key called when a boss is defeated.
+        /// Key called when a boss is defeated. args[0]=boss name
         /// </summary>
         public const string TRG_DEFEATED_BOSS = "Defeated Boss";
         /// <summary>
@@ -125,6 +129,7 @@ namespace ActualIdle {
         public const string UPG_BECOME_SOOTHER = "Become Soother";
         public const string UPG_DENSE_FOREST = "Dense Forest";
         public const string UPG_UNLOCK_SURF_THE_WEB = "Unlock Surf the Web";
+        public const string UPG_SPIDER_PRESTIGE = "Spider Prestige";
         /// <summary>
         /// Postfix for an upgrade, with prefix UPGRADE together key for whether the upgrade is bought.
         /// > 0 = bought, 0 = not bought.
@@ -164,6 +169,10 @@ namespace ActualIdle {
         /// The prefix for the value that gives the highest SV_COUNT has been. 
         /// </summary>
         public const string SV_MAX_COUNT = "svmaxcount";
+        /// <summary>
+        /// Prefix for soft values for other things that happen to 
+        /// </summary>
+        public const string SV = "sv";
 
         // INJECT KEYS BELOW
         public const string INJ_ACQUIRE = "Acquire";
@@ -179,5 +188,11 @@ namespace ActualIdle {
         /// Key for the value that says whether fighting style has been changed yet this think.
         /// </summary>
         public const string CHANGED_STYLE = "ChangedStyle";
+
+        // ITEMS BELOW
+        /// <summary>
+        /// Item found on the avg hp path, final boss. Used by Soothers later to create a Sapling of Life.
+        /// </summary>
+        public const string ITEM_CORRUPT_LIFE_SEED = "Corrupt Seed of Life";
     }
 }

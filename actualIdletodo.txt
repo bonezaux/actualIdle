@@ -14,6 +14,12 @@ Systems
   Bushes
    -Hver 250ende giver mere bush health.
  
+ACTUAL IDLE SKAL VÆRE ET ROGUELIGHT
+ - Semi-tilfældige Boss drops
+ - Mechanics der bliver unlocked, mere end straight-up bonusser
+ - Ting, man kan bruge tid på, som kan give hurtige bonusser
+ - Et time limit på hver omgang, man tager
+ 
 sådan noget
 Forskellige ting giver mere/mindre bonus til det
 Bossfights x

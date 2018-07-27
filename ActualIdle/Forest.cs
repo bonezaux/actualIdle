@@ -60,6 +60,7 @@ namespace ActualIdle {
         /// What calculation step we're currently at. Every 5th is a second
         /// </summary>
         public int Count { get; private set; }
+        public int LifeCount { get; set; }
         /// <summary>
         /// How many offline ticks have gone by.
         /// </summary>
@@ -173,10 +174,10 @@ namespace ActualIdle {
             Values["Defeated" + Boss.Name] = 1;
             Values["DefeatedBosses"] += 1;
             Values["allowedGrowths"] += Boss.AddedGrowths;
+            Trigger(E.TRG_DEFEATED_BOSS, Boss.Name);
             Boss = null;
             Fighting = false;
 
-            Trigger(E.TRG_DEFEATED_BOSS);
             CurBoss++;
             if (CurBoss >= CurPath.Length()) {
                 Console.WriteLine("You're through this path now..");
@@ -284,20 +285,16 @@ namespace ActualIdle {
             Fighting = true;
         }
 
-        public void AddObject(Entity obj) {
-            Entities.Add(obj.Name, obj);
+        /// <summary>
+        /// Adds an entity to the forest.
+        /// </summary>
+        /// <param name="e"></param>
+        public void AddEntity(Entity e) {
+            Entities.Add(e.Name, e);
         }
 
         public void AddDoable(Doable doable) {
             Doables.Add(doable.Name, doable);
-        }
-
-        public void AddTrophy(Trophy trophy) {
-            Entities.Add(trophy.Name, trophy);
-        }
-
-        public void AddUpgrade(Upgrade upgrade) {
-            Entities.Add(upgrade.Name, upgrade);
         }
 
         /// <summary>
@@ -623,9 +620,14 @@ namespace ActualIdle {
             while (Running) {
                 Thread.Sleep((Program.debug ? Program.debugCountTime : 200));
                 Count++;
+                LifeCount++;
                 Loop();
+                if(LifeCount >= 1800*5) {
+                    Console.WriteLine("Your old bones are aching... You have to go back to the forests and recover your power.");
+                    break;
+                }
             }
-            Console.WriteLine("Terminating");
+            Running = false;
         }
 
         /// <summary>
@@ -680,6 +682,7 @@ namespace ActualIdle {
             element.CreateElement("Hp", Hp);
             element.CreateElement("Mana", Mana);
             element.CreateElement("FightingStyle", FightingStyle);
+            element.CreateElement("LifeCount", LifeCount);
 
             System.IO.Directory.CreateDirectory("saves");
             XDocument xd = new XDocument();
@@ -769,6 +772,8 @@ namespace ActualIdle {
             OfflineTicks = element.GetInt("OfflineTicks");
             if (element.HasChild("FightingStyle"))
                 FightingStyle = element.GetString("FightingStyle");
+            if (element.HasChild("LifeCount"))
+                LifeCount = element.GetInt("LifeCount");
 
         }
 
@@ -782,6 +787,17 @@ namespace ActualIdle {
             Entities[name].Amount += amount;
             if (!Entities[name].Unlocked)
                 Entities[name].Unlocked = true;
+        }
+
+        /// <summary>
+        /// Makes the Forest start its calculation thread.
+        /// </summary>
+        public void StartCalculation() {
+            ThreadStart calculation = new ThreadStart(Calculation);
+            Console.WriteLine("Calculation is starting nao.");
+
+            Thread calcThread = new Thread(calculation);
+            calcThread.Start();
         }
     }
 }

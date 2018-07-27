@@ -117,11 +117,15 @@ namespace ActualIdle  {
         public bool HasExtension(string extension) => Extensions.ContainsKey(extension);
 
         public virtual void Loop() {
+            foreach(EExt e in Extensions.Values) {
+                e.Loop();
+            }
             foreach (codeInject i in Injects["loop"])
                 i(Forest, this, null);
-            if (Unlocked && Amount > 0)
+            if (Unlocked && Amount > 0) {
                 foreach (codeInject i in Injects["ownedLoop"])
                     i(Forest, this, null);
+            }
         }
 
         /// <summary>
@@ -180,7 +184,7 @@ namespace ActualIdle  {
             }
         }
 
-        public void Echo(bool writeDescription = false) {
+        public virtual void Echo(bool writeDescription = false) {
             string result = Statics.GetDisplayNumber(Amount) + " " + Name + "";
             foreach (EExt extension in Extensions.Values) {
                 result += extension.ShortDescription;

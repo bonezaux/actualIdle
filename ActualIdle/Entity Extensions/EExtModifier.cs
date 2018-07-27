@@ -24,14 +24,13 @@ namespace ActualIdle.Entity_Extensions {
                 System.Diagnostics.Debug.Assert(Modifier != null);
                 if (Scale)
                     Entity.Forest.GetModifier(Modifier.Name).AddModifier(Modifier, amount, ReduceMultipliers);
+            } else {
+                Console.WriteLine(Entity.Name + " adding modifier!");
+                Entity.Forest.AddModifier(Modifier);
             }
         }
-
-        /// <summary>
-        /// Activates  the modifier
-        /// </summary>
+        
         public override void OnEnable() {
-            Entity.Forest.AddModifier(Modifier);
         }
         /// <summary>
         /// Deactivates the modifier

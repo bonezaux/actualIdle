@@ -25,8 +25,10 @@ namespace ActualIdle.Entity_Extensions {
 
         public EExtGenerate((string, Formula)[] addedGrowths) => AddedGrowths = addedGrowths;
 
-        public void Loop()
+        public override void Loop()
         {
+            if (!(Entity.Unlocked && Entity.Amount > 0))
+                return;
             Forest forest = Entity.Forest;
             for (int loop = 0; loop < AddedGrowths.Length; loop++)
             {

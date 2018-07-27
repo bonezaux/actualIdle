@@ -56,7 +56,7 @@ namespace ActualIdle {
             base.Loop();
         }
 
-        public void Echo() {
+        public override void Echo(bool writeDescription=true) {
             Console.WriteLine(" --- " + Name + " --- [" + (Owned ? "Owned" : "Available") + "]");
             if (Owned)
                 Console.WriteLine(PostDescriptionText);
@@ -64,6 +64,7 @@ namespace ActualIdle {
                 Console.WriteLine(PreDescriptionText);
                 Extensions[E.EEXT_BUYABLE].Echo();
             }
+            
         }
     }
 }

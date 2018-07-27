@@ -38,7 +38,7 @@ namespace ActualIdle.Entity_Extensions {
             if (Price.CanAfford(Entity.Forest, amount)) {
                 foreach (codeInject gci in Entity.Injects[E.INJ_CREATE])
                     gci(Entity.Forest, Entity, new RuntimeValue[] { new RuntimeValue(2, amount) });
-                Console.WriteLine("You bought " + amount + " " + Entity.Name + " for ");
+                Console.WriteLine("You bought " + (BuySeveral ? amount+" " : "")  + Entity.Name + " for ");
                 Price.Print(Entity.Forest, amount);
                 Price.Apply(Entity.Forest, amount);
                 Entity.Amount += amount;
