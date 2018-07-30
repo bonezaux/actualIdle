@@ -38,6 +38,7 @@ namespace ActualIdle {
         /// </summary>
         public const string TIME = "Time";
         public const string DAMAGE = "Damage";
+        public const string DAMAGE_TAKEN = "Damage Taken";
         public const string INCOME = "Income";
         public const string MAXMANA = "Max Mana";
         public const string MANAREGEN = "Mana Regen";
@@ -56,6 +57,9 @@ namespace ActualIdle {
         /// </summary>
         public const string COUNT = "count";
         public const string SOOTHER = "Soother";
+        /// <summary>
+        /// [skill] + XP + GAIN is the modifier for xp gain.
+        /// </summary>
         public const string XP = "Xp";
         public const string KILLS = "Kills";
         /// <summary>
@@ -182,6 +186,10 @@ namespace ActualIdle {
         public const string SV = "sv";
 
         // INJECT KEYS BELOW
+        /// <summary>
+        /// Called in OnAdd. args[0] = amount
+        /// Also called in Reapply for Trophies.
+        /// </summary>
         public const string INJ_ACQUIRE = "Acquire";
         public const string INJ_REQUIREMENTS = "Requirements";
         public const string INJ_TOOLTIP = "Tooltip";
@@ -201,7 +209,25 @@ namespace ActualIdle {
         /// Item found on the avg hp path, final boss. Used by Soothers later to create a Sapling of Life.
         /// </summary>
         public const string ITEM_CORRUPT_LIFE_SEED = "Corrupt Seed of Life";
+        /// <summary>
+        /// A heavy rock. Gives +10% health, +25% defense.
+        /// </summary>
+        public const string ITEM_HEAVY_ROCK = "Heavy Rock";
+        /// <summary>
+        /// Tasty seeds. +50% Animal Handling xp gain, +20% bird gain.
+        /// </summary>
+        public const string ITEM_TASTY_SEEDS = "Tasty Seeds";
+        /// <summary>
+        /// A torn journal. +40% Druidcraft xp, +20% soothing.
+        /// </summary>
+        public const string ITEM_TORN_JOURNAl = "Torn Journal";
 
+        // TALENTS BELOW
         public const string TALENT_DC_CLEAR_SKIES = "Clear Skies";
+        public const string TALENT_DC_IRONBARK = "Ironbark";
+        public const string TALENT_AH_WEBS = "Recreate Webs";
+
+        // LOOT TABLES BELOW
+        public const string LOOT_RANDOM = "Random Loot";
     }
 }

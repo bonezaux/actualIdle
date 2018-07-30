@@ -16,7 +16,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="forest"></param>
         /// <param name="name"></param>
-        public Talent(Forest forest, string name, string description, string skill, Modifier modifier=null) :base(forest, name, E.GRP_TALENTS+skill) {
+        public Talent(Forest forest, string name, string description, string skill, Modifier modifier=null) :base(forest, name, E.GRP_TALENTS) {
             Description = description;
             if(modifier != null) {
                 Add(new EExtModifier(modifier));
@@ -25,7 +25,7 @@ namespace ActualIdle {
             Debug.Assert(Statics.skills.Contains(Skill));
         }
 
-        public override void OnAdd(int amount) {
+        public override void OnAdd(double amount) {
             base.OnAdd(amount);
             Forest.TalentPoints[Skill] -= 1;
         }
@@ -39,6 +39,11 @@ namespace ActualIdle {
             OnAdd(1);
             Console.WriteLine("You have taken the talent " + Name + "!");
             return true;
+        }
+
+        public override void Echo(bool writeDescription = true) {
+            Console.WriteLine(Name + "["+Skill+"]");
+            Console.WriteLine(Description);
         }
 
     }

@@ -202,7 +202,7 @@ namespace ActualIdle {
         /// winType 1 = soothed
         /// </summary>
         public void WinBattle(int winType = 0) {
-            Boss.Lose();
+            Boss.Lose(this);
             if (winType == 0)
                 Console.WriteLine("You defeated " + Boss.Name);
             else if (winType == 1) {
@@ -224,7 +224,7 @@ namespace ActualIdle {
                 Console.WriteLine("Changing boss:" + Boss);
             }
         }
-        public override void Lose() {
+        public override void Lose(Fighter fighter) {
             Console.WriteLine("You were defeated! Remaining boss stats:");
             EchoBoss();
             Boss.Hp = Boss.Stats[E.HEALTH];
@@ -284,6 +284,7 @@ namespace ActualIdle {
             if (Soothe > 0) {
                 damage -= (Soothe / 30);
             }
+            damage = Modifier.Modify(Modifiers.Values, E.DAMAGE_TAKEN, damage);
             return base.TakeDamage(damage, attacker, armor);
         }
         
@@ -356,7 +357,7 @@ namespace ActualIdle {
         /// </summary>
         /// <param name="name">name of entity</param>
         /// <param name="amount">How many to add</param>
-        public void AddItem(string name, int amount) {
+        public void AddItem(string name, double amount) {
             Entities[name].OnAdd(amount);
             Entities[name].Amount += amount;
             if (!Entities[name].Unlocked)
@@ -458,11 +459,12 @@ namespace ActualIdle {
                 Console.WriteLine("N/A");
             }
         }
-
         public void ListAvailableTalents(string skill) {
             string owned = "";
             string unowned = "";
-            foreach (Talent entry in GetEntities(E.GRP_TALENTS+skill)) {
+            foreach (Talent entry in GetEntities(E.GRP_TALENTS)) {
+                if (skill != null && entry.Skill != skill)
+                    continue;
                 if (entry.Unlocked) {
                     if (entry.Owned)
                         owned += ", " + entry.Name;
@@ -471,13 +473,13 @@ namespace ActualIdle {
                 }
             }
 
-            Console.WriteLine(" --- Available " + skill + " Talents --- ");
+            Console.WriteLine(" --- Available " + (skill != null ? skill+" " : "") + "Talents --- ");
             if (unowned.Length > 0) {
                 Console.WriteLine(unowned.Substring(2));
             } else {
                 Console.WriteLine("N/A");
             }
-            Console.WriteLine(" ----- Owned " + skill + " Talents ----- ");
+            Console.WriteLine(" ----- Owned " + (skill != null ? skill + " " : "") + "Talents ----- ");
             if (owned.Length > 0) {
                 Console.WriteLine(owned.Substring(2));
             } else {
@@ -606,8 +608,15 @@ namespace ActualIdle {
             else
                 Values[value] = change;
         }
-        public bool OwnsUpgrade(string upgrade) {
-            return GetValue("Upgrade" + upgrade + "Bought") > 0;
+        /// <summary>
+        /// Returns whether at least one of the corresponding Entity exists.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool OwnsEntity(string entity) {
+            if (Entities.ContainsKey(entity))
+                return Entities[entity].Owned;
+            return false;
         }
         /// <summary>
         /// Tests whether a giiven string requirement holds true. Used when Lambda expressions are overkill.

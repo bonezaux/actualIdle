@@ -41,7 +41,7 @@ namespace ActualIdle {
 
             forest.Trigger(E.TRG_THINK_COMPLETED);
             foreach(Trophy g in forest.GetEntities(E.GRP_TROPHIES)) {
-                g.Reapply();
+                g.OnAdd(1);
             }
             if(!forest.Running) {
                 forest.Running = true;
@@ -153,10 +153,22 @@ namespace ActualIdle {
                         }
                     }
                 } else if (l.StartsWith("talents")) {
-                    if (l.Split(' ').Length == 1)
-                        PrintHelp();
+                    if (l.Split(' ').Length == 1) {
+                        foreach (KeyValuePair<string, int> talentPoints in forest.TalentPoints) {
+                            if (forest.Xp[talentPoints.Key] > 101)
+                                Console.WriteLine(talentPoints.Key + ": " + talentPoints.Value + " point" + (talentPoints.Value != 1 ? "s" : "") + ".");
+                        }
+
+                        forest.ListAvailableTalents(null);
+                    }
                     else {
-                        forest.ListAvailableTalents(l.Substring(8));
+                        string skill = l.Substring(8);
+                        if (!Statics.skills.Contains(skill)) {
+                            Console.WriteLine("That skill does not exist!");
+                        } else {
+                            Console.WriteLine(skill + ": " + forest.TalentPoints[skill] + " point" + (forest.TalentPoints[skill] != 1 ? "s" : "") + ".");
+                            forest.ListAvailableTalents(skill);
+                        }
                     }
                 } else if (l.StartsWith("talent")) { // Get data on a specific Talent and maybe buy it
                     if (l.Split(' ').Length == 1)

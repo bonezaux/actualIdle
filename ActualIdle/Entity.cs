@@ -17,7 +17,7 @@ namespace ActualIdle  {
     /// An object in the forest, like oaks or bushes. Produce other things by a formula based on how many of them there are, and give stats.
     /// </summary>
     public class Entity : IPerformer {
-        private bool _unlocked;
+        protected bool _unlocked;
 
         public string Name { get; set; }
         public Forest Forest { get; set; }
@@ -36,7 +36,7 @@ namespace ActualIdle  {
         /// <summary>
         /// Whether the growth is unlocked currently.
         /// </summary>
-        public bool Unlocked { get => _unlocked; set {
+        public virtual bool Unlocked { get => _unlocked; set {
                 if(value != _unlocked) {
                     if (value)
                         OnEnable();
@@ -76,8 +76,9 @@ namespace ActualIdle  {
                 ["ownedLoop"] = new List<CodeInject>(),
                 [E.INJ_CREATE] = new List<CodeInject>(),
                 [E.INJ_RESET] = new List<CodeInject>(),
-                [E.INJ_REQUIREMENTS] = new List<CodeInject>()
-        };
+                [E.INJ_REQUIREMENTS] = new List<CodeInject>(),
+                [E.INJ_ACQUIRE] = new List<CodeInject>()
+            };
             foreach (string stat in Statics.statList) {
                 if (!forest.Values.ContainsKey(name + stat)) {
                     forest.Values[name + stat] = 0;
@@ -106,10 +107,11 @@ namespace ActualIdle  {
         /// </summary>
         /// <param name="trigger"></param>
         /// <param name="inject"></param>
-        public void AddTrigger(string trigger, CodeInject inject) {
+        public Entity AddTrigger(string trigger, CodeInject inject) {
             if (!Injects.ContainsKey(trigger))
                 Injects[trigger] = new List<CodeInject>();
             Injects[trigger].Add(inject);
+            return this;
         }
 
         public Entity Add(EExt extension) {
@@ -151,11 +153,15 @@ namespace ActualIdle  {
         /// Calls all extensions' onAdd function
         /// </summary>
         /// <param name="amount"></param>
-        public virtual void OnAdd(int amount) {
+        public virtual void OnAdd(double amount) {
             foreach (EExt ext in Extensions.Values) {
                 ext.OnAdd(amount);
             }
+            
             Forest.Trigger(E.TRG_ENTITY_ADDED, Name, amount);
+            foreach(CodeInject i in Injects[E.INJ_ACQUIRE]) {
+                i(Forest, this, amount);
+            }
         }
         /// <summary>
         /// Called before thinking resets are done for strength 1 or above.

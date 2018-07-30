@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace ActualIdle {
         public int AddedGrowths { get; set; }
         public int Hesitation { get; set; }
         public Dictionary<string, double> Stats;
+        public string LootTable;
 
         public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
             Stats = new Dictionary<string, double> {
@@ -37,7 +39,13 @@ namespace ActualIdle {
             Description = description;
             AddedGrowths = addedGrowths;
         }
-        
+
+        public Fighter AddLootTable(string lootTable) {
+            Debug.Assert(Initializer.lootTables.ContainsKey(lootTable));
+            LootTable = lootTable;
+            return this;
+        }
+
         public void Trigger(string trigger, params RuntimeValue[] arguments) {
             return; //TODO: ADD TRIGGER SYSTEM
         }
@@ -59,10 +67,15 @@ namespace ActualIdle {
         public void FightLoop(Fighter fighter) {
             fighter.TakeDamage(Stats[E.ATTACK], this);
             if (fighter.Hp <= 0 && Hp > 0)
-                fighter.Lose();
+                fighter.Lose(this);
         }
 
-        public virtual void Lose() {
+        public virtual void Lose(Fighter fighter) {
+            if(LootTable != null) {
+                string loot = Initializer.GetLoot(LootTable);
+                if (loot != null)
+                    ((Forest)fighter).AddItem(loot, 1);
+            }
         }
 
         public Fighter Clone() {

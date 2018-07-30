@@ -16,13 +16,20 @@ namespace ActualIdle {
     public class Trophy : Entity {
         public string Text { get; set; }
 
+        public override bool Unlocked { get => _unlocked; set {
+                if(value && !_unlocked) {
+                    Apply();
+                }
+                _unlocked = value;
+            }
+        }
+
         private Trophy(Forest forest, string name, string text)
             : base(forest, name, E.GRP_TROPHIES, 3) {
             Name = name;
             Text = text;
             Unlocked = false;
             this.Forest = forest;
-            Injects[E.INJ_ACQUIRE] = new List<CodeInject>();
         }
 
         /// <summary>
@@ -82,30 +89,13 @@ namespace ActualIdle {
             : this(forest, name, text, requirements, triggers) {
             Add(new EExtModifier(modifier));
         }
-
-        public override void Loop() {
-            base.Loop();
-        }
+        
 
         public void Apply() {
             Console.WriteLine(Text);
-            Unlocked = true;
             Forest.Values["svTrophy" + Name] = 1;
             Amount = 1;
-            Reapply(false);
-        }
-
-        /// <summary>
-        /// If reset is true, this is induced by a reset. Otherwise, it is induced by acquiring the trophy.
-        /// This is passed as a param to the ACQUIRE injects.
-        /// </summary>
-        /// <param name="reset"></param>
-        public void Reapply(bool reset = true) {
-            foreach(CodeInject c in Injects[E.INJ_ACQUIRE]) {
-                c(Forest, this, new RuntimeValue(3, reset));
-            }
-            if (HasExtension(E.EEXT_MODIFIER))
-                Extensions[E.EEXT_MODIFIER].OnEnable();
+            OnAdd(1);
         }
     }
 }

@@ -48,7 +48,10 @@ namespace ActualIdle {
         /// <param name="amount"></param>
         public virtual void Apply(Forest forest, int amount) {
             foreach (KeyValuePair<string, double> entry in Table) {
-                forest.Entities[entry.Key].Amount -= entry.Value * amount;
+                if (entry.Value > 0)
+                    forest.Entities[entry.Key].Amount -= entry.Value * amount;
+                else
+                    forest.AddItem(entry.Key, entry.Value * amount);
             }
         }
 
