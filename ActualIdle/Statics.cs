@@ -106,7 +106,7 @@ namespace ActualIdle {
             res = Math.Pow(10, res) * 100 - 100;
             if (res < 0) {
                 Console.WriteLine("Reduced XP!" + res +" Pre : "+ (preTotal+1) + "Post:" + (preTotal+change+1) + ", log diff: " + res);
-                return 0;
+                return 0;   
             }
             return res;
         }

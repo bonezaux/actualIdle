@@ -168,6 +168,13 @@ namespace ActualIdle {
                 Console.WriteLine("You don't have a next boss to fight right now.");
                 return;
             }
+
+            Boss.StartFight(this);
+            Console.WriteLine(Boss.Name + Boss.Fights);
+            if (!Boss.Fights) {
+                AdvanceBoss();
+                return;
+            }
             Console.WriteLine();
             Console.WriteLine("You are now fighting " + Boss.Name + "!");
             Soothe = 0;
@@ -196,6 +203,18 @@ namespace ActualIdle {
 
             Fighting = true;
         }
+        private void AdvanceBoss() {
+            Boss = null;
+            Fighting = false;
+
+            CurBoss++;
+            if (CurBoss >= CurPath.Length()) {
+                Console.WriteLine("You're through this path now..");
+            } else {
+                Boss = CurPath.Bosses[CurBoss].Clone();
+                Console.WriteLine("Changing boss:" + Boss);
+            }
+        }
         /// <summary>
         /// Called when the battle against the current boss is won. Can be used to insta-win a boss battle too, if necessary.
         /// winType 0 = defeated
@@ -213,16 +232,8 @@ namespace ActualIdle {
             Values["DefeatedBosses"] += 1;
             Values["allowedGrowths"] += Boss.AddedGrowths;
             Trigger(E.TRG_DEFEATED_BOSS, Boss.Name);
-            Boss = null;
-            Fighting = false;
 
-            CurBoss++;
-            if (CurBoss >= CurPath.Length()) {
-                Console.WriteLine("You're through this path now..");
-            } else {
-                Boss = CurPath.Bosses[CurBoss].Clone();
-                Console.WriteLine("Changing boss:" + Boss);
-            }
+            AdvanceBoss();
         }
         public override void Lose(Fighter fighter) {
             Console.WriteLine("You were defeated! Remaining boss stats:");

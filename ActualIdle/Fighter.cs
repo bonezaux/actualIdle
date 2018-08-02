@@ -22,8 +22,12 @@ namespace ActualIdle {
         public int Hesitation { get; set; }
         public Dictionary<string, double> Stats;
         public string LootTable;
+        /// <summary>
+        /// Whether this thing will even fight, if this is false, the fight will not even call the winbatlle things, and will only call this fighter's StartFight.
+        /// </summary>
+        public bool Fights { get; set; }
 
-        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1) {
+        public Fighter(double maxHp, double attack, double defense, string name, Resources reward, Dictionary<string, int> xp, string requirements, string description = null, int addedGrowths = 1, bool fights=true) {
             Stats = new Dictionary<string, double> {
                 [E.HEALTH] = maxHp,
                 [E.ATTACK] = attack,
@@ -38,6 +42,7 @@ namespace ActualIdle {
             Requirements = requirements;
             Description = description;
             AddedGrowths = addedGrowths;
+            Fights = fights;
         }
 
         public Fighter AddLootTable(string lootTable) {
@@ -77,9 +82,13 @@ namespace ActualIdle {
                     ((Forest)fighter).AddItem(loot, 1);
             }
         }
+    
+        public virtual void StartFight(Fighter fighter) {
 
-        public Fighter Clone() {
-            Fighter result = new Fighter(Stats[E.HEALTH], Stats[E.ATTACK], Stats[E.DEFENSE], Name, Reward, Xp, Requirements, Description) {
+        }
+
+        public virtual Fighter Clone() {
+            Fighter result = new Fighter(Stats[E.HEALTH], Stats[E.ATTACK], Stats[E.DEFENSE], Name, Reward, Xp, Requirements, Description, AddedGrowths, Fights) {
                 Stats = Stats
             };
             return result;

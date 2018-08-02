@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Branch.cs" />
+    <Compile Include="Chest.cs" />
     <Compile Include="Doable.cs" />
     <Compile Include="Entity Extensions\EExt.cs" />
     <Compile Include="Entity Extensions\EExtBuyable.cs" />

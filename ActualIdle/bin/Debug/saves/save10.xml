@@ -12,9 +12,9 @@
     <SpidersAttack>1</SpidersAttack>
     <WebsAttack>5</WebsAttack>
     <WebsDefense>50</WebsDefense>
-    <DefeatedBosses>5</DefeatedBosses>
-    <boughtThings>3</boughtThings>
-    <allowedGrowths>7</allowedGrowths>
+    <DefeatedBosses>3</DefeatedBosses>
+    <boughtThings>2</boughtThings>
+    <allowedGrowths>5</allowedGrowths>
     <DruidcraftXpGain>1</DruidcraftXpGain>
     <Animal_HandlingXpGain>1</Animal_HandlingXpGain>
     <SoothingXpGain>1</SoothingXpGain>
@@ -57,23 +57,26 @@
     <DefeatedBoss_1>1</DefeatedBoss_1>
     <DefeatedBoss_2>1</DefeatedBoss_2>
     <svTrophySoothed_20th_Boss>1</svTrophySoothed_20th_Boss>
-    <RejuvenateCooldown>4</RejuvenateCooldown>
+    <RejuvenateCooldown>44</RejuvenateCooldown>
     <DefeatedBoss_3>1</DefeatedBoss_3>
-    <DefeatedBoss_4>1</DefeatedBoss_4>
-    <DefeatedBoss_5>1</DefeatedBoss_5>
     <svlvlDruidcraft>30</svlvlDruidcraft>
     <svlvlAnimal_Handling>22</svlvlAnimal_Handling>
     <svlvlSoothing>18</svlvlSoothing>
-    <svcountOrganic_Material>41448.579000000012</svcountOrganic_Material>
+    <svcountOrganic_Material>80195162.190220848</svcountOrganic_Material>
     <svmaxcountOrganic_Material>79920720179095.891</svmaxcountOrganic_Material>
-    <svcountBushes>21</svcountBushes>
+    <svcountBushes>139</svcountBushes>
     <svmaxcountBushes>274</svmaxcountBushes>
-    <svcountOaks>21</svcountOaks>
+    <svcountOaks>124</svcountOaks>
     <svmaxcountOaks>262</svmaxcountOaks>
+    <svcountAnts>118</svcountAnts>
     <svmaxcountAnts>256</svmaxcountAnts>
+    <svcountBirches>7</svcountBirches>
     <svmaxcountBirches>21</svmaxcountBirches>
+    <svcountYews>87</svcountYews>
     <svmaxcountYews>227</svmaxcountYews>
+    <svcountFlowers>99</svcountFlowers>
     <svmaxcountFlowers>236</svmaxcountFlowers>
+    <svcountSpiders>106</svcountSpiders>
     <svmaxcountSpiders>246</svmaxcountSpiders>
     <svcountSoothed_20th_Boss>1</svcountSoothed_20th_Boss>
     <svmaxcountSoothed_20th_Boss>1</svmaxcountSoothed_20th_Boss>
@@ -81,24 +84,42 @@
     <svmaxcountWebbed_20th_Boss>1</svmaxcountWebbed_20th_Boss>
     <svcountAcquired_250_Bushes>1</svcountAcquired_250_Bushes>
     <svmaxcountAcquired_250_Bushes>1</svmaxcountAcquired_250_Bushes>
+    <svcountClear_Skies>1</svcountClear_Skies>
+    <svmaxcountClear_Skies>1</svmaxcountClear_Skies>
     <svmaxcountwand>1</svmaxcountwand>
     <svcountBush_Growth_1>1</svcountBush_Growth_1>
     <svmaxcountBush_Growth_1>1</svmaxcountBush_Growth_1>
     <svcountOak_Growth_1>1</svcountOak_Growth_1>
     <svmaxcountOak_Growth_1>1</svmaxcountOak_Growth_1>
+    <svcountGrowing_Birches_1>1</svcountGrowing_Birches_1>
     <svmaxcountGrowing_Birches_1>1</svmaxcountGrowing_Birches_1>
+    <svcountLarger_Ants_1>1</svcountLarger_Ants_1>
     <svmaxcountLarger_Ants_1>1</svmaxcountLarger_Ants_1>
+    <svcountBush_Growth_2>1</svcountBush_Growth_2>
     <svmaxcountBush_Growth_2>1</svmaxcountBush_Growth_2>
+    <svcountOak_Growth_2>1</svcountOak_Growth_2>
     <svmaxcountOak_Growth_2>1</svmaxcountOak_Growth_2>
+    <svcountGnarly_Yews_1>1</svcountGnarly_Yews_1>
     <svmaxcountGnarly_Yews_1>1</svmaxcountGnarly_Yews_1>
+    <svcountLarger_Ants_2>1</svcountLarger_Ants_2>
     <svmaxcountLarger_Ants_2>1</svmaxcountLarger_Ants_2>
+    <svcountSpiderbefriending_1>1</svcountSpiderbefriending_1>
     <svmaxcountSpiderbefriending_1>1</svmaxcountSpiderbefriending_1>
+    <svcountGrowing_Birches_2>1</svcountGrowing_Birches_2>
+    <svmaxcountGrowing_Birches_2>1</svmaxcountGrowing_Birches_2>
+    <svcountGnarly_Yews_2>1</svcountGnarly_Yews_2>
     <svmaxcountGnarly_Yews_2>1</svmaxcountGnarly_Yews_2>
+    <svcountOak_Growth_3>1</svcountOak_Growth_3>
     <svmaxcountOak_Growth_3>1</svmaxcountOak_Growth_3>
+    <svcountBush_Growth_3>1</svcountBush_Growth_3>
     <svmaxcountBush_Growth_3>1</svmaxcountBush_Growth_3>
+    <svcountLarger_Ants_3>1</svcountLarger_Ants_3>
     <svmaxcountLarger_Ants_3>1</svmaxcountLarger_Ants_3>
+    <svcountGnarly_Yews_3>1</svcountGnarly_Yews_3>
     <svmaxcountGnarly_Yews_3>1</svmaxcountGnarly_Yews_3>
+    <svcountSpiderbefriending_2>1</svcountSpiderbefriending_2>
     <svmaxcountSpiderbefriending_2>1</svmaxcountSpiderbefriending_2>
+    <svcountOak_Growth_4>1</svcountOak_Growth_4>
     <svmaxcountOak_Growth_4>1</svmaxcountOak_Growth_4>
     <svmaxcountLarger_Ants_4>1</svmaxcountLarger_Ants_4>
     <svmaxcountBush_Growth_4>1</svmaxcountBush_Growth_4>
@@ -112,8 +133,11 @@
     <svmaxcountBush_Growth_6>1</svmaxcountBush_Growth_6>
     <svmaxcountOak_Growth_6>1</svmaxcountOak_Growth_6>
     <svmaxcountGnarly_Yews_6>1</svmaxcountGnarly_Yews_6>
+    <svcountSpiderfriends>1</svcountSpiderfriends>
     <svmaxcountSpiderfriends>1</svmaxcountSpiderfriends>
+    <svcountTransmogrify_Rageuvenate>1</svcountTransmogrify_Rageuvenate>
     <svmaxcountTransmogrify_Rageuvenate>1</svmaxcountTransmogrify_Rageuvenate>
+    <svcountWeb_Site>1</svcountWeb_Site>
     <svmaxcountWeb_Site>1</svmaxcountWeb_Site>
     <svmaxcountWebs>7</svmaxcountWebs>
     <svmaxcountWeb_Development>1</svmaxcountWeb_Development>
@@ -127,15 +151,15 @@
     <svmaxcountHandled_You_Before>1</svmaxcountHandled_You_Before>
     <svcountSoothing_Thoughts>1</svcountSoothing_Thoughts>
     <svmaxcountSoothing_Thoughts>1</svmaxcountSoothing_Thoughts>
+    <svTrophySoothed_20th_Boss>1</svTrophySoothed_20th_Boss>
     <svTrophyWebbed_20th_Boss>1</svTrophyWebbed_20th_Boss>
     <svTrophyAcquired_250_Bushes>1</svTrophyAcquired_250_Bushes>
-    <svTrophySoothed_20th_Boss>1</svTrophySoothed_20th_Boss>
-    <svThinks>7</svThinks>
+    <svThinks>8</svThinks>
     <svSpider_PrestigeKills>3</svSpider_PrestigeKills>
   </Values>
   <skills>
-    <Druidcraft>1439.67807324772:0</Druidcraft>
-    <Animal_Handling>733.917114227204:1</Animal_Handling>
+    <Druidcraft>897.080817506769:0</Druidcraft>
+    <Animal_Handling>467.171198269616:0</Animal_Handling>
     <Soothing>100:0</Soothing>
     <Alchemy>100:0</Alchemy>
     <Transformation>100:0</Transformation>
@@ -143,27 +167,27 @@
   </skills>
   <Growths>
     <Organic_Material>
-      <Amount>58946647.363</Amount>
+      <Amount>677311.45</Amount>
       <Unlocked>true</Unlocked>
     </Organic_Material>
     <Bushes>
-      <Amount>115</Amount>
+      <Amount>86</Amount>
       <Unlocked>true</Unlocked>
     </Bushes>
     <Oaks>
-      <Amount>97</Amount>
+      <Amount>66</Amount>
       <Unlocked>true</Unlocked>
     </Oaks>
     <Ants>
-      <Amount>90</Amount>
+      <Amount>61</Amount>
       <Unlocked>true</Unlocked>
     </Ants>
     <Birches>
-      <Amount>3</Amount>
+      <Amount>2</Amount>
       <Unlocked>true</Unlocked>
     </Birches>
     <Yews>
-      <Amount>63</Amount>
+      <Amount>29</Amount>
       <Unlocked>true</Unlocked>
     </Yews>
     <Flowers>
@@ -190,6 +214,18 @@
       <Amount>0</Amount>
       <Unlocked>false</Unlocked>
     </Corrupt_Seed_of_Life>
+    <Heavy_Rock>
+      <Amount>0</Amount>
+      <Unlocked>false</Unlocked>
+    </Heavy_Rock>
+    <Tasty_Seeds>
+      <Amount>0</Amount>
+      <Unlocked>false</Unlocked>
+    </Tasty_Seeds>
+    <Torn_Journal>
+      <Amount>1</Amount>
+      <Unlocked>true</Unlocked>
+    </Torn_Journal>
     <Clear_Skies>
       <Amount>1</Amount>
       <Unlocked>true</Unlocked>
@@ -200,7 +236,7 @@
     </Ironbark>
     <Recreate_Webs>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Recreate_Webs>
     <wand>
       <Amount>0</Amount>
@@ -216,26 +252,26 @@
     </Oak_Growth_1>
     <Growing_Birches_1>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Growing_Birches_1>
     <Larger_Ants_1>
       <Amount>1</Amount>
       <Unlocked>true</Unlocked>
     </Larger_Ants_1>
     <Bush_Growth_2>
-      <Amount>1</Amount>
+      <Amount>0</Amount>
       <Unlocked>true</Unlocked>
     </Bush_Growth_2>
     <Oak_Growth_2>
-      <Amount>1</Amount>
+      <Amount>0</Amount>
       <Unlocked>true</Unlocked>
     </Oak_Growth_2>
     <Gnarly_Yews_1>
-      <Amount>1</Amount>
+      <Amount>0</Amount>
       <Unlocked>true</Unlocked>
     </Gnarly_Yews_1>
     <Larger_Ants_2>
-      <Amount>1</Amount>
+      <Amount>0</Amount>
       <Unlocked>true</Unlocked>
     </Larger_Ants_2>
     <Spiderbefriending_1>
@@ -247,24 +283,24 @@
       <Unlocked>false</Unlocked>
     </Growing_Birches_2>
     <Gnarly_Yews_2>
-      <Amount>1</Amount>
-      <Unlocked>true</Unlocked>
+      <Amount>0</Amount>
+      <Unlocked>false</Unlocked>
     </Gnarly_Yews_2>
     <Oak_Growth_3>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Oak_Growth_3>
     <Bush_Growth_3>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Bush_Growth_3>
     <Larger_Ants_3>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Larger_Ants_3>
     <Gnarly_Yews_3>
       <Amount>0</Amount>
-      <Unlocked>true</Unlocked>
+      <Unlocked>false</Unlocked>
     </Gnarly_Yews_3>
     <Spiderbefriending_2>
       <Amount>0</Amount>
@@ -463,7 +499,7 @@
   <Modifiers>
     <Base_Stats>
       <ModifiersA>
-        <HealthRegen>2</HealthRegen>
+        <HealthRegen>1</HealthRegen>
         <Max_Mana>120</Max_Mana>
         <Mana_Regen>1</Mana_Regen>
       </ModifiersA>
@@ -492,12 +528,12 @@
     </Webs>
     <Druidcraft_Considered>
       <ModifiersF>
-        <Gain>1.42</Gain>
+        <Gain>1.3599999999999999</Gain>
       </ModifiersF>
     </Druidcraft_Considered>
     <Handled_You_Before>
       <ModifiersF>
-        <Attack>1.3</Attack>
+        <Attack>1.24</Attack>
       </ModifiersF>
     </Handled_You_Before>
     <Soothing_Thoughts>
@@ -505,53 +541,43 @@
         <HealthRegen>1</HealthRegen>
       </ModifiersF>
     </Soothing_Thoughts>
-    <Bush_Growth_1>
-      <ModifiersF>
-        <BushesGain>3</BushesGain>
-      </ModifiersF>
-    </Bush_Growth_1>
     <Oak_Growth_1>
       <ModifiersF>
         <OaksGain>4</OaksGain>
       </ModifiersF>
     </Oak_Growth_1>
-    <Bush_Growth_2>
+    <Bush_Growth_1>
       <ModifiersF>
-        <BushesGain>5</BushesGain>
+        <BushesGain>3</BushesGain>
       </ModifiersF>
-    </Bush_Growth_2>
+    </Bush_Growth_1>
     <Larger_Ants_1>
       <ModifiersF>
         <AntsGain>5</AntsGain>
       </ModifiersF>
     </Larger_Ants_1>
-    <Oak_Growth_2>
+    <Clear_Skies>
       <ModifiersF>
-        <OaksGain>4</OaksGain>
+        <BushesGain>3.5</BushesGain>
+        <OaksGain>3.5</OaksGain>
+        <BirchesGain>3.5</BirchesGain>
+        <YewsGain>3.5</YewsGain>
+        <FlowersGain>3.5</FlowersGain>
       </ModifiersF>
-    </Oak_Growth_2>
-    <Gnarly_Yews_1>
+    </Clear_Skies>
+    <Torn_Journal>
       <ModifiersF>
-        <YewsGain>4</YewsGain>
+        <DruidcraftXpGain>1.4</DruidcraftXpGain>
+        <Soothing>1.2</Soothing>
       </ModifiersF>
-    </Gnarly_Yews_1>
-    <Larger_Ants_2>
-      <ModifiersF>
-        <AntsGain>5</AntsGain>
-      </ModifiersF>
-    </Larger_Ants_2>
-    <Gnarly_Yews_2>
-      <ModifiersF>
-        <YewsGain>4</YewsGain>
-      </ModifiersF>
-    </Gnarly_Yews_2>
+    </Torn_Journal>
   </Modifiers>
   <Path>Forest Street</Path>
-  <PathBoss>5</PathBoss>
-  <Count>6393</Count>
+  <PathBoss>3</PathBoss>
+  <Count>1642</Count>
   <OfflineTicks>18000</OfflineTicks>
-  <Hp>23.159999999999961</Hp>
-  <Mana>102.80000000000104</Mana>
+  <Hp>58.947167476835617</Hp>
+  <Mana>106.20000000000002</Mana>
   <FightingStyle>Fight</FightingStyle>
-  <LifeCount>5929</LifeCount>
+  <LifeCount>1642</LifeCount>
 </Forest>

@@ -96,9 +96,9 @@ namespace ActualIdle  {
                 foreach(CodeInject inj in Injects[trigger]) {
                     inj(Forest, this, arguments);
                 }
-                foreach(EExt ext in Extensions.Values) {
-                    ext.Trigger(trigger, arguments);
-                }
+            }
+            foreach (EExt ext in Extensions.Values) {
+                ext.Trigger(trigger, arguments);
             }
         }
 

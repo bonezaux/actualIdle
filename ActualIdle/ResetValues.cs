@@ -17,7 +17,7 @@ namespace ActualIdle {
             forest.Values[E.BOUGHT_THINGS] = 0;
             forest.Values["allowedGrowths"] = 2;
 
-            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 0.2 }, { E.MAXMANA, 120}, { E.MANAREGEN, 1 } }));
+            forest.AddModifier(new Modifier("Base Stats", modifiersA: new Dictionary<string, double>() { { "HealthRegen", 1 }, { E.MAXMANA, 120}, { E.MANAREGEN, 1 } }));
 
             forest.AddModifier(new Modifier(E.XP + E.GAIN, modifiersF: new Dictionary<string, double>() { { E.XP + E.GAIN, 1 } }));
             foreach (string skill in Statics.skills) {

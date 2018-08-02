@@ -20,6 +20,10 @@ ACTUAL IDLE SKAL VÆRE ET ROGUELIGHT
  - Semi-tilfældige Boss drops
  - Mechanics der bliver unlocked, mere end straight-up bonusser
  - Ting, man kan bruge tid på, som kan give hurtige bonusser
+
+Jeg ved ikke helt, hvordan det hele skal virke.
+Der er meget, der føles lidt mærkeligt lige nu.
+ 
  
 sådan noget
 Forskellige ting giver mere/mindre bonus til det

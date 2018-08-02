@@ -18,6 +18,7 @@ namespace ActualIdle {
         public static Dictionary<string, CodeInject> premadeInjects;
         public static Dictionary<string, (double chance, string item)[]> lootTables = new Dictionary<string, (double, string)[]>();
         public static Path startPath;
+        public static Random r = new Random();
 
         /// <summary>
         /// Initializes big (booty) birches upgrades
@@ -539,7 +540,6 @@ namespace ActualIdle {
 
         public static string GetLoot(string tableName) {
             (double chance, string item)[] table = lootTables[tableName];
-            Random r = new Random();
             double weight = r.NextDouble();
             double runningTotal = 0;
             foreach (var (chance, item) in table ) {
@@ -577,7 +577,7 @@ namespace ActualIdle {
                 .Add(new EExtModifier(new Modifier(E.ITEM_TORN_JOURNAl, new Dictionary<string, double>() { { E.DRUIDCRAFT + E.XP + E.GAIN, 1.4 }, { E.SOOTHING, 1.2 } }), true)));
             forest.Entities[E.ITEM_TORN_JOURNAl].Description = "A torn journal. +40% Druidcraft xp, +20% soothing.";
             if(lootTables.Count == 0) {
-                lootTables.Add(E.LOOT_RANDOM, new(double, string)[] { (0.2, E.ITEM_HEAVY_ROCK), (0.2, E.ITEM_TASTY_SEEDS), (0.2, E.ITEM_TORN_JOURNAl) });
+                lootTables.Add(E.LOOT_RANDOM, new(double, string)[] { (0.3333, E.ITEM_HEAVY_ROCK), (0.3333, E.ITEM_TASTY_SEEDS), (0.3334, E.ITEM_TORN_JOURNAl) });
             }
         }
 
@@ -586,6 +586,9 @@ namespace ActualIdle {
             startPath = new Path(forest, "Forest Street", "A little path through the forest.", "");
             for (int loop = 1; loop <= 12; loop++) {
                 startPath.AddBoss(GenerateBoss(loop));
+                if(loop%4 == 0) {
+                    startPath.AddBoss(new Chest("Chest", E.LOOT_RANDOM, 3));
+                }
             }
             Path hpPath = new Path(forest, "Forest heavy dudes", "Heavy people.", "");
 
